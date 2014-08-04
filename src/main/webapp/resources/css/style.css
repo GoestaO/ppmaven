@@ -1,0 +1,137 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 08.05.2014, 13:26:00
+    Author     : daniel
+*/
+
+html {
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.42857;
+    color: #333;
+
+    /*	overflow:hidden; */
+
+}
+
+
+div#header{
+    position:relative;
+    top:0px;
+    padding-top: 10px;
+    width: 100%;
+}
+
+div#content{
+    position:relative;
+    padding: 10px;
+    width: 100%;
+}
+
+
+div#content_left{
+    position:absolute;
+    padding:0px; text-align:left; width:200px; float:left;
+}
+div#content_right{
+    position:absolute;
+    width: 100%;
+    left: 210px;
+    padding:0px; text-align:left; float:left;
+}
+
+div#footer{
+
+    position:fixed;
+    bottom:0px;
+    height: 20px;
+    width: 100%;
+
+}
+
+
+*.spalte { padding:0px; text-align:left; width:33%; float:left; } 
+
+*.ersteSpalte { padding:0px;padding-right: 1%; padding-left: 1%; padding-bottom: 1%; text-align:left; width:25%; float:left; text-align:center; } 
+
+*.zweiteSpalte { padding:0px;padding-right: 1%; padding-left: 1%; padding-bottom: 1%; text-align:left; width:70%; float:left; text-align:center; } 
+
+h2, .h2 {
+    font-size: 30px;
+}
+h1, h2, h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 500;
+    line-height: 1.1;
+    color: inherit;
+}
+a.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+    background-color: chartreuse;
+
+}
+
+
+.dashboardGrid {
+    width:100%; 
+    text-align:center;
+}
+
+.dashboardGrid td{
+    width:33%;
+}
+
+.ui-datatable {
+    box-shadow: 5px 5px 10px grey;
+    border-radius: 4px;
+}
+
+.rowSeparator {
+    border-top: 2px solid gray;
+}
+
+.chartdiv {
+    border-radius: 10px; 
+    box-shadow: 5px 5px 10px grey; 
+    font-weight: bold;
+}
+
+.chartdiv-dark {
+    background-color: #282828;
+}
+
+.chartdiv-white {
+    background-color: #F5F5F5;
+}
+
+.backlogtracking-menu-btn {
+    background-color: #FFF !important;
+    border-color: #CCC !important;
+    border-radius: 4px !important;
+    color: #333 !important; 
+    padding: 6px 12px !important; 
+    text-shadow: none !important;
+    margin: 0px 0px 5px 0px !important;
+}
+
+.backlogtracking-menu-btn:hover {
+    background-color: #E6E6E6 !important;
+    border-color: #ADADAD !important;
+}

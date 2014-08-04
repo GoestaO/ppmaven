@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+
+    <h:head>
+
+        <title> 
+            <ui:insert name="title">LVS - Reporting</ui:insert>
+
+        </title>
+        <!--<link rel="stylesheet" type="text/css" href="css/style.css"/>-->
+        <h:outputStylesheet  library="css" name="style.css" ></h:outputStylesheet>
+        <h:outputScript library="js" name="locale_de.js" />
+
+    </h:head>
+    <h:body>
+        <f:view>
+            <h:panelGroup id="all">
+                <ui:insert name="metadata"/>
+                <div id="header">
+
+                    <div class="spalte"><h:outputLink value="#{request.contextPath}/index.jsf" ><h:graphicImage library="img" name="Zalando_logo.svg.png"/></h:outputLink></div>
+                    <div class="spalte">
+                        <center>
+                            <ui:insert name="header">
+                                <h2>Backlog Partnerprogramm</h2>
+                            </ui:insert>
+                        </center> 
+
+                    </div>
+
+                    <div style="clear:both"></div>
+
+
+                    <h:form>
+                        <p:menubar id="navigation" style="height: 2em; box-sizing: content-box;"> 
+                            <ui:insert name="navigation"> </ui:insert>
+                        </p:menubar>
+                    </h:form>
+
+                </div>
+
+
+
+
+                <div id="content">
+                    <ui:insert name="content"/>
+                </div>
+                <div id="footer">
+                    <ui:insert name="footer">
+                        <h:outputText value="Copyright &copy; PSI "/>
+                        <h:outputText value="#{session.lastAccessedTime}" >
+                            <f:convertDateTime pattern="yyyy" type="date"/>
+                        </h:outputText>
+                    </ui:insert>
+                </div>
+            </h:panelGroup>
+        </f:view>
+
+
+
+    </h:body>
+</html>
