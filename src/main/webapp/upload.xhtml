@@ -11,7 +11,7 @@
     <ui:define name="content" > 
 
         <h:form>
-            <p:fileUpload fileUploadListener="#{uploadController.handleFileUpload}" auto = "true" mode="advanced" dragDropSupport="false"
+            <p:fileUpload fileUploadListener="#{uploadController.handleFileUpload}" label = "Dateiauswahl" auto = "true" mode="advanced" dragDropSupport="false"
                           update="messages" fileLimit="3" allowTypes="/(\.|\/)(csv)$/" />
             <p:growl id="messages" showDetail="true" />
         </h:form>

@@ -1,4 +1,4 @@
-package model;
+package de.contentcreation.pplive.model;
 
 import java.io.Serializable;
 import javax.persistence.Column;

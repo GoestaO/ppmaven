@@ -1,5 +1,6 @@
 package de.contentcreation.pplive.reporting;
 
+import de.contentcreation.pplive.model.BacklogArticle;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -9,7 +10,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import de.contentcreation.pplive.services.ReportingHandler;
-import model.BacklogArticle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;

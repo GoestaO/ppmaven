@@ -1,5 +1,6 @@
 package de.contentcreation.pplive.services;
 
+import de.contentcreation.pplive.model.BacklogArticle;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -8,7 +9,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import model.BacklogArticle;
 import de.contentcreation.pplive.reportingClasses.PartnerReport;
 import de.contentcreation.pplive.reportingClasses.UserReport;
 

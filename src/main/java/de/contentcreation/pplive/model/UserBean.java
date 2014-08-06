@@ -1,58 +1,74 @@
-package model;
+package de.contentcreation.pplive.model;
 
-public class UserBean {
-	private int id;
-	private String nick;
-	private String vorname;
-	private String nachname;
-	private String passwort;
-	private boolean isValid;
+import java.io.Serializable;
+import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.inject.Named;
 
-	public int getId() {
-		return this.id;
-	}
+@Named
+@SessionScoped
+public class UserBean implements Serializable {
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    private int id;
+    private String nick;
+    private String vorname;
+    private String nachname;
+    private String passwort;
+    private boolean isValid;
 
-	public String getNick() {
-		return this.nick;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public void setNick(String nick) {
-		this.nick = nick;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getVorname() {
-		return this.vorname;
-	}
+    public String getNick() {
+        return this.nick;
+    }
 
-	public void setVorname(String vorname) {
-		this.vorname = vorname;
-	}
+    public void setNick(String nick) {
+        this.nick = nick;
+    }
 
-	public String getNachname() {
-		return this.nachname;
-	}
+    public String getVorname() {
+        return this.vorname;
+    }
 
-	public void setNachname(String nachname) {
-		this.nachname = nachname;
-	}
+    public void setVorname(String vorname) {
+        this.vorname = vorname;
+    }
 
-	public String getPasswort() {
-		return this.passwort;
-	}
+    public String getNachname() {
+        return this.nachname;
+    }
 
-	public void setPasswort(String passwort) {
-		this.passwort = passwort;
-	}
+    public void setNachname(String nachname) {
+        this.nachname = nachname;
+    }
 
-	public boolean isValid() {
-		return this.isValid;
-	}
+    public String getPasswort() {
+        return this.passwort;
+    }
 
-	public void setValid(boolean newValid) {
-		this.isValid = newValid;
-	}
+    public void setPasswort(String passwort) {
+        this.passwort = passwort;
+    }
+
+    public boolean isValid() {
+        return this.isValid;
+    }
+
+    public void setValid(boolean newValid) {
+        this.isValid = newValid;
+    }
+
+    public String resetUser() {
+        this.setValid(false);
+        FacesMessage message = new FacesMessage("Logout", "Logout war erfolgreich.");
+        FacesContext.getCurrentInstance().addMessage(null, message);
+        return "login.jsf?faces-redirect = true";
+    }
 }

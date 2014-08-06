@@ -1,9 +1,8 @@
 package de.contentcreation.pplive.services;
 
-import java.io.PrintStream;
+import de.contentcreation.pplive.model.User;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import model.User;
 
 public class SessionHandler {
 	HttpSession session;

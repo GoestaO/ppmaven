@@ -1,15 +1,14 @@
 package de.contentcreation.pplive.reportingClasses;
 
+import de.contentcreation.pplive.model.BacklogArticle;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.List;
 import de.contentcreation.pplive.services.ReportingHandler;
-import model.BacklogArticle;
+
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
