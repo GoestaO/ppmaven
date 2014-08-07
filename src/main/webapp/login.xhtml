@@ -8,29 +8,23 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <ui:define name="navigation" >
-        <c:if test="${ userBean.valid == true  }">
 
-            <f:facet name="options">
-                <p:commandButton id="logout" icon="ui-icon-extlink" styleClass="ui-priority-primary" value="Abmelden" update=":all">
-
-                </p:commandButton>
-            </f:facet>
-
-        </c:if>
     </ui:define>
 
     <ui:define name="content" > 
 
-        <h:form>
-            <h:panelGrid columns="2">
-                <p:outputLabel for="username" value="Nutzername:" />
-                <p:inputText id = "username" label="Nutzername" value="#{loginBean.username}"></p:inputText>
-                <p:outputLabel for="password" value="Passwort:" />
-                <p:password id = "password" label="Passwort" value="#{loginBean.password}"></p:password>
-                <p:commandButton value="Login" action="#{loginBean.login(loginBean.username, loginBean.password)}"/>
-            </h:panelGrid>
+        <c:if test="${ userBean.valid != true  }">
+            <h:form>
+                <p:growl id="growl" showDetail="true" sticky="true" />
+                <h:panelGrid columns="2">                
+                    <p:outputLabel for="username" value="Nutzername:" />
+                    <p:inputText id = "username" label="Nutzername" value="#{loginBean.username}"></p:inputText>
+                    <p:outputLabel for="password" value="Passwort:" />
+                    <p:password id = "password" label="Passwort" value="#{loginBean.password}"></p:password>
+                    <p:commandButton value="Login" action="#{loginBean.login(loginBean.username, loginBean.password)}" update ="growl"/>
+                </h:panelGrid>
 
-        </h:form>
-
+            </h:form>
+        </c:if>    
     </ui:define>
 </ui:composition>

@@ -1,0 +1,73 @@
+<ui:composition template="templates/base_content.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:mc="http://xmlns.jcp.org/jsf/composite/myComponent"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="msgs" showDetail="true"/>
+            <p:dataTable editable="true" var="article" value="#{overviewController.backlogList}" rows="10"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" currentPageReportTemplate="{startRecord}-{endRecord} von {totalRecords}"
+                         rowsPerPageTemplate="5,10,15"  >
+                <p:ajax event="rowEdit" listener="#{overviewController.onRowEdit}" update=":form:msgs" />
+                <p:ajax event="rowEditCancel" listener="#{overviewController.onRowCancel}" update=":form:msgs" />
+                <p:column headerText="Identifier">
+                    <h:outputText value="#{article.identifier}"/>
+                </p:column>
+                <p:column headerText="Config">
+                    <h:outputText value="#{article.config}"/>
+                </p:column>
+                <p:column headerText="Anzahl">
+                    <h:outputText value="#{article.counter}"/>
+                </p:column>
+                <p:column headerText="WG-Pfad">
+                    <h:outputText value="#{article.cgPath}"/>
+                </p:column>
+                <p:column headerText="Partner">
+                    <h:outputText value="#{article.partnerId}"/>
+                </p:column>
+                <p:column headerText="Datum">
+                    <h:outputText value="#{article.datum}">
+                        <f:convertDateTime dateStyle="short" locale="de" type="date" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Saison">
+                    <h:outputText value="#{article.saison}"/>
+                </p:column>
+                <p:column headerText="Appdomain">
+                    <h:outputText value="#{article.appdomainId}"/>
+                </p:column>
+                <p:column headerText="Bemerkung 1">
+                    <h:outputText value="#{article.bemerkung1}" />
+                </p:column>
+                <p:column headerText="Bemerkung 2">
+                    <h:outputText value="#{article.bemerkung2}"/>
+                </p:column>
+                <p:column headerText="Bemerkung 3">
+                    <h:outputText value="#{article.bemerkung3}"/>
+                </p:column>
+                <p:column headerText="Bemerkung KAM">
+                    <h:outputText value="#{article.bemerkungKAM}"/>
+                </p:column>
+                <p:column headerText="">
+                    <h:selectOneMenu value="#{overviewController.offen}">                        
+                        <f:selectItem itemValue="offen" itemLabel="offen"/>
+                        <f:selectItem itemValue="fertig" itemLabel="fertig"/>
+                    </h:selectOneMenu>
+                </p:column>
+                <p:column style="width:32px">
+                    <p:rowEditor />
+                </p:column>
+            </p:dataTable>
+
+        </h:form>
+    </ui:define>
+
+
+
+</ui:composition>

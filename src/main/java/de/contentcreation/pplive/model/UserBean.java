@@ -16,6 +16,7 @@ public class UserBean implements Serializable {
     private String nachname;
     private String passwort;
     private boolean isValid;
+    private User user;
 
     public int getId() {
         return this.id;
@@ -65,8 +66,17 @@ public class UserBean implements Serializable {
         this.isValid = newValid;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public String resetUser() {
         this.setValid(false);
+
         FacesMessage message = new FacesMessage("Logout", "Logout war erfolgreich.");
         FacesContext.getCurrentInstance().addMessage(null, message);
         return "login.jsf?faces-redirect = true";

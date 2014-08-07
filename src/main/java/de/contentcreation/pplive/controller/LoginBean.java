@@ -5,6 +5,7 @@
  */
 package de.contentcreation.pplive.controller;
 
+import de.contentcreation.pplive.model.User;
 import de.contentcreation.pplive.services.UserService;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -25,8 +26,6 @@ import javax.faces.context.FacesContext;
 @RequestScoped
 public class LoginBean {
 
-//    @PersistenceContext
-//    private EntityManager em;
     @Inject
     private UserBean bean;
 
@@ -71,11 +70,17 @@ public class LoginBean {
     }
 
     public void login(String username, String password) {
-        if (service.login(username, password) != null) {
+        User user = service.login(username, password);
+        if (user != null) {
+            bean.setUser(user);
             bean.setValid(true);
             bean.setVorname(username);
             bean.setNachname(username);
             FacesMessage message = new FacesMessage("Login erfolgreich", "Willkommen " + username + ".");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
+        else {
+            FacesMessage message = new FacesMessage("Login nicht erfolgreich", "Nutzername oder Passswort falsch.");
             FacesContext.getCurrentInstance().addMessage(null, message);
         }
     }

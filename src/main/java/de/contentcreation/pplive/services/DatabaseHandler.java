@@ -114,9 +114,6 @@ public class DatabaseHandler {
      
         BacklogArticle ba = (BacklogArticle) em.find(BacklogArticle.class,
                 identifier);
-
-        em.getTransaction().begin();
-
         UpdateBuchung updateBuchung = new UpdateBuchung();
         if (neuerStatus.equals("fertig")) {
             ba.setOffen(false);
@@ -138,9 +135,8 @@ public class DatabaseHandler {
         updateBuchung.setStatus(neuerStatus);
         updateBuchung.setSaison(season);
 
-        em.persist(ba);
+        em.merge(ba);
         em.persist(updateBuchung);
-        em.getTransaction().commit();
         
     }
 
