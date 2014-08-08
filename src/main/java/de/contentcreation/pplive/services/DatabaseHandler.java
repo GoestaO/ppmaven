@@ -115,7 +115,6 @@ public class DatabaseHandler {
         BacklogArticle ba = (BacklogArticle) em.find(BacklogArticle.class,
                 identifier);
         UpdateBuchung updateBuchung = new UpdateBuchung();
-        System.out.println("neuerStatus = " + neuerStatus);
         
         ba.setOffen(neuerStatus);
         ba.setBemerkung1(bemerkung1);
