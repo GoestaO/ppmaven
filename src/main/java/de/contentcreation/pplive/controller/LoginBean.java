@@ -11,10 +11,10 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import de.contentcreation.pplive.model.UserBean;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
@@ -70,6 +70,7 @@ public class LoginBean {
     }
 
     public void login(String username, String password) {
+        System.out.println("password = " + password);
         User user = service.login(username, password);
         if (user != null) {
             bean.setUser(user);

@@ -135,3 +135,6 @@ a.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-st
     background-color: #E6E6E6 !important;
     border-color: #ADADAD !important;
 }
+.ui-widget, .ui-widget .ui-widget {
+    font-size: 90%;
+}

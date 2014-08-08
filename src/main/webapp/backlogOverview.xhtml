@@ -8,17 +8,25 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <ui:define name="content">
+
+        <h:form rendered ="#{!userBean.valid}">
+            <p:button href="login.jsf" value="Zum Login" />
+
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+            #{overviewController.fatal()}
+        </h:form>
+
         <h:form id="form">
             <p:growl id="msgs" showDetail="true"/>
-            <p:dataTable editable="true" var="article" value="#{overviewController.backlogList}" rows="10"
+            <p:dataTable id="backlog" selectionMode="multiple" selection="#{overviewController.selectedArticles}" rowKey="#{article.identifier}" var="article" value="#{overviewController.backlogList}" rows="10"
                          paginator="true"
                          paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" currentPageReportTemplate="{startRecord}-{endRecord} von {totalRecords}"
-                         rowsPerPageTemplate="5,10,15"  >
+                         rowsPerPageTemplate="5,10,15" rendered ="#{userBean.valid}" >
                 <p:ajax event="rowEdit" listener="#{overviewController.onRowEdit}" update=":form:msgs" />
                 <p:ajax event="rowEditCancel" listener="#{overviewController.onRowCancel}" update=":form:msgs" />
-                <p:column headerText="Identifier">
-                    <h:outputText value="#{article.identifier}"/>
-                </p:column>
+                <!--                <p:column headerText="Identifier">
+                                    <h:outputText value="#{article.identifier}"/>
+                                </p:column>-->
                 <p:column headerText="Config">
                     <h:outputText value="#{article.config}"/>
                 </p:column>
@@ -43,50 +51,70 @@
                     <h:outputText value="#{article.appdomainId}"/>
                 </p:column>
                 <p:column headerText="Bemerkung 1">
-                    <p:cellEditor>
-                        <f:facet name="output"><h:outputText value="#{article.bemerkung1}" /></f:facet>
-                        <f:facet name="input"><h:inputText value="#{article.bemerkung1}"/></f:facet>
-                    </p:cellEditor>                    
+                    <h:outputText value="#{article.bemerkung1}" />                 
                 </p:column>
                 <p:column headerText="Bemerkung 2">
-                    <p:cellEditor>
-                        <f:facet name="output"><h:outputText value="#{article.bemerkung2}" /></f:facet>
-                        <f:facet name="input"><h:inputText value="#{article.bemerkung2}"/></f:facet>
-                    </p:cellEditor>
+                    <h:outputText value="#{article.bemerkung2}"/>
                 </p:column>
                 <p:column headerText="Bemerkung 3">
-                    <p:cellEditor>
-                        <f:facet name="output"><h:outputText value="#{article.bemerkung3}" /></f:facet>
-                        <f:facet name="input"><h:inputText value="#{article.bemerkung3}"/></f:facet>
-                    </p:cellEditor>
+                    <h:outputText value="#{article.bemerkung3}"/>
                 </p:column>
                 <p:column headerText="Bemerkung KAM">
-                    <p:cellEditor>
-                        <f:facet name="output"><h:outputText value="#{article.bemerkungKAM}" /></f:facet>
-                        <f:facet name="input"><h:inputText value="#{article.bemerkungKAM}"/></f:facet>
-                    </p:cellEditor>
+                    <h:outputText value="#{article.bemerkungKAM}"/>
                 </p:column>
-                <p:column headerText="Status">
-                    <p:cellEditor>                        
-                        <f:facet name="input">
-                            <p:selectOneListbox id="status" value="#{article.offen}">
-                                <f:selectItem itemLabel="offen" itemValue="true" />
-                                <f:selectItem itemLabel="fertig" itemValue="false" />           
-                            </p:selectOneListbox>
-                        </f:facet>
-                        <f:facet name="output">
-                            <h:outputText value="#{ (article.offen==true) ? 'offen' : 'fertig' }" />
-                            <!--<h:outputText value="#{article.offen}"/>-->
-                        </f:facet>
-                    </p:cellEditor>                    
-                </p:column>
-
-                <p:column style="width:32px">
-                    <p:rowEditor />
-                </p:column>
+                <f:facet name="header">
+                    <p:commandButton process="backlog" update=":articleDetail" icon="ui-icon-search" value="View" oncomplete="PF('editDialog').show()" />
+                </f:facet>
             </p:dataTable>
-
         </h:form>
+
+        <p:dialog header="Artikel bearbeiten" id="articleDetail" widgetVar="editDialog" width="80%" modal="true">
+            <h:form>
+                <h:dataTable value="#{overviewController.selectedArticles}" var="selectedArticle" width="80%">
+
+                    <p:column headerText="Config">
+                        <h:outputText value="#{selectedArticle.config}"/>
+                    </p:column>
+                    <p:column headerText="Appdomain">
+                        <h:outputText value="#{selectedArticle.appdomainId}"/>
+                    </p:column>
+                    <p:column headerText="Partner">
+                        <h:outputText value="#{selectedArticle.partnerId}"/>
+                    </p:column>
+                    <p:column headerText="Bemerkung 1">
+                        <h:inputText value="#{selectedArticle.bemerkung1}">
+                            <p:ajax listener="#{overviewController.onChange}" />
+                        </h:inputText>
+                    </p:column>
+                    <p:column headerText="Bemerkung 2">
+                        <h:inputText value="#{selectedArticle.bemerkung2}"/>
+                    </p:column>
+                    <p:column headerText="Bemerkung 3">
+                        <h:inputText value="#{selectedArticle.bemerkung3}"/>
+                    </p:column>
+                    <p:column headerText="Bemerkung KAM">
+                        <h:inputText value="#{selectedArticle.bemerkungKAM}"/>
+                    </p:column>
+                    <p:column headerText="Datum">
+                        <h:outputText value="#{selectedArticle.datum}">
+                            <f:convertDateTime dateStyle="short" locale="de" type="date" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Neuer Status">
+                        <p:selectOneMenu value="#{selectedArticle.offen}">
+                            <f:selectItem itemLabel="offen" itemValue="true"/>
+                            <f:selectItem itemLabel="fertig" itemValue="false"/>
+                        </p:selectOneMenu>
+                    </p:column>
+                    <f:facet name="footer">
+                        <p:commandButton process = "@this" update=":form:backlog" value="Speichern" action="#{overviewController.update(overviewController.selectedArticles)}" oncomplete="PF('editDialog').hide()"/>
+                    </f:facet>
+                </h:dataTable>
+
+                <!--</p:outputPanel>-->
+            </h:form>
+        </p:dialog>
+
     </ui:define>
 
 

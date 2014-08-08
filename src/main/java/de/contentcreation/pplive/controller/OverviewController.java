@@ -14,8 +14,10 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
+import javax.faces.component.html.HtmlDataTable;
 //import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -29,31 +31,50 @@ import org.primefaces.event.RowEditEvent;
 @ViewScoped
 public class OverviewController implements Serializable {
 
-    private String offen;
-
     @EJB
     private DatabaseHandler dh;
 
     private List<BacklogArticle> backlogList;
 
+    private List<BacklogArticle> selectedArticles;
+
+    private HtmlDataTable myDataTable;
+
+    private BacklogArticle selectedArticle;
+
     @Inject
     private UserBean userBean;
 
-    @PostConstruct
-    public void init() {
-        backlogList = dh.getBacklog();
-    }
-
+//    @PostConstruct
+//    public void init() {
+//        backlogList = dh.getBacklog();
+//    }
     public List<BacklogArticle> getBacklogList() {
-        return backlogList;
+        return dh.getBacklog();
     }
 
-    public String getOffen() {
-        return offen;
+    public List<BacklogArticle> getSelectedArticles() {
+        return selectedArticles;
     }
 
-    public void setOffen(String offen) {
-        this.offen = offen;
+    public void setSelectedArticles(List<BacklogArticle> selectedArticles) {
+        this.selectedArticles = selectedArticles;
+    }
+
+    public BacklogArticle getSelectedArticle() {
+        return selectedArticle;
+    }
+
+    public void setSelectedArticle(BacklogArticle selectedArticle) {
+        this.selectedArticle = selectedArticle;
+    }
+
+    public HtmlDataTable getMyDataTable() {
+        return myDataTable;
+    }
+
+    public void setMyDataTable(HtmlDataTable myDataTable) {
+        this.myDataTable = myDataTable;
     }
 
     public void onRowEdit(RowEditEvent event) {
@@ -72,8 +93,36 @@ public class OverviewController implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
+    public void update(List<BacklogArticle> selectedArticles) {
+
+        for (BacklogArticle editedArticle : selectedArticles) {
+            String identifier = editedArticle.getIdentifier();
+            String bemerkung1 = editedArticle.getBemerkung1();
+            System.out.println("bemerkung1 = " + bemerkung1);
+            String bemerkung2 = editedArticle.getBemerkung2();
+            String bemerkung3 = editedArticle.getBemerkung3();
+            String bemerkungKAM = editedArticle.getBemerkungKAM();
+            boolean neuerStatus = editedArticle.isOffen();
+            User currentUser = userBean.getUser();
+            String season = editedArticle.getSaison();
+            dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
+        }
+        FacesMessage msg = new FacesMessage("Artikel bearbeitet", "Artikel wurde erfolgreich aktualisiert");
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+
+    }
+
+    public void onChange(ValueChangeEvent event) {
+        BacklogArticle selectedArticle = this.getSelectedArticle();
+        System.out.println("selectedArticle = " + selectedArticle.getBemerkung1());
+    }
+
     public void onRowCancel(RowEditEvent event) {
         FacesMessage msg = new FacesMessage("Bearbeitung abgebrochen", "Bearbeitung abgebrochen.");
         FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+    public void fatal() {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Nicht eingeloggt!", "Du musst dich erst einloggen, bevor du loslegen kannst."));
     }
 }
