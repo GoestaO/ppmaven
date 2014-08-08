@@ -64,10 +64,10 @@ public class OverviewController implements Serializable {
         String bemerkung2 = editedArticle.getBemerkung2();
         String bemerkung3 = editedArticle.getBemerkung3();
         String bemerkungKAM = editedArticle.getBemerkungKAM();
-//        boolean neuerStatus = editedArticle.isOffen();
+        boolean neuerStatus = editedArticle.isOffen();
         User currentUser = userBean.getUser();
         String season = editedArticle.getSaison();
-        dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, bemerkung3, currentUser, season);
+        dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
         FacesMessage msg = new FacesMessage("Artikel bearbeitet", ((BacklogArticle) event.getObject()).getIdentifier());
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }

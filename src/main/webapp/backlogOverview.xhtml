@@ -43,23 +43,44 @@
                     <h:outputText value="#{article.appdomainId}"/>
                 </p:column>
                 <p:column headerText="Bemerkung 1">
-                    <h:outputText value="#{article.bemerkung1}" />
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{article.bemerkung1}" /></f:facet>
+                        <f:facet name="input"><h:inputText value="#{article.bemerkung1}"/></f:facet>
+                    </p:cellEditor>                    
                 </p:column>
                 <p:column headerText="Bemerkung 2">
-                    <h:outputText value="#{article.bemerkung2}"/>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{article.bemerkung2}" /></f:facet>
+                        <f:facet name="input"><h:inputText value="#{article.bemerkung2}"/></f:facet>
+                    </p:cellEditor>
                 </p:column>
                 <p:column headerText="Bemerkung 3">
-                    <h:outputText value="#{article.bemerkung3}"/>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{article.bemerkung3}" /></f:facet>
+                        <f:facet name="input"><h:inputText value="#{article.bemerkung3}"/></f:facet>
+                    </p:cellEditor>
                 </p:column>
                 <p:column headerText="Bemerkung KAM">
-                    <h:outputText value="#{article.bemerkungKAM}"/>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{article.bemerkungKAM}" /></f:facet>
+                        <f:facet name="input"><h:inputText value="#{article.bemerkungKAM}"/></f:facet>
+                    </p:cellEditor>
                 </p:column>
-                <p:column headerText="">
-                    <h:selectOneMenu value="#{overviewController.offen}">                        
-                        <f:selectItem itemValue="offen" itemLabel="offen"/>
-                        <f:selectItem itemValue="fertig" itemLabel="fertig"/>
-                    </h:selectOneMenu>
+                <p:column headerText="Status">
+                    <p:cellEditor>                        
+                        <f:facet name="input">
+                            <p:selectOneListbox id="status" value="#{article.offen}">
+                                <f:selectItem itemLabel="offen" itemValue="true" />
+                                <f:selectItem itemLabel="fertig" itemValue="false" />           
+                            </p:selectOneListbox>
+                        </f:facet>
+                        <f:facet name="output">
+                            <h:outputText value="#{ (article.offen==true) ? 'offen' : 'fertig' }" />
+                            <!--<h:outputText value="#{article.offen}"/>-->
+                        </f:facet>
+                    </p:cellEditor>                    
                 </p:column>
+
                 <p:column style="width:32px">
                     <p:rowEditor />
                 </p:column>

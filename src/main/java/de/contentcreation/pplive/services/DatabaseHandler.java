@@ -110,14 +110,14 @@ public class DatabaseHandler {
 
     public void updateArticleStatus(String identifier, String bemerkung1,
             String bemerkung2, String bemerkung3, String bemerkungKAM,
-            String neuerStatus, User currentUser, String season) {
+            boolean neuerStatus, User currentUser, String season) {
      
         BacklogArticle ba = (BacklogArticle) em.find(BacklogArticle.class,
                 identifier);
         UpdateBuchung updateBuchung = new UpdateBuchung();
-        if (neuerStatus.equals("fertig")) {
-            ba.setOffen(false);
-        }
+        System.out.println("neuerStatus = " + neuerStatus);
+        
+        ba.setOffen(neuerStatus);
         ba.setBemerkung1(bemerkung1);
         ba.setBemerkung2(bemerkung2);
         ba.setBemerkung3(bemerkung3);

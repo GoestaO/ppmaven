@@ -43,7 +43,7 @@ public class UpdateBuchung implements Serializable {
 	@JoinColumn(name = "User")
 	private User user;
 	@Column(name = "Status")
-	private String status;
+	private boolean status;
 	@Column(name = "Saison")
 	private String saison;
 
@@ -111,11 +111,11 @@ public class UpdateBuchung implements Serializable {
 		this.user = user;
 	}
 
-	public String getStatus() {
+	public boolean getStatus() {
 		return this.status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(boolean status) {
 		this.status = status;
 	}
 
