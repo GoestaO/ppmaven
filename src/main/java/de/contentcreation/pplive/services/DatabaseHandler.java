@@ -228,8 +228,7 @@ public class DatabaseHandler {
                 .createQuery(
                         "Select distinct(b.partnerId) from BacklogArticle b where b.partnerId > 0 and b.offen = 1 order by b.partnerId",
                         Integer.class);
-        List<Integer> partner = getPartnerQuery.getResultList();
-        em.close();
+        List<Integer> partner = getPartnerQuery.getResultList();       
        
         return partner;
     }

@@ -11,19 +11,26 @@
 
     </ui:define>
 
-    <ui:define name="content" > 
+    <ui:define name="content" >
+
+        <h:form id="growlForm">
+            <p:growl id="growl" showDetail="true" sticky="true" life="3000"/>
+        </h:form>
 
         <c:if test="${!userBean.valid}">
-            <h:form>
-                <p:growl id="growl" showDetail="true" sticky="true" />
-                <h:panelGrid columns="2" >                
+            <h:form id="loginForm">
+                <h:panelGrid columns="2">                
                     <p:outputLabel for="username" value="Nutzername:" />
-                    <p:inputText id = "username" label="Nutzername" value="#{loginBean.username}"></p:inputText>
+                    <p:inputText id = "username" label="Nutzername" value="#{loginBean.username}" required="true"></p:inputText>
                     <p:outputLabel for="password" value="Passwort:" />
-                    <p:password id = "password" label="Passwort" value="#{loginBean.password}"></p:password>
-                    <p:commandButton process = "@this" value="Login" action="#{loginBean.login(loginBean.username, loginBean.password)}" update ="growl"/>
+                    <p:password id = "password" label="Passwort" value="#{loginBean.password}" required="true"></p:password>
                 </h:panelGrid>
+                <p:selectManyCheckbox required="true" value="#{loginBean.selectedPartners}" layout="grid" columns ="15">
+                    <f:selectItems value="#{loginBean.partnerList}" var="partner" itemLabel="#{partner}" itemValue="#{partner}"/>
+                </p:selectManyCheckbox>
 
+                <p:commandButton value="Login" action="#{loginBean.login(loginBean.username, loginBean.password, loginBean.selectedPartners)}" update =":growlForm:growl,loginForm"/>
+                
             </h:form>
         </c:if>    
     </ui:define>

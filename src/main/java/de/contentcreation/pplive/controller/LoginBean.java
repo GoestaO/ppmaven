@@ -14,9 +14,13 @@ import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.inject.Named;
 import de.contentcreation.pplive.model.UserBean;
+import de.contentcreation.pplive.services.DatabaseHandler;
+import java.io.Serializable;
+import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -24,7 +28,11 @@ import javax.faces.context.FacesContext;
  */
 @Named
 @RequestScoped
-public class LoginBean {
+public class LoginBean implements Serializable {
+
+    private List<Integer> partnerList;
+
+    private List<Integer> selectedPartners;
 
     @Inject
     private UserBean bean;
@@ -32,10 +40,17 @@ public class LoginBean {
     @EJB
     private UserService service;
 
+    @EJB
+    private DatabaseHandler dbHandler;
+
     private String username;
 
     private String password;
 
+//    @PostConstruct
+//    public void init() {
+//        partnerList = 
+//    }
     public String getUsername() {
         return username;
     }
@@ -50,6 +65,22 @@ public class LoginBean {
 
     public void setPassword(String password) {
         this.password = this.md5(password);
+    }
+
+    public List<Integer> getPartnerList() {
+        return dbHandler.getPartner();
+    }
+
+    public void setPartnerList(List<Integer> partnerList) {
+        this.partnerList = partnerList;
+    }
+
+    public List<Integer> getSelectedPartners() {
+        return selectedPartners;
+    }
+
+    public void setSelectedPartners(List<Integer> selectedPartners) {
+        this.selectedPartners = selectedPartners;
     }
 
     private String md5(String input) {
@@ -69,21 +100,25 @@ public class LoginBean {
         return md5;
     }
 
-    public void login(String username, String password) {
-        System.out.println("password = " + password);
+    public String login(String username, String password, List<Integer> partnerList) {
+        String direction = "";
         User user = service.login(username, password);
         if (user != null) {
+//            welcome();
             bean.setUser(user);
             bean.setValid(true);
             bean.setVorname(username);
             bean.setNachname(username);
-            FacesMessage message = new FacesMessage("Login erfolgreich", "Willkommen " + username + ".");
-            FacesContext.getCurrentInstance().addMessage(null, message);
-        }
-        else {
-            FacesMessage message = new FacesMessage("Login nicht erfolgreich", "Nutzername oder Passswort falsch.");
-            FacesContext.getCurrentInstance().addMessage(null, message);
-        }
-    }
+            bean.setPartnerList(partnerList);
+//            RequestContext requestContext = RequestContext.getCurrentInstance();
+//            requestContext.execute("document.location.reload(true)");
 
+            direction = "backlogOverview.jsf?faces-redirect=true";
+        } else if (user == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Login nicht erfolgreich", "Benutzername '" + username + "' oder Passwort ist nicht korrekt!"));
+            direction = null;
+        }
+        return direction;
+    }
+    
 }

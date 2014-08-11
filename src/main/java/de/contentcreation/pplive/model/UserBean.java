@@ -1,6 +1,7 @@
 package de.contentcreation.pplive.model;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -17,6 +18,7 @@ public class UserBean implements Serializable {
     private String passwort;
     private boolean isValid;
     private User user;
+    private List<Integer> partnerList;
 
     public int getId() {
         return this.id;
@@ -74,9 +76,19 @@ public class UserBean implements Serializable {
         this.user = user;
     }
 
-    public String resetUser() {
-        this.setValid(false);
+    public List<Integer> getPartnerList() {
+        return partnerList;
+    }
 
+    public void setPartnerList(List<Integer> partnerList) {
+        this.partnerList = partnerList;
+    }
+    
+    public String resetUser() {
+        this.setNick(null);
+        this.setPasswort(null);
+        this.setValid(false);
+        this.setPartnerList(null);
         FacesMessage message = new FacesMessage("Logout", "Logout war erfolgreich.");
         FacesContext.getCurrentInstance().addMessage(null, message);
         return "login.jsf?faces-redirect = true";

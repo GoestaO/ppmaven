@@ -45,12 +45,9 @@ public class OverviewController implements Serializable {
     @Inject
     private UserBean userBean;
 
-//    @PostConstruct
-//    public void init() {
-//        backlogList = dh.getBacklog();
-//    }
-    public List<BacklogArticle> getBacklogList() {
-        return dh.getBacklog();
+    public List<BacklogArticle> getBacklogList() {        
+        List<Integer> partnerList = userBean.getPartnerList();
+        return dh.getBacklogByPartner2(partnerList);
     }
 
     public List<BacklogArticle> getSelectedArticles() {
@@ -98,7 +95,6 @@ public class OverviewController implements Serializable {
         for (BacklogArticle editedArticle : selectedArticles) {
             String identifier = editedArticle.getIdentifier();
             String bemerkung1 = editedArticle.getBemerkung1();
-            System.out.println("bemerkung1 = " + bemerkung1);
             String bemerkung2 = editedArticle.getBemerkung2();
             String bemerkung3 = editedArticle.getBemerkung3();
             String bemerkungKAM = editedArticle.getBemerkungKAM();
@@ -125,4 +121,6 @@ public class OverviewController implements Serializable {
     public void fatal() {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Nicht eingeloggt!", "Du musst dich erst einloggen, bevor du loslegen kannst."));
     }
+    
+    
 }

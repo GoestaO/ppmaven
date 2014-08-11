@@ -7,16 +7,21 @@
                 xmlns:mc="http://xmlns.jcp.org/jsf/composite/myComponent"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
+    
     <ui:define name="content">
 
         <h:form rendered ="#{!userBean.valid}">
             <p:button href="login.jsf" value="Zum Login" />
-
-            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+            <p:button href="register.jsf" value="Zur Registrierung" />
+            <p:growl id="messages" showDetail="true" autoUpdate="true" />
             #{overviewController.fatal()}
         </h:form>
+<!--        <h:form rendered ="#{userBean.valid}">
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+        #{overviewController.welcome()}
+    </h:form>-->
 
-        <h:form id="form">
+        <h:form id="form" rendered ="#{userBean.valid}">
             <p:growl id="msgs" showDetail="true"/>
             <p:dataTable id="backlog" selectionMode="multiple" selection="#{overviewController.selectedArticles}" rowKey="#{article.identifier}" var="article" value="#{overviewController.backlogList}" rows="10"
                          paginator="true"
@@ -63,15 +68,14 @@
                     <h:outputText value="#{article.bemerkungKAM}"/>
                 </p:column>
                 <f:facet name="header">
-                    <p:commandButton process="backlog" update=":articleDetail" icon="ui-icon-search" value="View" oncomplete="PF('editDialog').show()" />
+                    <p:commandButton process="backlog" update=":articleDetail" icon="ui-icon-search" value="Bearbeiten" oncomplete="PF('editDialog').show()" />
                 </f:facet>
             </p:dataTable>
         </h:form>
 
-        <p:dialog header="Artikel bearbeiten" id="articleDetail" widgetVar="editDialog" width="80%" modal="true">
+        <p:dialog header="Artikel bearbeiten" id="articleDetail" widgetVar="editDialog" width="80%" modal="true" rendered ="#{userBean.valid}">
             <h:form>
                 <h:dataTable value="#{overviewController.selectedArticles}" var="selectedArticle" width="80%">
-
                     <p:column headerText="Config">
                         <h:outputText value="#{selectedArticle.config}"/>
                     </p:column>
@@ -83,7 +87,6 @@
                     </p:column>
                     <p:column headerText="Bemerkung 1">
                         <h:inputText value="#{selectedArticle.bemerkung1}">
-                            <p:ajax listener="#{overviewController.onChange}" />
                         </h:inputText>
                     </p:column>
                     <p:column headerText="Bemerkung 2">
@@ -106,12 +109,12 @@
                             <f:selectItem itemLabel="fertig" itemValue="false"/>
                         </p:selectOneMenu>
                     </p:column>
-                    <f:facet name="footer">
+<!--                    <f:facet name="footer">
                         <p:commandButton process = "@this" update=":form:backlog" value="Speichern" action="#{overviewController.update(overviewController.selectedArticles)}" oncomplete="PF('editDialog').hide()"/>
-                    </f:facet>
+                    </f:facet>-->
                 </h:dataTable>
 
-                <!--</p:outputPanel>-->
+
             </h:form>
         </p:dialog>
 

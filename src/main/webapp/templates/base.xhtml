@@ -42,16 +42,17 @@
                         <p:menubar id="navigation" style="height: 2em; box-sizing: content-box;"> 
 
                             <c:if test="${ userBean.valid == true  }">
-
-                                <f:facet name="options">
+                                <p:menuitem url="backlogOverview.jsf" value="Backlog" icon="ui-icon-home" />  
+                                <c:if test="${ userBean.user.rolle.id != 4}">
+                                    <p:menuitem value="Reporting" url="reporting.jsf" icon="ui-icon-calculator" />
+                                    <p:menuitem value="Upload" url="upload.jsf" icon="ui-icon-circle-arrow-n" />
+                                </c:if>
+                                <f:facet name="options">                                    
                                     <p:outputLabel value="#{userBean.vorname} #{userBean.nachname}"/>
                                     <p:commandButton id="logout" icon="ui-icon-extlink" action="#{userBean.resetUser()}" styleClass="ui-priority-primary" value="Abmelden" update=":all">
-
-                                    </p:commandButton>
+                                    </p:commandButton>                      
                                 </f:facet>
-
                             </c:if>
-
                         </p:menubar>
                     </h:form>
 

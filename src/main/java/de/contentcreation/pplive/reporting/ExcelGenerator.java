@@ -18,16 +18,16 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import de.contentcreation.pplive.reportingClasses.UserReport;
+import javax.ejb.EJB;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
 
+@Named
+@RequestScoped
 public class ExcelGenerator {
-	private static ExcelGenerator instance = null;
-
-	public static ExcelGenerator getInstance() {
-		if (instance == null) {
-			instance = new ExcelGenerator();
-		}
-		return instance;
-	}
+    
+    @EJB
+    private ReportingHandler rh;
 
 	public void createNewArticlesReport(File filename) {
 		Workbook workbook = new XSSFWorkbook();
@@ -46,7 +46,7 @@ public class ExcelGenerator {
 
 		CellStyle fontStyle = workbook.createCellStyle();
 
-		ReportingHandler rh = ReportingHandler.getInstance();
+		
 		List<BacklogArticle> newArticles = rh.getNewBacklogArticles();
 
 		Row headerRow = sheet.createRow(0);
