@@ -73,9 +73,9 @@
             </p:dataTable>
         </h:form>
 
-        <p:dialog header="Artikel bearbeiten" id="articleDetail" widgetVar="editDialog" width="100%" modal="true" rendered ="#{userBean.valid}">
+<!--        <p:dialog header="Artikel bearbeiten" id="articleDetail" widgetVar="editDialog" modal="true" rendered ="#{userBean.valid}">
 
-            <p:outputPanel id="multiCarDetail" style="text-align:left;" >
+            <p:outputPanel style="text-align:left;" >
                 <h:form>
                     <h:dataTable value="#{overviewController.selectedArticles}" var="selectedArticle" width="100%">                        
                         <p:columnGroup type="header">
@@ -165,8 +165,52 @@
                     </h:dataTable>
                 </h:form>
             </p:outputPanel>
+        </p:dialog>-->
+
+        <p:dialog header="Selected Partner" id="articleDetail" widgetVar="editDialog"  modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="1000">
+            <h:form>
+                <p:outputPanel style="text-align:center;" >
+
+                    <p:dataTable id="multiSelectdataTable" var="selectedArticle" value="#{overviewController.selectedArticles}" editable="true" editMode="cell">
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column rowspan="2" headerText="Config"/> 
+                                <p:column rowspan="2" headerText="Appdomain"/>
+                                <!--                                <p:column rowspan="2" headerText="Partner"/>
+                                                                <p:column rowspan="3" headerText="Bemerkung 1"/>
+                                                                <p:column rowspan="3" headerText="Bemerkung 2"/>
+                                                                <p:column rowspan="3" headerText="Bemerkung 3"/>
+                                                                <p:column rowspan="3" headerText="Bemerkung KAM"/>
+                                                                <p:column rowspan="3" headerText="Datum"/>
+                                                                <p:column rowspan="1" headerText="Status"/>-->
+                            </p:row>
+                        </p:columnGroup>
 
 
+                        <p:column>
+                            <h:outputText value="#{selectedArticle.config}" />
+                        </p:column>
+
+                        <p:column>
+
+                            <h:outputText value="#{selectedArticle.appdomainId}" />
+
+                        </p:column>
+
+
+
+
+
+                    </p:dataTable>
+
+
+
+
+                </p:outputPanel>
+                <!--<p:commandButton value="Submit" update="dataTable" oncomplete="PF('multiPartnerDialog').hide()" icon="ui-icon-disk" actionListener="#{slotSessionBean.multiEdit}" >-->
+
+                <!--</p:commandButton>-->
+            </h:form>
         </p:dialog>
 
     </ui:define>
