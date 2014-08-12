@@ -11,14 +11,13 @@ import de.contentcreation.pplive.model.UserBean;
 import de.contentcreation.pplive.services.DatabaseHandler;
 import java.io.Serializable;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.html.HtmlDataTable;
-//import javax.faces.view.ViewScoped;
+import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
-import javax.faces.view.ViewScoped;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.event.RowEditEvent;
@@ -91,10 +90,11 @@ public class OverviewController implements Serializable {
     }
 
     public void update(List<BacklogArticle> selectedArticles) {
-
+          
         for (BacklogArticle editedArticle : selectedArticles) {
             String identifier = editedArticle.getIdentifier();
             String bemerkung1 = editedArticle.getBemerkung1();
+            System.out.println("bemerkung1 = " + bemerkung1);
             String bemerkung2 = editedArticle.getBemerkung2();
             String bemerkung3 = editedArticle.getBemerkung3();
             String bemerkungKAM = editedArticle.getBemerkungKAM();
@@ -112,11 +112,11 @@ public class OverviewController implements Serializable {
         BacklogArticle selectedArticle = this.getSelectedArticle();
         System.out.println("selectedArticle = " + selectedArticle.getBemerkung1());
     }
-
-    public void onRowCancel(RowEditEvent event) {
-        FacesMessage msg = new FacesMessage("Bearbeitung abgebrochen", "Bearbeitung abgebrochen.");
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-    }
+//
+//    public void onRowCancel(RowEditEvent event) {
+//        FacesMessage msg = new FacesMessage("Bearbeitung abgebrochen", "Bearbeitung abgebrochen.");
+//        FacesContext.getCurrentInstance().addMessage(null, msg);
+//    }
 
     public void fatal() {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Nicht eingeloggt!", "Du musst dich erst einloggen, bevor du loslegen kannst."));

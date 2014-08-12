@@ -22,7 +22,7 @@
                     <p:calendar id="date1" value="#{reportingController.date1}" locale="de" pattern="dd.MM.yyyy"/>
                     <h:outputLabel for="date2" value="Zweites Datum:" />
                     <p:calendar id="date2" value="#{reportingController.date2}" locale="de" pattern="dd.MM.yyyy"/>
-                    <p:commandButton value="OK" action="#{reportingController.getLeistungsReport(reportingController.date1, reportingController.date2)}"/>
+                    <p:commandButton value="OK" ajax="false" action="#{reportingController.getLeistungsReport(reportingController.date1, reportingController.date2)}"/>
                 </h:panelGroup>
             </p:panelGrid>
         </h:form>

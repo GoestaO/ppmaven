@@ -115,7 +115,14 @@ public class DatabaseHandler {
         BacklogArticle ba = (BacklogArticle) em.find(BacklogArticle.class,
                 identifier);
         UpdateBuchung updateBuchung = new UpdateBuchung();
-        
+        String neuerStatusString = "";
+        if(neuerStatus){
+            neuerStatusString = "offen";
+        }
+        else{
+            neuerStatusString = "fertig";
+        }
+      
         ba.setOffen(neuerStatus);
         ba.setBemerkung1(bemerkung1);
         ba.setBemerkung2(bemerkung2);
@@ -131,7 +138,7 @@ public class DatabaseHandler {
         updateBuchung.setBemerkung2(bemerkung2);
         updateBuchung.setBemerkung3(bemerkung3);
         updateBuchung.setBemerkungKAM(bemerkungKAM);
-        updateBuchung.setStatus(neuerStatus);
+        updateBuchung.setStatus(neuerStatusString);
         updateBuchung.setSaison(season);
 
         em.merge(ba);

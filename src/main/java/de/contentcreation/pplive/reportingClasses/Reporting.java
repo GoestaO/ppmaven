@@ -7,6 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import de.contentcreation.pplive.services.ReportingHandler;
+import javax.ejb.EJB;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
 
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -16,8 +19,13 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 
+@Named
+@RequestScoped
 public class Reporting {
-	public static void createNewArticlesReporting(File filename) {
+    
+    @EJB
+    private ReportingHandler rh;
+	public void createNewArticlesReporting(File filename) {
 		HSSFWorkbook workbook = new HSSFWorkbook();
 
 		HSSFSheet sheet = workbook.createSheet("Neue SKUs");
@@ -34,7 +42,7 @@ public class Reporting {
 
 		CellStyle fontStyle = workbook.createCellStyle();
 		fontStyle.setFont(font);
-		ReportingHandler rh = ReportingHandler.getInstance();
+		
 		List<BacklogArticle> newArticles = rh.getOpenBacklogArticles();
 
 		Row headerRow = sheet.createRow(0);
