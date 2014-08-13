@@ -144,36 +144,7 @@ public class DatabaseHandler {
         
     }
 
-    public String registerUser(String nick, String vorname, String nachname,
-            String passwort) {
-       
-        String forwardPage = null;
-
-        TypedQuery<User> checkForNick = em.createQuery(
-                "select u from User u where u.nick = :nick", User.class);
-        checkForNick.setParameter("nick", nick);
-
-        List<User> userList = checkForNick.getResultList();
-        Rolle rolle = new Rolle();
-        rolle.setId(4);
-        if (userList.size() > 0) {
-            forwardPage = "/invalidNickname.jsp";
-        } else if (userList.size() == 0) {
-            em.getTransaction().begin();
-            User user = new User();
-            user.setNick(nick);
-            user.setVorname(vorname);
-            user.setNachname(nachname);
-            user.setPasswort(passwort);
-            user.setRolle(rolle);
-            em.persist(user);
-            em.getTransaction().commit();
-            forwardPage = "/confirmRegistration.jsp";
-        }
-        em.close();
-        
-        return forwardPage;
-    }
+    
 
     public void setCounter() {
         

@@ -13,15 +13,11 @@
         <h:form rendered ="#{!userBean.valid}">
             <p:button href="login.jsf" value="Zum Login" />
             <p:button href="register.jsf" value="Zur Registrierung" />
-            <p:growl id="message" showDetail="true"/>
+            <p:messages id="message" showDetail="true"/>
             #{overviewController.fatal()}
         </h:form>
-<!--        <h:form rendered ="#{userBean.valid}">
-            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
-        
-    </h:form>-->
 
-        <h:form id="form" rendered ="#{userBean.valid}">
+        <h:form id="form">
             <p:hotkey bind="alt+n" handler="varEditButton.jq.click()" />
             <p:growl id="msgs" showDetail="true"/>
             <p:dataTable id="backlog" selectionMode="multiple" selection="#{overviewController.selectedArticles}" rowKey="#{article.identifier}" var="article" value="#{overviewController.backlogList}" rows="50"
@@ -30,7 +26,7 @@
                          rowsPerPageTemplate="10,50,100" rendered ="#{userBean.valid}" filteredValue="#{overviewController.filteredArticles}" emptyMessage="Keine Artikel gefunden">
 <!--                <p:ajax event="rowEdit" listener="#{overviewController.onRowEdit}" update=":form:msgs" />
                 <p:ajax event="rowEditCancel" listener="#{overviewController.onRowCancel}" update=":form:msgs" />-->
-                
+
                 <p:column headerText="Config" filterBy="#{article.config}" filterMatchMode="contains">
                     <h:outputText value="#{article.config}"/>
                 </p:column>
@@ -71,10 +67,7 @@
                 </f:facet>
             </p:dataTable>
 
-
-
-            <p:dialog header="Artikel bearbeiten" id="articleDetail" widgetVar="editDialog" modal="true">            
-
+            <p:dialog header="Artikel bearbeiten" id="articleDetail" widgetVar="editDialog" modal="true">
                 <p:dataTable id="dataTable" var="selectedArticle"  value="#{overviewController.selectedArticles}" editable="true" editMode="cell" style="font-size: 12px">                        
                     <p:columnGroup type="header">
                         <p:row>

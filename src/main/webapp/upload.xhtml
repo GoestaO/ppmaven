@@ -4,15 +4,21 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:mc="http://xmlns.jcp.org/jsf/composite/myComponent"
-                >
+                xmlns:mc="http://xmlns.jcp.org/jsf/composite/myComponent">
 
 
     <ui:define name="content" > 
 
+        <h:form rendered ="#{!userBean.valid}">
+            <p:button href="login.jsf" value="Zum Login" />
+            <p:button href="register.jsf" value="Zur Registrierung" />
+            <p:messages id="message" showDetail="true"/>
+            #{overviewController.fatal()}
+        </h:form>
+
         <h:form>
             <p:fileUpload fileUploadListener="#{uploadController.handleFileUpload}" label = "Dateiauswahl" auto = "true" mode="advanced" dragDropSupport="false"
-                          update="messages" fileLimit="3" allowTypes="/(\.|\/)(csv)$/" />
+                          update="messages" fileLimit="1" allowTypes="/(\.|\/)(csv)$/"  rendered ="#{userBean.valid}"/>
             <p:growl id="messages" showDetail="true" />
         </h:form>
 

@@ -7,6 +7,10 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import de.contentcreation.pplive.model.Rolle;
+import java.util.List;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.persistence.TypedQuery;
 
 @Stateless
 public class UserService {
@@ -37,5 +41,31 @@ public class UserService {
             user = null;
         }
         return user;
+    }
+
+    public void registerUser(String nick, String vorname, String nachname,
+            String passwort) {
+        TypedQuery<User> checkForNick = em.createQuery(
+                "select u from User u where u.nick = :nick", User.class);
+        checkForNick.setParameter("nick", nick);
+
+        List<User> userList = checkForNick.getResultList();
+        Rolle rolle = new Rolle();
+        rolle.setId(4);
+        if (!userList.isEmpty()) {
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, "Nutzername bekannt", "Dieser Nutzername ist bereits vergeben, bitte versuche einen anderen!");
+            FacesContext.getCurrentInstance()
+                    .addMessage(null, message);
+        } else if (userList.isEmpty()) {
+            User u = new User();
+            u.setNick(nick);
+            u.setVorname(vorname);
+            u.setNachname(nachname);
+            u.setPasswort(passwort);
+            u.setRolle(rolle);
+            em.persist(user);
+        }
+        em.close();
+
     }
 }
