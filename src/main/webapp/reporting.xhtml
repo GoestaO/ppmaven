@@ -11,23 +11,28 @@
 
     <ui:define name="content">   
         <p:dialog modal="true" widgetVar="statusDialog" header="Status" draggable="false" closable="false" resizable="false">
-            <p:graphicImage name="/demo/images/ajaxloadingbar.gif" />
+            <p:graphicImage name="/img/ajaxloadingbar.gif" />
         </p:dialog>
 
-        <h:form>
-            <p:panelGrid columns="2">
-                <p:outputLabel value="Leistungsreport"/>
-                <h:panelGroup>
-                    <h:outputLabel for="date1" value="Erstes Datum:" />
-                    <p:calendar id="date1" value="#{reportingController.date1}" locale="de" pattern="dd.MM.yyyy"/>
-                    <h:outputLabel for="date2" value="Zweites Datum:" />
-                    <p:calendar id="date2" value="#{reportingController.date2}" locale="de" pattern="dd.MM.yyyy"/>
-                    <p:commandButton value="OK" ajax="false" action="#{reportingController.getLeistungsReport(reportingController.date1, reportingController.date2)}"/>
-                </h:panelGroup>
-            </p:panelGrid>
-        </h:form>
 
 
+        <p:panel header="Leistungsreport" style="width: 50%">
+            <h:form>
+
+                <p:panelGrid columns="3" style="padding: 5">
+                    <h:panelGroup>
+                        <h:outputLabel for="date1" value="Erstes Datum:" />
+                        <p:calendar id="date1" value="#{reportingController.date1}" locale="de" pattern="dd.MM.yyyy"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:outputLabel for="date2" value="Zweites Datum:" />
+                        <p:calendar id="date2" value="#{reportingController.date2}" locale="de" pattern="dd.MM.yyyy"/>
+                    </h:panelGroup>
+                    <p:commandButton value="OK" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getLeistungsReport(reportingController.date1, reportingController.date2)}"/>
+                </p:panelGrid>
+            </h:form>
+        </p:panel>
 
     </ui:define>
 </ui:composition>

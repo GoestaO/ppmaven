@@ -16,7 +16,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.component.html.HtmlDataTable;
 import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ValueChangeEvent;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -37,6 +36,8 @@ public class OverviewController implements Serializable {
 
     private List<BacklogArticle> selectedArticles;
 
+    private List<BacklogArticle> filteredArticles;
+
     private HtmlDataTable myDataTable;
 
     private BacklogArticle selectedArticle;
@@ -44,7 +45,7 @@ public class OverviewController implements Serializable {
     @Inject
     private UserBean userBean;
 
-    public List<BacklogArticle> getBacklogList() {        
+    public List<BacklogArticle> getBacklogList() {
         List<Integer> partnerList = userBean.getPartnerList();
         return dh.getBacklogByPartner2(partnerList);
     }
@@ -73,6 +74,14 @@ public class OverviewController implements Serializable {
         this.myDataTable = myDataTable;
     }
 
+    public List<BacklogArticle> getFilteredArticles() {
+        return filteredArticles;
+    }
+
+    public void setFilteredArticles(List<BacklogArticle> filteredArticles) {
+        this.filteredArticles = filteredArticles;
+    }
+
     public void onRowEdit(RowEditEvent event) {
         BacklogArticle editedArticle = (BacklogArticle) event.getObject();
 
@@ -85,16 +94,14 @@ public class OverviewController implements Serializable {
         User currentUser = userBean.getUser();
         String season = editedArticle.getSaison();
         dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
-        FacesMessage msg = new FacesMessage("Artikel bearbeitet", ((BacklogArticle) event.getObject()).getIdentifier());
-        FacesContext.getCurrentInstance().addMessage(null, msg);
+
     }
 
     public void update(List<BacklogArticle> selectedArticles) {
-          
+
         for (BacklogArticle editedArticle : selectedArticles) {
             String identifier = editedArticle.getIdentifier();
             String bemerkung1 = editedArticle.getBemerkung1();
-            System.out.println("bemerkung1 = " + bemerkung1);
             String bemerkung2 = editedArticle.getBemerkung2();
             String bemerkung3 = editedArticle.getBemerkung3();
             String bemerkungKAM = editedArticle.getBemerkungKAM();
@@ -103,24 +110,14 @@ public class OverviewController implements Serializable {
             String season = editedArticle.getSaison();
             dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
         }
-        FacesMessage msg = new FacesMessage("Artikel bearbeitet", "Artikel wurde erfolgreich aktualisiert");
+
+        FacesMessage msg = new FacesMessage("Artikel bearbeitet", "Artikel erfolgreich aktualisiert");
         FacesContext.getCurrentInstance().addMessage(null, msg);
 
     }
 
-    public void onChange(ValueChangeEvent event) {
-        BacklogArticle selectedArticle = this.getSelectedArticle();
-        System.out.println("selectedArticle = " + selectedArticle.getBemerkung1());
-    }
-//
-//    public void onRowCancel(RowEditEvent event) {
-//        FacesMessage msg = new FacesMessage("Bearbeitung abgebrochen", "Bearbeitung abgebrochen.");
-//        FacesContext.getCurrentInstance().addMessage(null, msg);
-//    }
-
     public void fatal() {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Nicht eingeloggt!", "Du musst dich erst einloggen, bevor du loslegen kannst."));
     }
-    
-    
+
 }

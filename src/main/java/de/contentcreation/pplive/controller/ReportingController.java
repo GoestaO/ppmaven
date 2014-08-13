@@ -13,25 +13,30 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import org.primefaces.model.DashboardColumn;
+import org.primefaces.model.DefaultDashboardColumn;
+import org.primefaces.model.DefaultDashboardModel;
 
 /**
  *
  * @author Gösta Ostendorf <goesta.o@gmail.com>
  */
 @Named
-@RequestScoped
+@ViewScoped
 public class ReportingController {
 
     @EJB
@@ -43,6 +48,8 @@ public class ReportingController {
     private Date date1;
 
     private Date date2;
+    
+    
 
     private List<BacklogArticle> leistungsReportList;
 
@@ -62,7 +69,11 @@ public class ReportingController {
         this.date2 = date2;
     }
 
+    
+    
     public void getLeistungsReport(Date date1, Date date2) {
+        date2 = this.shiftDate(date2);
+        System.out.println("date2 = " + date2);
         List<UserReport> userReport = rh.getUserReport(date1, date2);
 
         String fileName = "UserReport.xlsx";
@@ -77,6 +88,14 @@ public class ReportingController {
 
     public void setLeistungsReportList(List<BacklogArticle> leistungsReportList) {
         this.leistungsReportList = leistungsReportList;
+    }
+
+    public Date shiftDate(Date date) {
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(date);
+        cal2.add(5, 1);
+        Date secondDate = cal2.getTime();       
+        return secondDate;
     }
 
     public void download(File file) throws IOException {

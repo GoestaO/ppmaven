@@ -5,20 +5,20 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:mc="http://xmlns.jcp.org/jsf/composite/myComponent"
-                >
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
 
     <ui:define name="content" > 
 
+        <c:if test="${!userBean.valid}">
+            <center>
+                <p:button href="login.jsf" value="Zum Login" /> 
+                <br/>
+                <br/>
+                <p:button href="register.jsf" value="Zur Registrierung" />  
 
-        <center>
-            <p:button href="login.jsf" value="Zum Login" /> 
-            <br/>
-            <br/>
-            <p:button href="register.jsf" value="Zur Registrierung" />  
-
-        </center>
-
+            </center>
+        </c:if>
 
 
 
