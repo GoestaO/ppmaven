@@ -97,10 +97,8 @@ public class DatabaseHandler {
         for (BacklogArticle ba : backlogList) {
             BacklogArticle checkedArticle = (BacklogArticle) em.find(
                     BacklogArticle.class, ba.getIdentifier());
-            if (checkedArticle == null) {
-                em.getTransaction().begin();
+            if (checkedArticle == null) {                
                 em.persist(ba);
-                em.getTransaction().commit();
                 counter++;
             }
         }

@@ -22,6 +22,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import org.jboss.logging.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -76,13 +77,16 @@ public class UploadController {
                 ba.setDatum(Calendar.getInstance().getTime());
                 ba.setOffen(true);
                 backlogList.add(ba);
-                line = br.readLine();                
+                line = br.readLine();
             }
             br.close();
             counter = dh.checkAndAdd(backlogList);
             System.out.println("beendet.");
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.getLogger(UploadController.class.getClass()).log(Logger.Level.FATAL, e);
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, "Upload fehlgeschlagen", e.getMessage());
+            FacesContext.getCurrentInstance()
+                    .addMessage(null, message);
         }
         FacesMessage message = new FacesMessage("Upload", counter + " Artikel erfolgreich hochgeladen.");
         FacesContext.getCurrentInstance()
