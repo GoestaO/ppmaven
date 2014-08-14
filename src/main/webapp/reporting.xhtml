@@ -7,32 +7,68 @@
                 xmlns:mc="http://xmlns.jcp.org/jsf/composite/myComponent"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
-
-
     <ui:define name="content">   
         <p:dialog modal="true" widgetVar="statusDialog" header="Status" draggable="false" closable="false" resizable="false">
             <p:graphicImage name="/img/ajaxloadingbar.gif" />
         </p:dialog>
 
-
-
-        <p:panel header="Leistungsreport" style="width: 50%">
-            <h:form>
-
-                <p:panelGrid columns="3" style="padding: 5">
-                    <h:panelGroup>
+        <h:form rendered ="#{!userBean.valid}">
+            <p:button href="login.jsf" value="Zum Login" />
+            <p:button href="register.jsf" value="Zur Registrierung" />
+            <p:messages id="message" showDetail="true"/>
+            #{overviewController.fatal()}
+        </h:form>
+        <p:growl id="messages" showDetail="true" />
+        <p:panelGrid columns="3" rendered ="#{userBean.valid and userBean.user.rolle.id != 4}">
+            <p:panel header="Leistungsreport" style="width: 300px; height: 200px">
+                <h:form>
+                    <h3>Bitte Start- und Enddatum angeben</h3>                    
+                    <p:panelGrid columns="2">
                         <h:outputLabel for="date1" value="Erstes Datum:" />
-                        <p:calendar id="date1" value="#{reportingController.date1}" locale="de" pattern="dd.MM.yyyy"/>
-                    </h:panelGroup>
-
-                    <h:panelGroup>
                         <h:outputLabel for="date2" value="Zweites Datum:" />
-                        <p:calendar id="date2" value="#{reportingController.date2}" locale="de" pattern="dd.MM.yyyy"/>
-                    </h:panelGroup>
-                    <p:commandButton value="OK" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getLeistungsReport(reportingController.date1, reportingController.date2)}"/>
-                </p:panelGrid>
-            </h:form>
-        </p:panel>
+                        <p:calendar id="date1" value="#{reportingController.date1}" locale="de" pattern="dd.MM.yyyy"/>
+                        <p:calendar id="date2" value="#{reportingController.date2}" locale="de" pattern="dd.MM.yyyy"/>                        
+                    </p:panelGrid>
+                    <br></br>
+                    <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getLeistungsReport(reportingController.date1, reportingController.date2)}"/>
+                </h:form>
+            </p:panel>
 
+            <p:panel header="Partnerreport" style="width: 300px; height: 200px">
+                <h:form>
+                    <h3>Alle offenen Artikel ausgeben</h3>                   
+                    <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getPartnerReportList()}"/>
+                </h:form>
+            </p:panel>
+
+            <p:panel header="KAM Report" style="width: 300px; height: 200px">
+                <h:form>
+                    <h3>Alle Artikel mit Kommentaren ausgeben</h3>                   
+                    <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getKAMReportList()}"/>
+                </h:form>
+            </p:panel>
+
+            <p:panel header="Alle bereits gepflegten Artikel eines Partners" style="width: 300px; height: 200px">
+                <h:form>
+                    <h3>Wähle Partner</h3>
+                    <p:selectOneMenu value="#{reportingController.selectedPartner}">
+                        <f:selectItems value="#{reportingController.partnerList}" var = "partner" itemLabel="#{partner}" itemValue="#{partner}"/>
+                    </p:selectOneMenu>
+                    <br></br>
+                    <br></br>
+                    <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getEditArticlesReport(reportingController.selectedPartner)}"/>
+                </h:form>
+            </p:panel>
+
+            <p:panel header="Upload Report" style="width: 300px; height: 200px">
+                <h:form>
+                    <h3>Alle hochgeladenen Artikel sortiert nach Datum und Partner </h3>
+                    <br></br>
+                    <br></br>
+                    <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getNewArticlesReport()}"/>
+                </h:form>
+            </p:panel>
+
+        </p:panelGrid>
     </ui:define>
 </ui:composition>

@@ -36,7 +36,7 @@
                 <p:column headerText="WG-Pfad">
                     <h:outputText value="#{article.cgPath}"/>
                 </p:column>
-                <p:column headerText="Partner">
+                <p:column headerText="Partner" filterBy="#{article.partnerId}" filterMatchMode="contains">
                     <h:outputText value="#{article.partnerId}"/>
                 </p:column>
                 <p:column headerText="Datum">
@@ -47,7 +47,7 @@
                 <p:column headerText="Saison">
                     <h:outputText value="#{article.saison}"/>
                 </p:column>
-                <p:column headerText="Appdomain">
+                <p:column headerText="Appdomain" filterBy="#{article.appdomainId}" filterMatchMode="contains">
                     <h:outputText value="#{article.appdomainId}"/>
                 </p:column>
                 <p:column headerText="Bemerkung 1">

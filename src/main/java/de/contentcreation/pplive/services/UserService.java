@@ -7,6 +7,9 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import de.contentcreation.pplive.model.Rolle;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -43,8 +46,12 @@ public class UserService {
         return user;
     }
 
-    public void registerUser(String nick, String vorname, String nachname,
+    public boolean registerUser(String nick, String vorname, String nachname,
             String passwort) {
+
+        
+        boolean returnValue = false;
+
         TypedQuery<User> checkForNick = em.createQuery(
                 "select u from User u where u.nick = :nick", User.class);
         checkForNick.setParameter("nick", nick);
@@ -52,11 +59,7 @@ public class UserService {
         List<User> userList = checkForNick.getResultList();
         Rolle rolle = new Rolle();
         rolle.setId(4);
-        if (!userList.isEmpty()) {
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, "Nutzername bekannt", "Dieser Nutzername ist bereits vergeben, bitte versuche einen anderen!");
-            FacesContext.getCurrentInstance()
-                    .addMessage(null, message);
-        } else if (userList.isEmpty()) {
+    if (userList.isEmpty()) {
             User u = new User();
             u.setNick(nick);
             u.setVorname(vorname);
@@ -64,8 +67,26 @@ public class UserService {
             u.setPasswort(passwort);
             u.setRolle(rolle);
             em.persist(user);
+            returnValue = true;
         }
         em.close();
+        return returnValue;
+    }
 
+    private String md5(String input) {
+        String md5 = null;
+        if (input == null) {
+            return null;
+        }
+        try {
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+
+            digest.update(input.getBytes(), 0, input.length());
+
+            md5 = new BigInteger(1, digest.digest()).toString(16);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return md5;
     }
 }

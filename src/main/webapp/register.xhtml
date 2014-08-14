@@ -14,12 +14,20 @@
             <h2>Registrierung</h2>
         </center>
 
-        <p:panelGrid columns="2" rendered="#{!userBean.valid}">
-            <p:inputText 
-            
-        </p:panelGrid>    
-
-
+        <h:form>
+            <p:growl id="message" autoUpdate="true"/>
+            <p:panelGrid columns="2" rendered="#{!userBean.valid}">
+                <p:outputLabel value="Nutzername"/>
+                <p:inputText value ="#{registerController.username}"/>
+                <p:outputLabel value="Vorname"/>
+                <p:inputText value ="#{registerController.vorname}"/>
+                <p:outputLabel value="Nachname"/>
+                <p:inputText value ="#{registerController.nachname}"/>
+                <p:outputLabel value="Passwort"/>
+                <p:password value ="#{registerController.password}"/>
+            </p:panelGrid>    
+            <p:commandButton update="message" value="#{registerController.registerUser(registerController.username, registerController.vorname, registerController.nachname, registerController.md5(registerController.password))}"/>
+        </h:form>
 
 
     </ui:define>

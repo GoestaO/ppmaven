@@ -16,7 +16,7 @@
             #{overviewController.fatal()}
         </h:form>
 
-        <h:form>
+        <h:form rendered ="#{userBean.valid}">
             <p:fileUpload fileUploadListener="#{uploadController.handleFileUpload}" label = "Dateiauswahl" auto = "true" mode="advanced" dragDropSupport="false"
                           update="messages" fileLimit="1" allowTypes="/(\.|\/)(csv)$/"  rendered ="#{userBean.valid}"/>
             <p:growl id="messages" showDetail="true" />

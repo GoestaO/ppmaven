@@ -8,11 +8,13 @@ package de.contentcreation.pplive.controller;
 import de.contentcreation.pplive.model.BacklogArticle;
 import de.contentcreation.pplive.reporting.ExcelGenerator;
 import de.contentcreation.pplive.reportingClasses.UserReport;
+import de.contentcreation.pplive.services.DatabaseHandler;
 import de.contentcreation.pplive.services.ReportingHandler;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -33,10 +35,13 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Named
 @ViewScoped
-public class ReportingController {
+public class ReportingController implements Serializable {
 
     @EJB
     private ReportingHandler rh;
+
+    @EJB
+    private DatabaseHandler dh;
 
     @Inject
     private ExcelGenerator ex;
@@ -44,10 +49,10 @@ public class ReportingController {
     private Date date1;
 
     private Date date2;
-    
-    
 
-    private List<BacklogArticle> leistungsReportList;
+    private Integer selectedPartner;
+
+    private List<Integer> partnerList;
 
     public Date getDate1() {
         return date1;
@@ -65,11 +70,27 @@ public class ReportingController {
         this.date2 = date2;
     }
 
-    
-    
+    public Integer getSelectedPartner() {
+        return selectedPartner;
+    }
+
+    public void setSelectedPartner(Integer selectedPartner) {
+        this.selectedPartner = selectedPartner;
+    }
+
+    public List<Integer> getPartnerList() {
+        return dh.getPartner();
+    }
+
+    /**
+     * @param partnerList the partnerList to set
+     */
+    public void setPartnerList(List<Integer> partnerList) {
+        this.partnerList = partnerList;
+    }
+
     public void getLeistungsReport(Date date1, Date date2) {
         date2 = this.shiftDate(date2);
-        System.out.println("date2 = " + date2);
         List<UserReport> userReport = rh.getUserReport(date1, date2);
 
         String fileName = "UserReport.xlsx";
@@ -82,15 +103,61 @@ public class ReportingController {
         }
     }
 
-    public void setLeistungsReportList(List<BacklogArticle> leistungsReportList) {
-        this.leistungsReportList = leistungsReportList;
+    public void getPartnerReportList() {
+
+        List<BacklogArticle> partnerReportList = rh.getOpenBacklogArticles();
+        String fileName = "Offene_Artikel.xlsx";
+        File reportFile = new File(fileName);
+        ex.createPartnerReport(reportFile, partnerReportList);
+        try {
+            download(reportFile);
+        } catch (IOException ex) {
+            Logger.getLogger(ReportingController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void getKAMReportList() {
+        List<Object[]> partnerReport = rh.getProblemArticles();
+        String fileName = "KeyAccountReport.xlsx";
+        File reportFile = new File(fileName);
+        ex.createKeyAccountReport(reportFile, partnerReport);
+        try {
+            download(reportFile);
+        } catch (IOException ex) {
+            Logger.getLogger(ReportingController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void getEditArticlesReport(Integer selectedPartner) {
+        List<Object[]> editedArticlesList = rh.getEditedDataByPartner(selectedPartner);
+
+        String fileName = "GepflegteArtikel_Partner" + selectedPartner + ".xlsx";
+        File reportFile = new File(fileName);
+        ex.createEditedArticlesReport(reportFile, editedArticlesList);
+        try {
+            download(reportFile);
+        } catch (IOException ex) {
+            Logger.getLogger(ReportingController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void getNewArticlesReport() {
+        String fileName = "neueArtikel.xlsx";
+        File reportFile = new File(fileName);
+        ex.createNewArticlesReport(reportFile);
+        try {
+            download(reportFile);
+        } catch (IOException ex) {
+            Logger.getLogger(ReportingController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public Date shiftDate(Date date) {
         Calendar cal2 = Calendar.getInstance();
         cal2.setTime(date);
         cal2.add(5, 1);
-        Date secondDate = cal2.getTime();       
+        Date secondDate = cal2.getTime();
         return secondDate;
     }
 
@@ -143,7 +210,6 @@ public class ReportingController {
                 err.printStackTrace();
             }
         }
-
     }
 
 }
