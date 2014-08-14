@@ -62,6 +62,11 @@
                 <p:column headerText="Bemerkung KAM">
                     <h:outputText value="#{article.bemerkungKAM}"/>
                 </p:column>
+                <p:column>
+                    <p:commandButton icon="ui-icon-wrench" oncomplete ="PF('editDialog').show()" update=":form:articleDetail" >
+                        <f:setPropertyActionListener target="#{overviewController.selectedArticles}" value="#{overviewController.toList(article)}"/>
+                    </p:commandButton>
+                </p:column>
                 <f:facet name="header">                    
                     <p:commandButton id="editButton" widgetVar="varEditButton" process="backlog" update=":form:articleDetail" icon="ui-icon-search" value="Bearbeiten" oncomplete="PF('editDialog').show()" />
                 </f:facet>

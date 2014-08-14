@@ -10,6 +10,7 @@ import de.contentcreation.pplive.model.User;
 import de.contentcreation.pplive.model.UserBean;
 import de.contentcreation.pplive.services.DatabaseHandler;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -120,4 +121,9 @@ public class OverviewController implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Nicht eingeloggt!", "Du musst dich erst einloggen, bevor du loslegen kannst."));
     }
 
+    public List<BacklogArticle> toList(BacklogArticle article) {
+        List<BacklogArticle> list = new ArrayList<>();
+        list.add(article);
+        return list;
+    }
 }
