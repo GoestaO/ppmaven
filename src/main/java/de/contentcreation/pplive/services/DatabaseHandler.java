@@ -64,7 +64,7 @@ public class DatabaseHandler {
         
         TypedQuery<BacklogArticle> query = em
                 .createQuery(
-                        "select b from BacklogArticle b where b.offen = '1' and b.partnerId in :partnerList",
+                        "select b from BacklogArticle b where b.offen = 1 and b.partnerId in :partnerList",
                         BacklogArticle.class);
         query.setParameter("partnerList", partnerList);
         List<BacklogArticle> backlogList = query.getResultList();

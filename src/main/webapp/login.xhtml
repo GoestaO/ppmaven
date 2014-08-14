@@ -25,7 +25,7 @@
                     <p:outputLabel for="password" value="Passwort:" />
                     <p:password id = "password" label="Passwort" value="#{loginBean.password}" required="true"></p:password>
                 </h:panelGrid>
-                <p:selectManyCheckbox required="true" value="#{loginBean.selectedPartners}" layout="grid" columns ="15">
+                <p:selectManyCheckbox required="true" requiredMessage="Du musst mindestens einen Partner auswählen." value="#{loginBean.selectedPartners}" layout="grid" columns ="15">
                     <f:selectItems value="#{loginBean.partnerList}" var="partner" itemLabel="#{partner}" itemValue="#{partner}"/>
                 </p:selectManyCheckbox>
 
