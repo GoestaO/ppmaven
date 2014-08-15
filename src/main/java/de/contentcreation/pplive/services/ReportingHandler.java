@@ -91,6 +91,7 @@ public class ReportingHandler {
                         + "where b.Bemerkung1 not like '' or b.Bemerkung2 not like '' or b.Bemerkung3 not like '' \n"
                         + "and b.Bemerkung1 = c.Bemerkung1 and b.Bemerkung2 = c.Bemerkung2 and b.Bemerkung3 = c.Bemerkung3 and b.BemerkungKAM = c.BemerkungKAM \n"
                         + "order by b.PartnerID");
+        
         List<Object[]> resultList = query.getResultList();
 
         return resultList;

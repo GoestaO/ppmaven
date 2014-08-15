@@ -12,151 +12,162 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "backlog")
 public class BacklogArticle implements Serializable {
-	private static final long serialVersionUID = 1L;
-	@Id
-	@Column(name = "Identifier")
-	private String identifier;
-	@Column(name = "AppdomainID")
-	private int appdomainId;
-	@Column(name = "Config")
-	private String config;
-	@Column(name = "Eingepflegt")
-	private boolean eingepflegt;
-	@Column(name = "PartnerID")
-	private int partnerId;
-	@Column(name = "Warengruppenpfad")
-	private String cgPath;
-	@Column(name = "Saison")
-	private String saison;
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "Datum")
-	private Date datum;
-	@Column(name = "OFFEN")
-	private boolean offen;
-	@Column(name = "Bemerkung1")
-	private String bemerkung1;
-	@Column(name = "Bemerkung2")
-	private String bemerkung2;
-	@Column(name = "Bemerkung3")
-	private String bemerkung3;
-	@Column(name = "BemerkungKAM")
-	private String bemerkungKAM;
-	@Column(name = "Counter")
-	private int counter;
 
-	public int getCounter() {
-		return this.counter;
-	}
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Column(name = "Identifier")
+    private String identifier;
+    @Column(name = "EAN")
+    private long ean;
+    @Column(name = "AppdomainID")
+    private int appdomainId;
+    @Column(name = "Config")
+    private String config;
+    @Column(name = "Eingepflegt")
+    private boolean eingepflegt;
+    @Column(name = "PartnerID")
+    private int partnerId;
+    @Column(name = "Warengruppenpfad")
+    private String cgPath;
+    @Column(name = "Saison")
+    private String saison;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "Datum")
+    private Date datum;
+    @Column(name = "OFFEN")
+    private boolean offen;
+    @Column(name = "Bemerkung1")
+    private String bemerkung1;
+    @Column(name = "Bemerkung2")
+    private String bemerkung2;
+    @Column(name = "Bemerkung3")
+    private String bemerkung3;
+    @Column(name = "BemerkungKAM")
+    private String bemerkungKAM;
+    @Column(name = "Counter")
+    private int counter;
 
-	public void setCounter(int counter) {
-		this.counter = counter;
-	}
+    public int getCounter() {
+        return this.counter;
+    }
 
-	public String getIdentifier() {
-		return this.identifier;
-	}
+    public void setCounter(int counter) {
+        this.counter = counter;
+    }
 
-	public void setIdentifier(String identifier) {
-		this.identifier = identifier;
-	}
+    public String getIdentifier() {
+        return this.identifier;
+    }
 
-	public int getAppdomainId() {
-		return this.appdomainId;
-	}
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
 
-	public void setAppdomainId(int appdomainId) {
-		this.appdomainId = appdomainId;
-	}
+    public long getEan() {
+        return ean;
+    }
 
-	public String getConfig() {
-		return this.config;
-	}
+    public void setEan(long ean) {
+        this.ean = ean;
+    }
 
-	public void setConfig(String config) {
-		this.config = config;
-	}
+    public int getAppdomainId() {
+        return this.appdomainId;
+    }
 
-	public boolean isEingepflegt() {
-		return this.eingepflegt;
-	}
+    public void setAppdomainId(int appdomainId) {
+        this.appdomainId = appdomainId;
+    }
 
-	public void setEingepflegt(boolean eingepflegt) {
-		this.eingepflegt = eingepflegt;
-	}
+    public String getConfig() {
+        return this.config;
+    }
 
-	public int getPartnerId() {
-		return this.partnerId;
-	}
+    public void setConfig(String config) {
+        this.config = config;
+    }
 
-	public void setPartnerId(int partnerId) {
-		this.partnerId = partnerId;
-	}
+    public boolean isEingepflegt() {
+        return this.eingepflegt;
+    }
 
-	public String getCgPath() {
-		return this.cgPath;
-	}
+    public void setEingepflegt(boolean eingepflegt) {
+        this.eingepflegt = eingepflegt;
+    }
 
-	public void setCgPath(String cgPath) {
-		this.cgPath = cgPath;
-	}
+    public int getPartnerId() {
+        return this.partnerId;
+    }
 
-	public String getSaison() {
-		return this.saison;
-	}
+    public void setPartnerId(int partnerId) {
+        this.partnerId = partnerId;
+    }
 
-	public void setSaison(String saison) {
-		this.saison = saison;
-	}
+    public String getCgPath() {
+        return this.cgPath;
+    }
 
-	public Date getDatum() {
-		return this.datum;
-	}
+    public void setCgPath(String cgPath) {
+        this.cgPath = cgPath;
+    }
 
-	public void setDatum(Date datum) {
-		this.datum = datum;
-	}
+    public String getSaison() {
+        return this.saison;
+    }
 
-	public boolean isOffen() {
-		return this.offen;
-	}
+    public void setSaison(String saison) {
+        this.saison = saison;
+    }
 
-	public void setOffen(boolean offen) {
-		this.offen = offen;
-	}
+    public Date getDatum() {
+        return this.datum;
+    }
 
-	public static long getSerialversionuid() {
-		return 1L;
-	}
+    public void setDatum(Date datum) {
+        this.datum = datum;
+    }
 
-	public String getBemerkung1() {
-		return this.bemerkung1;
-	}
+    public boolean isOffen() {
+        return this.offen;
+    }
 
-	public void setBemerkung1(String bemerkung1) {
-		this.bemerkung1 = bemerkung1;
-	}
+    public void setOffen(boolean offen) {
+        this.offen = offen;
+    }
 
-	public String getBemerkung2() {
-		return this.bemerkung2;
-	}
+    public static long getSerialversionuid() {
+        return 1L;
+    }
 
-	public void setBemerkung2(String bemerkung2) {
-		this.bemerkung2 = bemerkung2;
-	}
+    public String getBemerkung1() {
+        return this.bemerkung1;
+    }
 
-	public String getBemerkung3() {
-		return this.bemerkung3;
-	}
+    public void setBemerkung1(String bemerkung1) {
+        this.bemerkung1 = bemerkung1;
+    }
 
-	public void setBemerkung3(String bemerkung3) {
-		this.bemerkung3 = bemerkung3;
-	}
+    public String getBemerkung2() {
+        return this.bemerkung2;
+    }
 
-	public String getBemerkungKAM() {
-		return this.bemerkungKAM;
-	}
+    public void setBemerkung2(String bemerkung2) {
+        this.bemerkung2 = bemerkung2;
+    }
 
-	public void setBemerkungKAM(String bemerkungKAM) {
-		this.bemerkungKAM = bemerkungKAM;
-	}
+    public String getBemerkung3() {
+        return this.bemerkung3;
+    }
+
+    public void setBemerkung3(String bemerkung3) {
+        this.bemerkung3 = bemerkung3;
+    }
+
+    public String getBemerkungKAM() {
+        return this.bemerkungKAM;
+    }
+
+    public void setBemerkungKAM(String bemerkungKAM) {
+        this.bemerkungKAM = bemerkungKAM;
+    }
 }

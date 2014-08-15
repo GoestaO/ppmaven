@@ -12,23 +12,24 @@
 
         <center>
             <h2>Registrierung</h2>
+            <br></br>
+            <br></br>
+            <h:form>
+                <p:growl id="message" autoUpdate="true"/>
+                <p:panelGrid columns="2" rendered="#{!userBean.valid}">
+                    <p:outputLabel value="Nutzername"/>
+                    <p:inputText value ="#{registerController.username}"/>
+                    <p:outputLabel value="Vorname"/>
+                    <p:inputText value ="#{registerController.vorname}"/>
+                    <p:outputLabel value="Nachname"/>
+                    <p:inputText value ="#{registerController.nachname}"/>
+                    <p:outputLabel value="Passwort"/>
+                    <p:password value ="#{registerController.password}"/>
+                </p:panelGrid>
+                <br></br>
+                <p:commandButton update="message" value ="Registrieren" action="#{registerController.registerUser(registerController.username, registerController.vorname, registerController.nachname, registerController.md5(registerController.password))}"/>
+            </h:form>
         </center>
-
-        <h:form>
-            <p:growl id="message" autoUpdate="true"/>
-            <p:panelGrid columns="2" rendered="#{!userBean.valid}">
-                <p:outputLabel value="Nutzername"/>
-                <p:inputText value ="#{registerController.username}"/>
-                <p:outputLabel value="Vorname"/>
-                <p:inputText value ="#{registerController.vorname}"/>
-                <p:outputLabel value="Nachname"/>
-                <p:inputText value ="#{registerController.nachname}"/>
-                <p:outputLabel value="Passwort"/>
-                <p:password value ="#{registerController.password}"/>
-            </p:panelGrid>    
-            <p:commandButton update="message" value="#{registerController.registerUser(registerController.username, registerController.vorname, registerController.nachname, registerController.md5(registerController.password))}"/>
-        </h:form>
-
 
     </ui:define>
 </ui:composition>

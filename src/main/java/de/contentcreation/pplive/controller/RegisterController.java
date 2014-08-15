@@ -6,6 +6,7 @@
 package de.contentcreation.pplive.controller;
 
 import de.contentcreation.pplive.services.UserService;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -21,7 +22,7 @@ import javax.inject.Named;
  */
 @Named
 @RequestScoped
-public class RegisterController {
+public class RegisterController implements Serializable{
 
     @EJB
     private UserService service;
@@ -68,19 +69,22 @@ public class RegisterController {
 
     public String registerUser(String username, String vorname, String nachname,
             String password) {
-
+        String navigation = "";
         boolean registered = service.registerUser(username, vorname, nachname, password);
 
         if (!registered) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, "Nutzername bekannt", "Dieser Nutzername ist bereits vergeben, bitte versuche einen anderen!");
             FacesContext.getCurrentInstance()
                     .addMessage(null, message);
+            navigation = "register.jsf";
         } else {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Registrierung erfolgreich", "Du wurdest erfolgreich registriert.");
             FacesContext.getCurrentInstance()
                     .addMessage(null, message);
+            navigation = "login.jsf";
+            
         }
-        return "login.jsf";
+        return navigation;        
 
     }
 

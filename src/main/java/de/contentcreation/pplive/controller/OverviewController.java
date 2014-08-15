@@ -13,13 +13,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.html.HtmlDataTable;
-import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import model.Bemerkung;
 import org.primefaces.event.RowEditEvent;
 
 /**
@@ -27,7 +28,7 @@ import org.primefaces.event.RowEditEvent;
  * @author Gösta Ostendorf <goesta.o@gmail.com>
  */
 @Named
-@ViewScoped
+@SessionScoped
 public class OverviewController implements Serializable {
 
     @EJB
@@ -42,6 +43,8 @@ public class OverviewController implements Serializable {
     private HtmlDataTable myDataTable;
 
     private BacklogArticle selectedArticle;
+
+    private List<Bemerkung> selectedBemerkungen;
 
     @Inject
     private UserBean userBean;
@@ -81,6 +84,14 @@ public class OverviewController implements Serializable {
 
     public void setFilteredArticles(List<BacklogArticle> filteredArticles) {
         this.filteredArticles = filteredArticles;
+    }
+
+    public List<Bemerkung> getSelectedBemerkungen() {
+        return selectedBemerkungen;
+    }
+
+    public void setSelectedBemerkungen(List<Bemerkung> selectedBemerkungen) {
+        this.selectedBemerkungen = selectedBemerkungen;
     }
 
     public void onRowEdit(RowEditEvent event) {
@@ -126,4 +137,19 @@ public class OverviewController implements Serializable {
         list.add(article);
         return list;
     }
+
+    public List<Bemerkung> completeBemerkung(String query) {
+        List<Bemerkung> allBemerkungen = dh.getBemerkungen();
+        List<Bemerkung> filteredBemerkungen = new ArrayList<>();
+
+        for (int i = 0; i < allBemerkungen.size(); i++) {
+            Bemerkung bemerkung = allBemerkungen.get(i);
+            if (bemerkung.getBemerkung().toLowerCase().contains(query)) {
+                filteredBemerkungen.add(bemerkung);
+            }
+        }
+
+        return filteredBemerkungen;
+    }
+
 }

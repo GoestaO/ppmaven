@@ -14,25 +14,25 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import org.jboss.logging.Logger;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
 
 /**
  *
  * @author Gösta Ostendorf <goesta.o@gmail.com>
  */
 @Named
-@RequestScoped
-public class UploadController {
+@SessionScoped
+public class UploadController implements Serializable{
 
     @EJB
     private DatabaseHandler dh;
@@ -40,7 +40,7 @@ public class UploadController {
     int counter = 0;
 
     public void handleFileUpload(FileUploadEvent event) {
-        UploadedFile file = event.getFile();
+//        UploadedFile file = event.getFile();
         List<BacklogArticle> backlogList = new ArrayList();
         try {
             File targetFile = new File("backlog.csv");
@@ -58,14 +58,15 @@ public class UploadController {
             FileReader reader = new FileReader(targetFile);
             BufferedReader br = new BufferedReader(reader);
             br.readLine();
-            String line = br.readLine();
+            String line = br.readLine();         
             while (line != null) {
-                String[] data = line.split(";");
+                String[] data = line.split(";",-1);
                 String config = data[0];
+                long ean =  Long.parseLong(data[9]);
                 int partnerID = Integer.parseInt(data[1]);
-                String warengruppenpfad = data[7];
-                String saison = data[8];
-                int appdomainID = Integer.parseInt(data[9]);
+                String warengruppenpfad = data[10];
+                String saison = data[11];
+                int appdomainID = Integer.parseInt(data[7]);
                 String identifier = config + partnerID + appdomainID;
                 BacklogArticle ba = new BacklogArticle();
                 ba.setIdentifier(identifier);
@@ -74,14 +75,14 @@ public class UploadController {
                 ba.setPartnerId(partnerID);
                 ba.setCgPath(warengruppenpfad);
                 ba.setSaison(saison);
+                ba.setEan(ean);
                 ba.setDatum(Calendar.getInstance().getTime());
                 ba.setOffen(true);
-                backlogList.add(ba);
+                backlogList.add(ba);              
                 line = br.readLine();
             }
             br.close();
             counter = dh.checkAndAdd(backlogList);
-            System.out.println("beendet.");
         } catch (IOException e) {
             Logger.getLogger(UploadController.class.getClass()).log(Logger.Level.FATAL, e);
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, "Upload fehlgeschlagen", e.getMessage());

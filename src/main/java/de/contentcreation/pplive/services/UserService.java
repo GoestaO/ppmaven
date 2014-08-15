@@ -49,27 +49,24 @@ public class UserService {
     public boolean registerUser(String nick, String vorname, String nachname,
             String passwort) {
 
-        
         boolean returnValue = false;
 
         TypedQuery<User> checkForNick = em.createQuery(
                 "select u from User u where u.nick = :nick", User.class);
         checkForNick.setParameter("nick", nick);
-
         List<User> userList = checkForNick.getResultList();
-        Rolle rolle = new Rolle();
-        rolle.setId(4);
-    if (userList.isEmpty()) {
+        if (userList.size() == 0) {
             User u = new User();
+            Rolle rolle = new Rolle();
+            rolle.setId(4);
             u.setNick(nick);
             u.setVorname(vorname);
             u.setNachname(nachname);
             u.setPasswort(passwort);
             u.setRolle(rolle);
-            em.persist(user);
+            em.persist(u);
             returnValue = true;
         }
-        em.close();
         return returnValue;
     }
 
