@@ -21,9 +21,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
+import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.ServletOutputStream;
@@ -34,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Gösta Ostendorf <goesta.o@gmail.com>
  */
 @Named
-@ViewScoped
+@RequestScoped
 public class ReportingController implements Serializable {
 
     @EJB
@@ -46,28 +47,48 @@ public class ReportingController implements Serializable {
     @Inject
     private ExcelGenerator ex;
 
-    private Date date1;
+    private Date leistungDate1;
 
-    private Date date2;
+    private Date leistungDate2;
+
+    private Date uploadDate1;
+
+    private Date uploadDate2;
 
     private Integer selectedPartner;
 
     private List<Integer> partnerList;
 
-    public Date getDate1() {
-        return date1;
+    public Date getLeistungDate1() {
+        return leistungDate1;
     }
 
-    public void setDate1(Date date1) {
-        this.date1 = date1;
+    public void setLeistungDate1(Date leistungDate1) {
+        this.leistungDate1 = leistungDate1;
     }
 
-    public Date getDate2() {
-        return date2;
+    public Date getLeistungDate2() {
+        return leistungDate2;
     }
 
-    public void setDate2(Date date2) {
-        this.date2 = date2;
+    public void setLeistungDate2(Date leistungDate2) {
+        this.leistungDate2 = leistungDate2;
+    }
+
+    public Date getUploadDate1() {
+        return uploadDate1;
+    }
+
+    public void setUploadDate1(Date uploadDate1) {
+        this.uploadDate1 = uploadDate1;
+    }
+
+    public Date getUploadDate2() {
+        return uploadDate2;
+    }
+
+    public void setUploadDate2(Date uploadDate2) {
+        this.uploadDate2 = uploadDate2;
     }
 
     public Integer getSelectedPartner() {
@@ -89,17 +110,21 @@ public class ReportingController implements Serializable {
         this.partnerList = partnerList;
     }
 
-    public void getLeistungsReport(Date date1, Date date2) {
-        date2 = this.shiftDate(date2);
-        List<UserReport> userReport = rh.getUserReport(date1, date2);
+    public void getLeistungsReport(Date datum1, Date datum2) {
+        if (datum2.before(datum1)) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlerhafte Eingabe", "Das erste Datum muss kleiner als das zweite Datum sein. Bitte versuche es noch einmal."));
+        } else {
+            datum2 = this.shiftDate(datum2);
+            List<UserReport> userReport = rh.getUserReport(datum1, datum2);
 
-        String fileName = "UserReport.xlsx";
-        File reportFile = new File(fileName);
-        ex.createUserReport(reportFile, userReport);
-        try {
-            download(reportFile);
-        } catch (IOException ex) {
-            Logger.getLogger(ReportingController.class.getName()).log(Level.SEVERE, null, ex);
+            String fileName = "UserReport.xlsx";
+            File reportFile = new File(fileName);
+            ex.createUserReport(reportFile, userReport);
+            try {
+                download(reportFile);
+            } catch (IOException ex) {
+                Logger.getLogger(ReportingController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -142,14 +167,19 @@ public class ReportingController implements Serializable {
         }
     }
 
-    public void getNewArticlesReport() {
-        String fileName = "neueArtikel.xlsx";
-        File reportFile = new File(fileName);
-        ex.createNewArticlesReport(reportFile);
-        try {
-            download(reportFile);
-        } catch (IOException ex) {
-            Logger.getLogger(ReportingController.class.getName()).log(Level.SEVERE, null, ex);
+    public void getNewArticlesReport(Date datum1, Date datum2) {
+        if (datum2.before(datum1)) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlerhafte Eingabe", "Das erste Datum muss kleiner als das zweite Datum sein. Bitte versuche es noch einmal."));
+        } else {
+            datum2 = this.shiftDate(datum2);
+            String fileName = "neueArtikel.xlsx";
+            File reportFile = new File(fileName);
+            ex.createNewArticlesReport(reportFile, datum1, datum2);
+            try {
+                download(reportFile);
+            } catch (IOException ex) {
+                Logger.getLogger(ReportingController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

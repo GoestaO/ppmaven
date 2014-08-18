@@ -18,9 +18,9 @@ import de.contentcreation.pplive.services.DatabaseHandler;
 import java.io.Serializable;
 import java.util.List;
 import javax.enterprise.context.RequestScoped;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import org.primefaces.context.RequestContext;
 
 /**
  *

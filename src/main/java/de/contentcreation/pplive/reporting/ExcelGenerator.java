@@ -18,6 +18,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import de.contentcreation.pplive.reportingClasses.UserReport;
+import java.util.Date;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
@@ -29,7 +30,7 @@ public class ExcelGenerator {
     @EJB
     private ReportingHandler rh;
 
-	public void createNewArticlesReport(File filename) {
+	public void createNewArticlesReport(File filename, Date datum1, Date datum2) {
 		Workbook workbook = new XSSFWorkbook();
 
 		Sheet sheet = workbook.createSheet("Neue SKUs");
@@ -47,7 +48,7 @@ public class ExcelGenerator {
 		CellStyle fontStyle = workbook.createCellStyle();
 
 		
-		List<BacklogArticle> newArticles = rh.getNewBacklogArticles();
+		List<BacklogArticle> newArticles = rh.getNewBacklogArticles(datum1, datum2);
 
 		Row headerRow = sheet.createRow(0);
 

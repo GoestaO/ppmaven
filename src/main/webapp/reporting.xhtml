@@ -26,11 +26,11 @@
                     <p:panelGrid columns="2">
                         <h:outputLabel for="date1" value="Erstes Datum:" />
                         <h:outputLabel for="date2" value="Zweites Datum:" />
-                        <p:calendar id="date1" value="#{reportingController.date1}" locale="de" pattern="dd.MM.yyyy"/>
-                        <p:calendar id="date2" value="#{reportingController.date2}" locale="de" pattern="dd.MM.yyyy"/>                        
+                        <p:calendar id="date1" value="#{reportingController.leistungDate1}" locale="de" pattern="dd.MM.yyyy"/>
+                        <p:calendar id="date2" value="#{reportingController.leistungDate2}" locale="de" pattern="dd.MM.yyyy"/>                        
                     </p:panelGrid>
                     <br></br>
-                    <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getLeistungsReport(reportingController.date1, reportingController.date2)}"/>
+                    <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getLeistungsReport(reportingController.leistungDate1, reportingController.leistungDate2)}"/>
                 </h:form>
             </p:panel>
 
@@ -61,11 +61,16 @@
             </p:panel>
 
             <p:panel header="Upload Report" style="width: 300px; height: 200px">
-                <h:form>
-                    <h3>Alle hochgeladenen Artikel sortiert nach Datum und Partner </h3>
+                <h:form>                    
+                    <h3>Bitte Start- und Enddatum angeben</h3>                    
+                    <p:panelGrid columns="2">
+                        <h:outputLabel for="date1" value="Erstes Datum:" />
+                        <h:outputLabel for="date2" value="Zweites Datum:" />
+                        <p:calendar id="date1" value="#{reportingController.uploadDate1}" locale="de" pattern="dd.MM.yyyy"/>
+                        <p:calendar id="date2" value="#{reportingController.uploadDate2}" locale="de" pattern="dd.MM.yyyy"/>                        
+                    </p:panelGrid>
                     <br></br>
-                    <br></br>
-                    <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getNewArticlesReport()}"/>
+                    <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" update=":messages" action="#{reportingController.getNewArticlesReport(reportingController.uploadDate1, reportingController.uploadDate2)}"/>
                 </h:form>
             </p:panel>
 

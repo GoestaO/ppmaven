@@ -31,12 +31,14 @@ public class ReportingHandler {
         return newBacklogArticles;
     }
 
-    public List<BacklogArticle> getNewBacklogArticles() {
+    public List<BacklogArticle> getNewBacklogArticles(Date datum1, Date datum2) {
 
         TypedQuery<BacklogArticle> query = em
                 .createQuery(
-                        "Select b from BacklogArticle b where b.datum is not null order by b.datum, b.partnerId",
+                        "Select b from BacklogArticle b where b.datum is not null and b.datum between :datum1 and :datum2 order by b.datum, b.partnerId",
                         BacklogArticle.class);
+        query.setParameter("datum1", datum1);
+        query.setParameter("datum2", datum2);
 
         List<BacklogArticle> newBacklogArticles = query.getResultList();
 
