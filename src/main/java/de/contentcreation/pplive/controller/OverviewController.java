@@ -21,7 +21,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import model.Bemerkung;
-import org.primefaces.event.RowEditEvent;
+//import org.primefaces.event.RowEditEvent;
 
 /**
  *
@@ -94,20 +94,20 @@ public class OverviewController implements Serializable {
         this.selectedBemerkungen = selectedBemerkungen;
     }
 
-    public void onRowEdit(RowEditEvent event) {
-        BacklogArticle editedArticle = (BacklogArticle) event.getObject();
-
-        String identifier = editedArticle.getIdentifier();
-        String bemerkung1 = editedArticle.getBemerkung1();
-        String bemerkung2 = editedArticle.getBemerkung2();
-        String bemerkung3 = editedArticle.getBemerkung3();
-        String bemerkungKAM = editedArticle.getBemerkungKAM();
-        boolean neuerStatus = editedArticle.isOffen();
-        User currentUser = userBean.getUser();
-        String season = editedArticle.getSaison();
-        dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
-
-    }
+//    public void onRowEdit(RowEditEvent event) {
+//        BacklogArticle editedArticle = (BacklogArticle) event.getObject();
+//
+//        String identifier = editedArticle.getIdentifier();
+//        String bemerkung1 = editedArticle.getBemerkung1();
+//        String bemerkung2 = editedArticle.getBemerkung2();
+//        String bemerkung3 = editedArticle.getBemerkung3();
+//        String bemerkungKAM = editedArticle.getBemerkungKAM();
+//        boolean neuerStatus = editedArticle.isOffen();
+//        User currentUser = userBean.getUser();
+//        String season = editedArticle.getSaison();
+//        dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
+//
+//    }
 
     public void update(List<BacklogArticle> selectedArticles) {
 

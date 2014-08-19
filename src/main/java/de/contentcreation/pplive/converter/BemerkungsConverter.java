@@ -29,14 +29,16 @@ public class BemerkungsConverter implements Converter{
     
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
-        
-        
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Long id = dh.getBemerkungId(value);
+        Bemerkung b = new Bemerkung();
+        b.setID(id);
+        b.setBemerkung(value);
+        return b;
     }
 
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object value) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return value.toString();
     }
     
 }

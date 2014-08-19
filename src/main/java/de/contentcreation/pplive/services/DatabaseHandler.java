@@ -18,7 +18,6 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import model.Bemerkung;
 
-
 @Stateless
 public class DatabaseHandler {
 
@@ -31,13 +30,13 @@ public class DatabaseHandler {
                 "select b from BacklogArticle b where b.offen = '1' ",
                 BacklogArticle.class);
 
-        List<BacklogArticle> backlogList = showBacklog.getResultList();       
+        List<BacklogArticle> backlogList = showBacklog.getResultList();
 
         return backlogList;
     }
 
     public List<Object[]> getBacklogByPartner(List<Integer> partnerList) {
-       
+
         StringBuilder builder = new StringBuilder();
 
         builder.append("(");
@@ -56,71 +55,70 @@ public class DatabaseHandler {
         Query query = em.createNativeQuery(abfrage);
 
         List<Object[]> backlogList = query.getResultList();
-     
+
         return backlogList;
     }
 
     public List<BacklogArticle> getBacklogByPartner2(List<Integer> partnerList) {
-        
+
         TypedQuery<BacklogArticle> query = em
                 .createQuery(
                         "select b from BacklogArticle b where b.offen = 1 and b.partnerId in :partnerList",
                         BacklogArticle.class);
         query.setParameter("partnerList", partnerList);
         List<BacklogArticle> backlogList = query.getResultList();
-       
+
         return backlogList;
     }
 
     public int getBacklogSize() {
-        
+
         TypedQuery<BacklogArticle> showBacklog = em.createQuery(
                 "select b from BacklogArticle b where b.offen = '1' ",
                 BacklogArticle.class);
         List<BacklogArticle> backlogList = showBacklog.getResultList();
-        
+
         return backlogList.size();
     }
 
     public BacklogArticle getBacklogArticle(String identifier) {
-        
+
         BacklogArticle backlogArticle = (BacklogArticle) em.find(
                 BacklogArticle.class, identifier);
         em.close();
-       
+
         return backlogArticle;
     }
 
     public int checkAndAdd(List<BacklogArticle> backlogList) {
         int counter = 0;
-       
+
         for (BacklogArticle ba : backlogList) {
             BacklogArticle checkedArticle = (BacklogArticle) em.find(
                     BacklogArticle.class, ba.getIdentifier());
-            if (checkedArticle == null) {                
+            if (checkedArticle == null) {
                 em.persist(ba);
                 counter++;
             }
         }
-      
+
         return counter;
     }
 
     public void updateArticleStatus(String identifier, String bemerkung1,
             String bemerkung2, String bemerkung3, String bemerkungKAM,
             boolean neuerStatus, User currentUser, String season) {
-     
+
         BacklogArticle ba = (BacklogArticle) em.find(BacklogArticle.class,
                 identifier);
         UpdateBuchung updateBuchung = new UpdateBuchung();
         String neuerStatusString = "";
-        if(neuerStatus){
+        if (neuerStatus) {
             neuerStatusString = "offen";
-        }
-        else{
+        } else {
             neuerStatusString = "fertig";
         }
-      
+
         ba.setOffen(neuerStatus);
         ba.setBemerkung1(bemerkung1);
         ba.setBemerkung2(bemerkung2);
@@ -141,13 +139,11 @@ public class DatabaseHandler {
 
         em.merge(ba);
         em.persist(updateBuchung);
-        
+
     }
 
-    
-
     public void setCounter() {
-        
+
         long start = -System.currentTimeMillis();
 
         em.getTransaction().begin();
@@ -166,18 +162,18 @@ public class DatabaseHandler {
         }
         em.getTransaction().commit();
         em.close();
-       
+
     }
 
     public List<String> getSeasons() {
-        
+
         TypedQuery<String> getSeasons = em
                 .createQuery(
                         "select distinct(b.saison) from BacklogArticle b where b.saison !='' order by b.saison",
                         String.class);
         List<String> seasons = getSeasons.getResultList();
         em.close();
-       
+
         return seasons;
     }
 
@@ -199,25 +195,24 @@ public class DatabaseHandler {
     }
 
     public List<Integer> getPartner() {
-        
+
         TypedQuery<Integer> getPartnerQuery = em
                 .createQuery(
                         "Select distinct(b.partnerId) from BacklogArticle b where b.partnerId > 0 and b.offen = 1 order by b.partnerId",
                         Integer.class);
-        List<Integer> partner = getPartnerQuery.getResultList();       
-       
+        List<Integer> partner = getPartnerQuery.getResultList();
+
         return partner;
     }
 
     public List<Integer> getPartner2() {
-       
+
         TypedQuery<Integer> getPartnerQuery = em
                 .createQuery(
                         "Select distinct(b.partnerId) from BacklogArticle b where b.partnerId > 0 order by b.partnerId",
                         Integer.class);
         List<Integer> partner = getPartnerQuery.getResultList();
         em.close();
-       
 
         return partner;
     }
@@ -234,14 +229,20 @@ public class DatabaseHandler {
         return partnerListString;
     }
 
-    public List<Bemerkung> getBemerkungen() {       
-        
+    public List<Bemerkung> getBemerkungen() {
+
         TypedQuery<Bemerkung> getBemerkungQuery = em.createQuery(
                 "Select b from Bemerkung b", Bemerkung.class);
         List<Bemerkung> bemerkungen = getBemerkungQuery.getResultList();
-        
+
         return bemerkungen;
     }
-    
-   
+
+    public Long getBemerkungId(String value) {
+        TypedQuery<Long> query = em.createQuery("Select b.id from Bemerkung where b.bemerkung = :value", Long.class);
+        query.setParameter(value, value);
+        Long id = query.getSingleResult();
+        return id;
+    }
+
 }

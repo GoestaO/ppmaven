@@ -14,16 +14,16 @@ public class Bemerkung implements Serializable {
 	@Id
 	@GeneratedValue
 	@Column(name = "ID")
-	private int ID;
+	private Long id;
 	@Column(name = "Bemerkung")
 	private String bemerkung;
 
-	public int getID() {
-		return this.ID;
+	public Long getID() {
+		return this.id;
 	}
 
-	public void setID(int iD) {
-		this.ID = iD;
+	public void setID(Long id) {
+		this.id = id;
 	}
 
 	public String getBemerkung() {
