@@ -394,7 +394,11 @@ public class ExcelGenerator {
 			Row row = sheet.createRow(rownum++);
 
 			Cell nameCell = row.createCell(0);
-			nameCell.setCellValue(ur.getName());
+			try{
+                            nameCell.setCellValue(ur.getName());
+                        } catch(NullPointerException ex){
+                            nameCell.setCellValue("");
+                        }                        
 
 			Cell configCell = row.createCell(1);
 			configCell.setCellValue(ur.getConfig());

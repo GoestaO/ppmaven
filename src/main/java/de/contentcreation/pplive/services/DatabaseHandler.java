@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -229,19 +230,25 @@ public class DatabaseHandler {
         return partnerListString;
     }
 
-    public List<Bemerkung> getBemerkungen() {
+    public List<String> getBemerkungen() {
 
-        TypedQuery<Bemerkung> getBemerkungQuery = em.createQuery(
-                "Select b from Bemerkung b", Bemerkung.class);
-        List<Bemerkung> bemerkungen = getBemerkungQuery.getResultList();
+        TypedQuery<String> getBemerkungQuery = em.createQuery(
+                "Select b.bemerkung from Bemerkung b", String.class);
+        List<String> bemerkungen = getBemerkungQuery.getResultList();
 
         return bemerkungen;
     }
 
     public Long getBemerkungId(String value) {
-        TypedQuery<Long> query = em.createQuery("Select b.id from Bemerkung where b.bemerkung = :value", Long.class);
-        query.setParameter(value, value);
-        Long id = query.getSingleResult();
+        Long id;
+        TypedQuery<Long> query = em.createQuery("Select b.id from Bemerkung b where b.bemerkung = :value", Long.class);
+//        query.setParameter(value, value);
+        query.setParameter("value", value);
+        try {
+            id = query.getSingleResult();
+        } catch (NoResultException ex) {
+            id = null;
+        }
         return id;
     }
 

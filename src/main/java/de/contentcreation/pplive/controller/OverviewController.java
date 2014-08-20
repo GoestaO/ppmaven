@@ -13,14 +13,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.html.HtmlDataTable;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import model.Bemerkung;
+import org.primefaces.event.SelectEvent;
 //import org.primefaces.event.RowEditEvent;
 
 /**
@@ -28,7 +29,7 @@ import model.Bemerkung;
  * @author Gösta Ostendorf <goesta.o@gmail.com>
  */
 @Named
-@SessionScoped
+@ViewScoped
 public class OverviewController implements Serializable {
 
     @EJB
@@ -45,6 +46,8 @@ public class OverviewController implements Serializable {
     private BacklogArticle selectedArticle;
 
     private List<Bemerkung> selectedBemerkungen;
+
+    private Bemerkung selectedBemerkung;
 
     @Inject
     private UserBean userBean;
@@ -94,6 +97,34 @@ public class OverviewController implements Serializable {
         this.selectedBemerkungen = selectedBemerkungen;
     }
 
+    public Bemerkung getSelectedBemerkung() {
+        return selectedBemerkung;
+    }
+
+    public void setSelectedBemerkung(Bemerkung selectedBemerkung) {
+        this.selectedBemerkung = selectedBemerkung;
+    }
+
+    public void handleSelectedBemerkung1(SelectEvent event) {
+        String bemerkung = (String) event.getObject();
+        this.selectedArticle.setBemerkung1(bemerkung);
+    }
+
+    public void handleSelectedBemerkung2(SelectEvent event) {
+        String bemerkung = (String) event.getObject();
+        this.selectedArticle.setBemerkung2(bemerkung);
+    }
+
+    public void handleSelectedBemerkung3(SelectEvent event) {
+        String bemerkung = (String) event.getObject();
+        this.selectedArticle.setBemerkung3(bemerkung);
+    }
+
+    public void handleSelectedBemerkungKAM(SelectEvent event) {
+        String bemerkung = (String) event.getObject();
+        selectedArticle.setBemerkungKAM(bemerkung);
+    }
+
 //    public void onRowEdit(RowEditEvent event) {
 //        BacklogArticle editedArticle = (BacklogArticle) event.getObject();
 //
@@ -108,7 +139,6 @@ public class OverviewController implements Serializable {
 //        dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
 //
 //    }
-
     public void update(List<BacklogArticle> selectedArticles) {
 
         for (BacklogArticle editedArticle : selectedArticles) {
@@ -138,13 +168,13 @@ public class OverviewController implements Serializable {
         return list;
     }
 
-    public List<Bemerkung> completeBemerkung(String query) {
-        List<Bemerkung> allBemerkungen = dh.getBemerkungen();
-        List<Bemerkung> filteredBemerkungen = new ArrayList<>();
+    public List<String> completeBemerkung(String query) {
+        List<String> allBemerkungen = dh.getBemerkungen();
+        List<String> filteredBemerkungen = new ArrayList<>();
 
         for (int i = 0; i < allBemerkungen.size(); i++) {
-            Bemerkung bemerkung = allBemerkungen.get(i);
-            if (bemerkung.getBemerkung().toLowerCase().contains(query)) {
+            String bemerkung = allBemerkungen.get(i);
+            if (bemerkung.toLowerCase().contains(query)) {
                 filteredBemerkungen.add(bemerkung);
             }
         }

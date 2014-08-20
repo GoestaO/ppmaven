@@ -13,7 +13,7 @@
         <h:form rendered ="#{!userBean.valid}">
             <p:button href="login.jsf" value="Zum Login" />
             <p:button href="register.jsf" value="Zur Registrierung" />
-            <p:messages id="message" showDetail="true"/>
+            <!--<p:messages id="message" showDetail="true"/>-->
             #{overviewController.fatal()}
         </h:form>
 
@@ -27,7 +27,7 @@
 <!--                <p:ajax event="rowEdit" listener="#{overviewController.onRowEdit}" update=":form:msgs" />
                 <p:ajax event="rowEditCancel" listener="#{overviewController.onRowCancel}" update=":form:msgs" />-->
 
-                <p:column headerText="Config" filterBy="#{article.config}" filterMatchMode="contains">
+                <p:column headerText="Config" filterBy="#{article.config.toLowerCase()}" filterMatchMode="contains">
                     <h:outputText value="#{article.config}"/>
                 </p:column>
                 <p:column headerText="EAN" filterBy="#{article.ean}" filterMatchMode="contains">
@@ -42,27 +42,28 @@
                 <p:column headerText="Partner" filterBy="#{article.partnerId}" filterMatchMode="contains" filterStyle="width: 25px;">
                     <h:outputText value="#{article.partnerId}"/>
                 </p:column>
-                <p:column headerText="Datum" filterBy="#{article.cgPath}" filterMatchMode="contains" filterStyle="width: 50px;">
+                <p:column headerText="Datum" filterBy="#{article.datum}" filterMatchMode="contains" filterStyle="width: 50px;">
                     <h:outputText value="#{article.datum}">
                         <f:convertDateTime dateStyle="short" locale="de" type="date" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="Saison" filterBy="#{article.saison}" filterMatchMode="contains" filterStyle="width: 35px;">
+                <p:column headerText="Saison" filterBy="#{article.saison.toLowerCase()}" filterMatchMode="contains" filterStyle="width: 35px;">
                     <h:outputText value="#{article.saison}"/>
                 </p:column>
                 <p:column headerText="Appdomain" filterBy="#{article.appdomainId}" filterMatchMode="contains" filterStyle="width: 20px;">
                     <h:outputText value="#{article.appdomainId}"/>
                 </p:column>
-                <p:column headerText="Bemerkung 1" filterBy="#{article.bemerkung1}" filterMatchMode="contains">
-                    <h:outputText value="#{article.bemerkung1}" />                 
+                <p:column headerText="Bemerkung 1" filterBy="#{article.bemerkung1.toLowerCase()}" filterMatchMode="contains">
+                    <h:outputText value="#{article.bemerkung1}" />
+<!--                    <p:autoComplete id="acSimple" value="#{article.bemerkung1}" completeMethod="#{overviewController.completeBemerkung}"  var="bemerkung" itemLabel="#{bemerkung}" itemValue="#{bemerkung}" converter="bemerkungsConverter"/>-->
                 </p:column>
-                <p:column headerText="Bemerkung 2" filterBy="#{article.bemerkung2}" filterMatchMode="contains">
+                <p:column headerText="Bemerkung 2" filterBy="#{article.bemerkung2.toLowerCase()}" filterMatchMode="contains">
                     <h:outputText value="#{article.bemerkung2}"/>
                 </p:column>
-                <p:column headerText="Bemerkung 3" filterBy="#{article.bemerkung3}" filterMatchMode="contains">
+                <p:column headerText="Bemerkung 3" filterBy="#{article.bemerkung3.toLowerCase()}" filterMatchMode="contains">
                     <h:outputText value="#{article.bemerkung3}"/>
                 </p:column>
-                <p:column headerText="Bemerkung KAM" filterBy="#{article.bemerkungKAM}" filterMatchMode="contains">
+                <p:column headerText="Bemerkung KAM" filterBy="#{article.bemerkungKAM.toLowerCase()}" filterMatchMode="contains">
                     <h:outputText value="#{article.bemerkungKAM}"/>
                 </p:column>
                 <p:column>
@@ -104,9 +105,14 @@
                         <h:outputText value="#{selectedArticle.partnerId}" />
                     </p:column>
                     <p:column>
-                        <p:inputTextarea rows="2" cols="30" value="#{selectedArticle.bemerkung1}">
+<!--                        <p:inputTextarea rows="2" cols="30" value="#{selectedArticle.bemerkung1}">
                             <p:ajax/>
-                        </p:inputTextarea>                        
+                        </p:inputTextarea>-->
+                        <p:autoComplete value="#{selectedArticle.bemerkung1}" completeMethod="#{overviewController.completeBemerkung}"  var="bemerkung" itemLabel="#{bemerkung}" itemValue="#{bemerkung}" immediate="false">
+                            <p:ajax event="itemSelect" listener="#{overviewController.handleSelectedBemerkung1}" >
+                                <!--<ui:param name="selectedBemerkung" value="${bemerkung}" />-->
+                            </p:ajax>
+                        </p:autoComplete>
                     </p:column>
                     <p:column>
                         <p:inputTextarea rows="2" cols="30" value="#{selectedArticle.bemerkung2}">
@@ -119,9 +125,14 @@
                         </p:inputTextarea>
                     </p:column>
                     <p:column>
-                        <p:inputTextarea rows="2" cols="30"  value="#{selectedArticle.bemerkungKAM}">
+<!--                        <p:inputTextarea rows="2" cols="30"  value="#{selectedArticle.bemerkungKAM}">
                             <p:ajax/>
-                        </p:inputTextarea>
+                        </p:inputTextarea>-->
+                        <p:autoComplete value="#{selectedArticle.bemerkungKAM}" completeMethod="#{overviewController.completeBemerkung}"  var="bemerkung" itemLabel="#{bemerkung}" itemValue="#{bemerkung}" immediate="false">
+                            <p:ajax event="itemSelect" listener="#{overviewController.handleSelectedBemerkungKAM}"  update=":form:msgs">
+                                <!--<ui:param name="selectedBemerkung" value="${bemerkung}" />-->
+                            </p:ajax>
+                        </p:autoComplete>
                     </p:column>
                     <p:column>
                         <h:outputText value="#{selectedArticle.datum}">
