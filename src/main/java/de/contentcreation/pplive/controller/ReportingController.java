@@ -55,9 +55,11 @@ public class ReportingController implements Serializable {
 
     private Date uploadDate2;
 
-    private Integer selectedPartner;
+    private List<Integer> selectedPartner;
 
     private List<Integer> partnerList;
+    
+    private int offen;
 
     public Date getLeistungDate1() {
         return leistungDate1;
@@ -91,16 +93,24 @@ public class ReportingController implements Serializable {
         this.uploadDate2 = uploadDate2;
     }
 
-    public Integer getSelectedPartner() {
+    public List<Integer> getSelectedPartner() {
         return selectedPartner;
     }
 
-    public void setSelectedPartner(Integer selectedPartner) {
+    public void setSelectedPartner(List<Integer> selectedPartner) {
         this.selectedPartner = selectedPartner;
     }
 
     public List<Integer> getPartnerList() {
         return dh.getPartner();
+    }
+
+    public int getOffen() {
+        return offen;
+    }
+
+    public void setOffen(int offen) {
+        this.offen = offen;
     }
 
     /**
@@ -141,8 +151,8 @@ public class ReportingController implements Serializable {
         }
     }
 
-    public void getKAMReportList() {
-        List<Object[]> partnerReport = rh.getProblemArticles();
+    public void getKAMReportList(int offen) {
+        List<Object[]> partnerReport = rh.getProblemArticles(offen);
         String fileName = "KeyAccountReport.xlsx";
         File reportFile = new File(fileName);
         ex.createKeyAccountReport(reportFile, partnerReport);
@@ -154,7 +164,7 @@ public class ReportingController implements Serializable {
 
     }
 
-    public void getEditArticlesReport(Integer selectedPartner) {
+    public void getEditArticlesReport(List<Integer> selectedPartner) {
         List<Object[]> editedArticlesList = rh.getEditedDataByPartner(selectedPartner);
 
         String fileName = "GepflegteArtikel_Partner" + selectedPartner + ".xlsx";

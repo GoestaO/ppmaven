@@ -43,19 +43,41 @@
 
             <p:panel header="KAM Report" style="width: 300px; height: 200px">
                 <h:form>
-                    <h3>Alle Artikel mit Kommentaren ausgeben</h3>                   
-                    <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getKAMReportList()}"/>
+                    <h3>Alle Artikel mit Kommentaren ausgeben</h3>
+                    <p:selectOneButton value="#{reportingController.offen}">
+                        <f:selectItem itemLabel="offen" itemValue="1"/>
+                        <f:selectItem itemLabel="fertig" itemValue="0"/>                          
+                        <p:ajax/>                     
+                    </p:selectOneButton>
+                    <br></br>
+                    <br></br>
+                    <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getKAMReportList(reportingController.offen)}"/>
                 </h:form>
             </p:panel>
 
             <p:panel header="Alle bereits gepflegten Artikel eines Partners" style="width: 300px; height: 200px">
                 <h:form>
-                    <h3>Wähle Partner</h3>
-                    <p:selectOneMenu value="#{reportingController.selectedPartner}">
+                    <!--                    <h3>Wähle Partner</h3>-->
+
+                    <h:panelGrid columns="1" cellpadding="5">
+
+                        <p:selectCheckboxMenu id="menu" value="#{reportingController.selectedPartner}" label="Partner"
+                                              filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
+                            <f:selectItems value="#{reportingController.partnerList}" var = "partner" itemLabel="#{partner}" itemValue="#{partner}"/>
+                        </p:selectCheckboxMenu>
+                        <p:commandLink value="Fertig ausgewählt" update="display" />
+                    </h:panelGrid>
+
+                    <p:outputPanel id="display" style="width:250px;padding-left:5px;margin-top:10px">
+                        <p:dataList value="#{reportingController.selectedPartner}" var="partner" emptyMessage="Keine Partner ausgewählt">
+                            #{partner}
+                        </p:dataList>
+                    </p:outputPanel>
+<!--                    <p:selectOneMenu value="#{reportingController.selectedPartner}">
                         <f:selectItems value="#{reportingController.partnerList}" var = "partner" itemLabel="#{partner}" itemValue="#{partner}"/>
-                    </p:selectOneMenu>
-                    <br></br>
-                    <br></br>
+                    </p:selectOneMenu>-->
+                    <!--                    <br></br>-->
+                    <!--<br></br>-->
                     <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getEditArticlesReport(reportingController.selectedPartner)}"/>
                 </h:form>
             </p:panel>

@@ -11,6 +11,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import de.contentcreation.pplive.reportingClasses.PartnerReport;
 import de.contentcreation.pplive.reportingClasses.UserReport;
+import de.contentcreation.pplive.util.QueryHelper;
 import javax.ejb.Stateless;
 import javax.persistence.PersistenceContext;
 
@@ -83,28 +84,39 @@ public class ReportingHandler {
     // ef.close();
     // return resultList;
     // }
-    public List<Object[]> getProblemArticles() {
+    public List<Object[]> getProblemArticles(int offen) {
 
         Query query = em
-                .createNativeQuery("select distinct(b.Identifier), b.PartnerID, b.Config, b.AppdomainID, b.Warengruppenpfad, b.Saison, user.VORNAME, user.NACHNAME, b.Bemerkung1, b.Bemerkung2, b.Bemerkung3, b.BemerkungKAM, b.OFFEN \n "
-                        + "from backlog b \n"
-                        + "left join (select max(buchungen.Timestamp), buchungen.Identifier, buchungen.User, buchungen.Bemerkung1, buchungen.Bemerkung2, buchungen.Bemerkung3, buchungen.BemerkungKAM from buchungen group by buchungen.Identifier) c on b.Identifier = c.Identifier \n"
-                        + "inner join user on user.ID = c.User \n"
-                        + "where b.Bemerkung1 not like '' or b.Bemerkung2 not like '' or b.Bemerkung3 not like '' \n"
-                        + "and b.Bemerkung1 = c.Bemerkung1 and b.Bemerkung2 = c.Bemerkung2 and b.Bemerkung3 = c.Bemerkung3 and b.BemerkungKAM = c.BemerkungKAM \n"
-                        + "order by b.PartnerID");
-        
+                .createNativeQuery("select b.Identifier, b.PartnerID, b.Config, b.AppdomainID, b.Warengruppenpfad, b.Saison, user.VORNAME, user.NACHNAME, b.Bemerkung1, b.Bemerkung2, b.Bemerkung3, b.BemerkungKAM, \n"
+                        + "b.OFFEN, buchungen.Status\n"
+                        + "from backlog b\n"
+                        + "inner join (select buchungen.Identifier, max(buchungen.ID) as ID from buchungen group by buchungen.Identifier) c\n"
+                        + "on b.Identifier = c.Identifier\n"
+                        + "inner join buchungen on c.ID = buchungen.ID\n"
+                        + "inner join user on user.ID = buchungen.User\n"
+                        + "where \n"
+                        + "(b.Bemerkung1 not like '' or b.Bemerkung2 not like '' or b.Bemerkung3 not like '') and b.OFFEN = " + offen);
+//        System.out.println("query = " + query);
         List<Object[]> resultList = query.getResultList();
 
         return resultList;
     }
 
-    public List<Object[]> getEditedDataByPartner(Integer partner) {
+    public List<Object[]> getEditedDataByPartner(List<Integer> partner) {
 
-        String q = "Select backlog.Identifier, backlog.PartnerID, backlog.Config, backlog.AppdomainID, backlog.Warengruppenpfad, backlog.Saison, max(buchungen.Timestamp), backlog.Bemerkung1, backlog.Bemerkung2, backlog.Bemerkung3, backlog.BemerkungKAM from backlog left join buchungen on backlog.Identifier = buchungen.Identifier where backlog.PartnerID = "
-                + Integer.toString(partner.intValue())
-                + " and backlog.OFFEN = 0 group by backlog.Identifier";
-        Query query = em.createNativeQuery(q);
+        String inclause = QueryHelper.getInClause(partner);
+        String q = "Select backlog.Identifier, backlog.PartnerID, backlog.Config, backlog.AppdomainID, backlog.Warengruppenpfad, backlog.Saison, max(buchungen.Timestamp), backlog.Bemerkung1, backlog.Bemerkung2, backlog.Bemerkung3, backlog.BemerkungKAM \n"
+                + "from backlog left join buchungen on backlog.Identifier = buchungen.Identifier where backlog.PartnerID in " + inclause + " and backlog.OFFEN = 0 group by backlog.Identifier";
+
+        String query2 = "select b.Identifier, b.PartnerID, b.Config, b.AppdomainID, b.Warengruppenpfad, b.Saison, buchungen.Timestamp, b.Bemerkung1, b.Bemerkung2, b.Bemerkung3, b.BemerkungKAM, \n"
+                + "b.OFFEN, buchungen.Status\n"
+                + "from backlog b\n"
+                + "inner join (select buchungen.Identifier, max(buchungen.ID) as ID from buchungen group by buchungen.Identifier) c\n"
+                + "on b.Identifier = c.Identifier\n"
+                + "inner join buchungen on c.ID = buchungen.ID\n"
+                + "inner join user on user.ID = buchungen.User\n"
+                + "where b.PartnerID in " + inclause + " and b.OFFEN = 0 order by b.PartnerID";
+        Query query = em.createNativeQuery(query2);
 
         List<Object[]> resultList = query.getResultList();
 

@@ -137,7 +137,14 @@
                     </p:column>            
                 </p:dataTable>
                 <f:facet name="footer">
-                    <p:commandButton styleClass="dialogbutton" process = "@this" update=":form:backlog,msgs" value="Speichern" action="#{overviewController.update(overviewController.selectedArticles)}" oncomplete="PF('editDialog').hide()"/>
+                    <p:commandButton styleClass="dialogbutton" process = "@this" update=":form:backlog,msgs" value="Speichern" action="#{overviewController.update(overviewController.selectedArticles)}" oncomplete="PF('editDialog').hide()">
+                        <p:confirm header="Bestätigung" message="Bist du dir sicher?" icon="ui-icon-alert" />
+                    </p:commandButton>
+
+                    <p:confirmDialog global="true">
+                        <p:commandButton value="Ja" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="Nein" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
                 </f:facet>
             </p:dialog>
         </h:form>
