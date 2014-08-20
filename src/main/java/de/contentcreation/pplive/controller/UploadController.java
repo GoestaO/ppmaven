@@ -32,7 +32,9 @@ import org.primefaces.event.FileUploadEvent;
  */
 @Named
 @SessionScoped
-public class UploadController implements Serializable{
+public class UploadController implements Serializable {
+
+    long ean;
 
     @EJB
     private DatabaseHandler dh;
@@ -58,11 +60,15 @@ public class UploadController implements Serializable{
             FileReader reader = new FileReader(targetFile);
             BufferedReader br = new BufferedReader(reader);
             br.readLine();
-            String line = br.readLine();         
+            String line = br.readLine();
             while (line != null) {
-                String[] data = line.split(";",-1);
+                String[] data = line.split(";", -1);
                 String config = data[0];
-                long ean =  Long.parseLong(data[9]);
+                try {
+                    ean = Long.parseLong(data[9]);
+                } catch (NumberFormatException ex) {
+                    ean = 0;
+                }
                 int partnerID = Integer.parseInt(data[1]);
                 String warengruppenpfad = data[10];
                 String saison = data[11];
@@ -78,7 +84,7 @@ public class UploadController implements Serializable{
                 ba.setEan(ean);
                 ba.setDatum(Calendar.getInstance().getTime());
                 ba.setOffen(true);
-                backlogList.add(ba);              
+                backlogList.add(ba);
                 line = br.readLine();
             }
             br.close();
