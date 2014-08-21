@@ -18,6 +18,7 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.html.HtmlDataTable;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.view.ViewScoped;
 
 import javax.inject.Inject;
@@ -115,8 +116,21 @@ public class OverviewController implements Serializable {
             }
 
         } catch (NullPointerException ex) {
-            
+
         }
+    }
+
+    public void handleChangedBemerkung1() {
+        String bemerkung = this.selectedArticle.getBemerkung1();
+//        try {
+//            if (this.selectedArticle != null) {
+//                this.selectedArticle.setBemerkung1(bemerkung);
+//            }
+//
+//        } catch (NullPointerException ex) {
+//
+//        }
+        System.out.println(bemerkung);
     }
 
     public void handleSelectedBemerkung2(SelectEvent event) {
@@ -130,14 +144,14 @@ public class OverviewController implements Serializable {
     }
 
     public void handleSelectedBemerkungKAM(SelectEvent event) {
-        String bemerkung = (String) event.getObject();        
+        String bemerkung = (String) event.getObject();
         try {
             if (this.selectedArticle != null) {
                 this.selectedArticle.setBemerkungKAM(bemerkung);
             }
 
         } catch (NullPointerException ex) {
-            
+
         }
     }
 //    public void onRowEdit(RowEditEvent event) {

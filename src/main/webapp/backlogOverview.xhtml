@@ -109,9 +109,10 @@
                             <p:ajax/>
                         </p:inputTextarea>-->
                         <p:autoComplete size="30"  value="#{selectedArticle.bemerkung1}" completeMethod="#{overviewController.completeBemerkung}"  var="bemerkung" itemLabel="#{bemerkung}" itemValue="#{bemerkung}" immediate="false">
-                            <p:ajax event="itemSelect" listener="#{overviewController.handleSelectedBemerkung1}" >
+                            <p:ajax/>
+                            <p:ajax event="itemSelect" listener="#{overviewController.handleSelectedBemerkung1}" />
                                 <!--<ui:param name="selectedBemerkung" value="${bemerkung}" />-->
-                            </p:ajax>
+                            <!--<p:ajax listener="#{overviewController.handleChangedBemerkung1}" />-->
                         </p:autoComplete>
                     </p:column>
                     <p:column>

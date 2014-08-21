@@ -102,7 +102,7 @@ public class ReportingController implements Serializable {
     }
 
     public List<Integer> getPartnerList() {
-        return dh.getPartner();
+        return dh.getPartner2();
     }
 
     public int getOffen() {
