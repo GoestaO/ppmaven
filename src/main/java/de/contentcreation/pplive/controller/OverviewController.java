@@ -12,6 +12,8 @@ import de.contentcreation.pplive.services.DatabaseHandler;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.html.HtmlDataTable;
@@ -107,7 +109,14 @@ public class OverviewController implements Serializable {
 
     public void handleSelectedBemerkung1(SelectEvent event) {
         String bemerkung = (String) event.getObject();
-        this.selectedArticle.setBemerkung1(bemerkung);
+        try {
+            if (this.selectedArticle != null) {
+                this.selectedArticle.setBemerkung1(bemerkung);
+            }
+
+        } catch (NullPointerException ex) {
+            
+        }
     }
 
     public void handleSelectedBemerkung2(SelectEvent event) {
@@ -121,10 +130,16 @@ public class OverviewController implements Serializable {
     }
 
     public void handleSelectedBemerkungKAM(SelectEvent event) {
-        String bemerkung = (String) event.getObject();
-        selectedArticle.setBemerkungKAM(bemerkung);
-    }
+        String bemerkung = (String) event.getObject();        
+        try {
+            if (this.selectedArticle != null) {
+                this.selectedArticle.setBemerkungKAM(bemerkung);
+            }
 
+        } catch (NullPointerException ex) {
+            
+        }
+    }
 //    public void onRowEdit(RowEditEvent event) {
 //        BacklogArticle editedArticle = (BacklogArticle) event.getObject();
 //
@@ -139,6 +154,7 @@ public class OverviewController implements Serializable {
 //        dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
 //
 //    }
+
     public void update(List<BacklogArticle> selectedArticles) {
 
         for (BacklogArticle editedArticle : selectedArticles) {
@@ -178,7 +194,6 @@ public class OverviewController implements Serializable {
                 filteredBemerkungen.add(bemerkung);
             }
         }
-
         return filteredBemerkungen;
     }
 

@@ -108,7 +108,7 @@
 <!--                        <p:inputTextarea rows="2" cols="30" value="#{selectedArticle.bemerkung1}">
                             <p:ajax/>
                         </p:inputTextarea>-->
-                        <p:autoComplete value="#{selectedArticle.bemerkung1}" completeMethod="#{overviewController.completeBemerkung}"  var="bemerkung" itemLabel="#{bemerkung}" itemValue="#{bemerkung}" immediate="false">
+                        <p:autoComplete size="30"  value="#{selectedArticle.bemerkung1}" completeMethod="#{overviewController.completeBemerkung}"  var="bemerkung" itemLabel="#{bemerkung}" itemValue="#{bemerkung}" immediate="false">
                             <p:ajax event="itemSelect" listener="#{overviewController.handleSelectedBemerkung1}" >
                                 <!--<ui:param name="selectedBemerkung" value="${bemerkung}" />-->
                             </p:ajax>
@@ -125,14 +125,14 @@
                         </p:inputTextarea>
                     </p:column>
                     <p:column>
-<!--                        <p:inputTextarea rows="2" cols="30"  value="#{selectedArticle.bemerkungKAM}">
+                        <p:inputTextarea rows="2" cols="30"  value="#{selectedArticle.bemerkungKAM}">
                             <p:ajax/>
-                        </p:inputTextarea>-->
-                        <p:autoComplete value="#{selectedArticle.bemerkungKAM}" completeMethod="#{overviewController.completeBemerkung}"  var="bemerkung" itemLabel="#{bemerkung}" itemValue="#{bemerkung}" immediate="false">
-                            <p:ajax event="itemSelect" listener="#{overviewController.handleSelectedBemerkungKAM}"  update=":form:msgs">
-                                <!--<ui:param name="selectedBemerkung" value="${bemerkung}" />-->
+                        </p:inputTextarea>
+<!--                        <p:autoComplete value="#{selectedArticle.bemerkungKAM}" completeMethod="#{overviewController.completeBemerkung}"   var="bemerkung" itemLabel="#{bemerkung}" itemValue="#{bemerkung}" immediate="false">
+                            <p:ajax event="itemSelect" listener="#{overviewController.handleSelectedBemerkungKAM}"  process="@form" update=":form:msgs">
+                                <f:setPropertyActionListener target="#{overviewController.selectedArticle}" value="#{selectedArticle}"/>
                             </p:ajax>
-                        </p:autoComplete>
+                        </p:autoComplete>-->
                     </p:column>
                     <p:column>
                         <h:outputText value="#{selectedArticle.datum}">
