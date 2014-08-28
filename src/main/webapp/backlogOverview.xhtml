@@ -27,30 +27,30 @@
 <!--                <p:ajax event="rowEdit" listener="#{overviewController.onRowEdit}" update=":form:msgs" />
                 <p:ajax event="rowEditCancel" listener="#{overviewController.onRowCancel}" update=":form:msgs" />-->
 
-                <p:column headerText="Config" filterBy="#{article.config.toLowerCase()}" filterMatchMode="contains">
+                <p:column headerText="Config" filterBy="#{article.config.toLowerCase()}" width="120" filterMatchMode="contains">
                     <h:outputText value="#{article.config}"/>
                 </p:column>
-                <p:column headerText="EAN" filterBy="#{article.ean}" filterMatchMode="contains">
+                <p:column headerText="EAN" filterBy="#{article.ean}" width="120" filterMatchMode="contains">
                     <h:outputText value="#{article.ean}"/>
                 </p:column>                
-                <p:column headerText="Anzahl" filterBy="#{article.counter}" filterStyle="width: 20px;">
+                <p:column headerText="Anzahl" filterBy="#{article.counter}" width="40" filterStyle="width: 20px;">
                     <h:outputText value="#{article.counter}"/>
                 </p:column>
-                <p:column headerText="WG-Pfad">
+                <p:column headerText="WG-Pfad" width="60">
                     <h:outputText value="#{article.cgPath}"/>
                 </p:column>
-                <p:column headerText="Partner" filterBy="#{article.partnerId}" filterMatchMode="contains" filterStyle="width: 25px;">
+                <p:column headerText="Partner" filterBy="#{article.partnerId}" filterMatchMode="contains" width="60" filterStyle="width: 25px;">
                     <h:outputText value="#{article.partnerId}"/>
                 </p:column>
-                <p:column headerText="Datum" filterBy="#{article.datum}" filterMatchMode="contains" filterStyle="width: 50px;">
+                <p:column headerText="Datum" filterBy="#{article.datum}" filterMatchMode="contains" width="60" filterStyle="width: 50px;">
                     <h:outputText value="#{article.datum}">
                         <f:convertDateTime dateStyle="short" locale="de" type="date" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="Saison" filterBy="#{article.saison.toLowerCase()}" filterMatchMode="contains" filterStyle="width: 35px;">
+                <p:column headerText="Saison" filterBy="#{article.saison.toLowerCase()}" filterMatchMode="contains" width="60" filterStyle="width: 35px;">
                     <h:outputText value="#{article.saison}"/>
                 </p:column>
-                <p:column headerText="Appdomain" filterBy="#{article.appdomainId}" filterMatchMode="contains" filterStyle="width: 20px;">
+                <p:column headerText="Appd." filterBy="#{article.appdomainId}" filterMatchMode="contains" width="40" filterStyle="width: 20px;">
                     <h:outputText value="#{article.appdomainId}"/>
                 </p:column>
                 <p:column headerText="Bemerkung 1" filterBy="#{article.bemerkung1.toLowerCase()}" filterMatchMode="contains">
@@ -66,7 +66,7 @@
                 <p:column headerText="Bemerkung KAM" filterBy="#{article.bemerkungKAM.toLowerCase()}" filterMatchMode="contains">
                     <h:outputText value="#{article.bemerkungKAM}"/>
                 </p:column>
-                <p:column>
+                <p:column width="40">
                     <p:commandButton icon="ui-icon-wrench" oncomplete ="PF('editDialog').show()" update=":form:articleDetail" >
                         <f:setPropertyActionListener target="#{overviewController.selectedArticles}" value="#{overviewController.toList(article)}"/>
                     </p:commandButton>
@@ -92,13 +92,13 @@
                             <p:column headerText="Status"/>
                         </p:row>
                     </p:columnGroup>
-                    <p:column>
+                    <p:column width="120">
                         <h:outputText value="#{selectedArticle.config}" />
                     </p:column>
-                    <p:column>
+                    <p:column width="120">
                         <h:outputText value="#{selectedArticle.ean}" />
                     </p:column>
-                    <p:column>
+                    <p:column width="40">
                         <h:outputText value="#{selectedArticle.appdomainId}" />
                     </p:column>
                     <p:column>

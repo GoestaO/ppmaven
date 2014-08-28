@@ -60,9 +60,7 @@
                     <style type="text/css">
                         .selectCheckboxMenu { display: inline-block; vertical-align: top; }
                     </style>
-
                     <h:panelGrid columns="2" style="vertical-align: top;">
-
                         <p:selectCheckboxMenu styleClass = "selectCheckboxMenu" id="menu" value="#{reportingController.selectedPartner}" label="Partner"
                                               filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
                             <f:selectItems value="#{reportingController.partnerList}" var = "partner" itemLabel="#{partner}" itemValue="#{partner}"/>
