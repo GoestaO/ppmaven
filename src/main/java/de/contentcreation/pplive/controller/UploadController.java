@@ -63,6 +63,17 @@ public class UploadController implements Serializable {
             String line = br.readLine();
             while (line != null) {
                 String[] data = line.split(";", -1);
+//                String config = data[0];
+//                try {
+//                    ean = Long.parseLong(data[9]);
+//                } catch (NumberFormatException ex) {
+//                    ean = 0;
+//                }
+//                int partnerID = Integer.parseInt(data[1]);
+//                String warengruppenpfad = data[10];
+//                String saison = data[11];
+//                int appdomainID = Integer.parseInt(data[7]);
+
                 String config = data[0];
                 try {
                     ean = Long.parseLong(data[9]);
@@ -70,9 +81,9 @@ public class UploadController implements Serializable {
                     ean = 0;
                 }
                 int partnerID = Integer.parseInt(data[1]);
-                String warengruppenpfad = data[10];
-                String saison = data[11];
-                int appdomainID = Integer.parseInt(data[7]);
+                String warengruppenpfad = data[7];
+                String saison = data[8];
+                int appdomainID = Integer.parseInt(data[10]);
                 String identifier = config + partnerID + appdomainID;
                 BacklogArticle ba = new BacklogArticle();
                 ba.setIdentifier(identifier);

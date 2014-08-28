@@ -213,7 +213,6 @@ public class DatabaseHandler {
                         "Select distinct(b.partnerId) from BacklogArticle b where b.partnerId > 0 order by b.partnerId",
                         Integer.class);
         List<Integer> partner = getPartnerQuery.getResultList();
-        em.close();
 
         return partner;
     }

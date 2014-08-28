@@ -57,28 +57,18 @@
 
             <p:panel header="Alle bereits gepflegten Artikel eines Partners" style="width: 300px; height: 200px">
                 <h:form>
-                    <!--                    <h3>Wähle Partner</h3>-->
+                    <style type="text/css">
+                        .selectCheckboxMenu { display: inline-block; vertical-align: top; }
+                    </style>
 
-                    <h:panelGrid columns="1" cellpadding="5">
+                    <h:panelGrid columns="2" style="vertical-align: top;">
 
-                        <p:selectCheckboxMenu id="menu" value="#{reportingController.selectedPartner}" label="Partner"
+                        <p:selectCheckboxMenu styleClass = "selectCheckboxMenu" id="menu" value="#{reportingController.selectedPartner}" label="Partner"
                                               filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
                             <f:selectItems value="#{reportingController.partnerList}" var = "partner" itemLabel="#{partner}" itemValue="#{partner}"/>
-                        </p:selectCheckboxMenu>
-                        <p:commandLink value="Fertig ausgewählt" update="display" />
+                        </p:selectCheckboxMenu>                        
+                        <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getEditArticlesReport(reportingController.selectedPartner)}"/>
                     </h:panelGrid>
-
-                    <p:outputPanel id="display" style="width:250px;padding-left:5px;margin-top:10px">
-                        <p:dataList value="#{reportingController.selectedPartner}" var="partner" emptyMessage="Keine Partner ausgewählt">
-                            #{partner}
-                        </p:dataList>
-                    </p:outputPanel>
-<!--                    <p:selectOneMenu value="#{reportingController.selectedPartner}">
-                        <f:selectItems value="#{reportingController.partnerList}" var = "partner" itemLabel="#{partner}" itemValue="#{partner}"/>
-                    </p:selectOneMenu>-->
-                    <!--                    <br></br>-->
-                    <!--<br></br>-->
-                    <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getEditArticlesReport(reportingController.selectedPartner)}"/>
                 </h:form>
             </p:panel>
 
