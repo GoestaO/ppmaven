@@ -37,7 +37,21 @@
 
                     <div style="clear:both"></div>
 
+                    <h:form>
+                        <!--<p:idleMonitor timeout="1500000">-->
+                        <p:idleMonitor timeout="30000">
+                            <p:ajax event="idle" listener="#{userBean.sessionIdleListener}" /> 
+                        </p:idleMonitor> 
 
+                        <p:confirmDialog  closable="true" id="sessionExpiredDlg" 
+                                          message="Deine Sitzung wird in 5 Minuten ablaufen."  
+                                          header="#{msgs['confirmDialog.initiatingDestroyProcess.label']}"
+                                          severity="alert" widgetVar="sessionExpiredConfirmation" style="z-index: 25000">
+                            <p:commandButton id="confirmRouteDel" value="Ok" oncomplete="PF('sessionExpiredConfirmation').hide();" actionListener="#{userBean.keepSessionAlive}"/>
+                            <!--<p:button href="login.jsf" value="Zum Login" />-->
+                            <p:remoteCommand actionListener="#{userBean.keepSessionAlive}"/>
+                        </p:confirmDialog>
+                    </h:form>
                     <h:form>
                         <p:menubar id="navigation" style="height: 2em; box-sizing: content-box;"> 
 
@@ -67,7 +81,7 @@
                 <div id="footer">
                     <ui:insert name="footer">
                         <!--<h:outputText value="Copyright &copy; PSI "/>-->
-                       
+
                     </ui:insert>
                 </div>
             </h:panelGroup>

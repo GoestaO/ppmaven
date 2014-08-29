@@ -6,6 +6,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import org.primefaces.context.RequestContext;
 
 @Named
 @SessionScoped
@@ -83,7 +84,7 @@ public class UserBean implements Serializable {
     public void setPartnerList(List<Integer> partnerList) {
         this.partnerList = partnerList;
     }
-    
+
     public String resetUser() {
         this.setNick(null);
         this.setPasswort(null);
@@ -92,5 +93,14 @@ public class UserBean implements Serializable {
         FacesMessage message = new FacesMessage("Logout", "Logout war erfolgreich.");
         FacesContext.getCurrentInstance().addMessage(null, message);
         return "login.jsf?faces-redirect = true";
+    }
+
+    public void sessionIdleListener() {
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.execute("PF('sessionExpiredConfirmation').show()");
+    }
+
+    public void keepSessionAlive() {
+
     }
 }
