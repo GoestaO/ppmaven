@@ -20,7 +20,7 @@
         </h:form>
         <p:growl id="messages" showDetail="true" />
         <p:panelGrid columns="3" rendered ="#{userBean.valid and userBean.user.rolle.id != 4}">
-            <p:panel header="Leistungsreport" style="width: 300px; height: 200px">
+            <p:panel header="Leistungsreport" style="width: 400px; height: 200px">
                 <h:form>
                     <h3>Bitte Start- und Enddatum angeben</h3>                    
                     <p:panelGrid columns="2">
@@ -34,14 +34,14 @@
                 </h:form>
             </p:panel>
 
-            <p:panel header="Partnerreport" style="width: 300px; height: 200px">
+            <p:panel header="Partnerreport" style="width: 400px; height: 200px">
                 <h:form>
                     <h3>Alle offenen Artikel ausgeben</h3>                   
                     <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getPartnerReportList()}"/>
                 </h:form>
             </p:panel>
 
-            <p:panel header="KAM Report" style="width: 300px; height: 200px">
+            <p:panel header="KAM Report" style="width: 400px; height: 200px">
                 <h:form>
                     <h3>Alle Artikel mit Kommentaren ausgeben</h3>
                     <p:selectOneButton value="#{reportingController.offen}">
@@ -55,7 +55,7 @@
                 </h:form>
             </p:panel>
 
-            <p:panel header="Alle bereits gepflegten Artikel eines Partners" style="width: 300px; height: 200px">
+            <p:panel header="Alle bereits gepflegten Artikel eines Partners" style="width: 400px; height: 200px">
                 <h:form>
                     <style type="text/css">
                         .selectCheckboxMenu { display: inline-block; vertical-align: top; }
@@ -70,7 +70,7 @@
                 </h:form>
             </p:panel>
 
-            <p:panel header="Upload Report" style="width: 300px; height: 200px">
+            <p:panel header="Upload Report" style="width: 400px; height: 200px">
                 <h:form>                    
                     <h3>Bitte Start- und Enddatum angeben</h3>                    
                     <p:panelGrid columns="2">
