@@ -7,6 +7,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * Die Implementierung der Bemerkung
+ * @author Gösta Ostendorf (goesta.o@gmail.com)
+ */
+
 @Entity
 @Table(name = "bemerkungen")
 public class Bemerkung implements Serializable {

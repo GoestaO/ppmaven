@@ -17,12 +17,15 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
 /**
+ * Dies ist der Controller für die Registrierungs-Seite. Er schaut nach, ob
+ * schon ein Nutzer mit diesem Nutzernamen registriert ist, ansonsten wird der
+ * Nutzer aufgefordert, einen anderen Nutzernamen zu wählen.
  *
- * @author goesta
+ * @author Gösta Ostendorf (goesta.o@gmail.com)
  */
 @Named
 @RequestScoped
-public class RegisterController implements Serializable{
+public class RegisterController implements Serializable {
 
     @EJB
     private UserService service;
@@ -35,6 +38,7 @@ public class RegisterController implements Serializable{
 
     private String nachname;
 
+    // Getter + Setter
     public String getUsername() {
         return username;
     }
@@ -67,6 +71,20 @@ public class RegisterController implements Serializable{
         this.nachname = nachname;
     }
 
+    /**
+     * Mit Hilfe der vom Nutzer eingegebenen Daten wird eine Abfrage vom
+     * UserService durchgeführt, ob zunächst der Nutzername verfügbar ist. Ist
+     * dies der Fall, werden die Daten gespeichert, ansonsten wird eine
+     * Fehlermeldung ausgegeben und der Nutzer muss es erneut versuchen.
+     *
+     * @param username Der gewählte Nutzername
+     * @param vorname Der genannte Vorname
+     * @param nachname Der genannte Nachname
+     * @param password Das gewählte Passwort
+     * @return Die Navigation nach Ausführung der Methode - entweder zum Login
+     * (wenn Registrierung erfolgreich), oder nochmals zur Registrierung, wenn
+     * Nutzername bereits vorhanden ist.
+     */
     public String registerUser(String username, String vorname, String nachname,
             String password) {
         String navigation = "";
@@ -82,12 +100,19 @@ public class RegisterController implements Serializable{
             FacesContext.getCurrentInstance()
                     .addMessage(null, message);
             navigation = "login.jsf";
-            
+
         }
-        return navigation;        
+        return navigation;
 
     }
 
+    /**
+     * Diese Method ist für die Verschlüsselung des eingegebenen Passwortes in
+     * einen MD5-Hash zuständig
+     *
+     * @param input Das eingegebene Passwort
+     * @return Der verschlüsselte MD5-Hash
+     */
     public String md5(String input) {
         String md5 = null;
         if (input == null) {

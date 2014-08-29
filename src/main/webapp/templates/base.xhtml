@@ -38,13 +38,13 @@
                     <div style="clear:both"></div>
 
                     <h:form>
-                        <!--<p:idleMonitor timeout="1500000">-->
-                        <p:idleMonitor timeout="30000">
-                            <p:ajax event="idle" listener="#{userBean.sessionIdleListener}" /> 
+                        <p:idleMonitor timeout="1500000">                        
+                            <p:ajax event="idle" listener="#{userBean.sessionIdleListener}" />
+                            <p:ajax event="active" listener="#{userBean.keepSessionAlive}"/>
                         </p:idleMonitor> 
 
                         <p:confirmDialog  closable="true" id="sessionExpiredDlg" 
-                                          message="Deine Sitzung wird in 5 Minuten ablaufen."  
+                                          message="Deine Sitzung wird in 5 Minuten ablaufen. Drücke OK um sie zu verlängern."  
                                           header="#{msgs['confirmDialog.initiatingDestroyProcess.label']}"
                                           severity="alert" widgetVar="sessionExpiredConfirmation" style="z-index: 25000">
                             <p:commandButton id="confirmRouteDel" value="Ok" oncomplete="PF('sessionExpiredConfirmation').hide();" actionListener="#{userBean.keepSessionAlive}"/>

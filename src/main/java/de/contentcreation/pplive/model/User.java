@@ -10,6 +10,11 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+/**
+ * Die Implementierung des Users
+ * @author Gösta Ostendorf (goesta.o@gmail.com)
+ */
+
 @Entity
 @Table(name = "user")
 public class User implements Serializable {

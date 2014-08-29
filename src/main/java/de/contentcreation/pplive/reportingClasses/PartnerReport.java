@@ -1,5 +1,9 @@
 package de.contentcreation.pplive.reportingClasses;
 
+/**
+ * Die Implementierung eines PartnerReport-Objekts
+ * @author Gösta Ostendorf (goesta.o@gmail.com)
+ */
 public class PartnerReport {
 	private String nachname;
 	private String vorname;

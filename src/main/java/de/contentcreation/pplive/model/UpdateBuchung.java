@@ -14,6 +14,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+/**
+ * Die Implementierung der Update-Buchung
+ * @author Gösta Ostendorf (goesta.o@gmail.com)
+ */
+
 @Entity
 @Table(name = "buchungen")
 public class UpdateBuchung implements Serializable {

@@ -2,6 +2,11 @@ package de.contentcreation.pplive.reportingClasses;
 
 import java.util.Date;
 
+
+/**
+ * Die Implementierung des UserReport-Objekts
+ * @author Gösta Ostendorf (goesta.o@gmail.com)
+ */
 public class UserReport {
 
     private String nachname;

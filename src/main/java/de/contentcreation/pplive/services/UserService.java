@@ -11,10 +11,14 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.persistence.TypedQuery;
 
+/**
+ * Diese Klasse ist für alle Datenbankabfragen, die den Nutzer betreffen,
+ * zuständig.
+ *
+ * @author Gösta Ostendorf (goesta.o@gmail.com)
+ */
 @Stateless
 public class UserService {
 
@@ -23,6 +27,15 @@ public class UserService {
 
     User user;
 
+    /**
+     * Sucht ein Userobjekt mit Hilfe des Nutzernamens und des Passworts, wenn
+     * ein Eintrag mit dieser Konstellation gefunden wurde, wird das Userobjekt
+     * zurückgegeben.
+     *
+     * @param username Der Nutzername
+     * @param password Das Passwort
+     * @return
+     */
     public User login(String username, String password) {
 
         Query q = em
@@ -46,6 +59,18 @@ public class UserService {
         return user;
     }
 
+    /**
+     * Diese Methode speichert einen Nutzer, der sich neu registrieren möchte.
+     * Zunächst wird geprüft, ob der Nutzername schon vergeben ist, dann wird
+     * der Rückgabewert false ausgegeben. Ansonsten wird der Nutzer angelegt und
+     * abgespeichert sowie true zurückgegeben.
+     *
+     * @param nick Der Nutzername
+     * @param vorname Der Vorname
+     * @param nachname Der Nachname
+     * @param passwort Das Passwort
+     * @return Registrierung war erfolgreich; true = ja, false = nein
+     */
     public boolean registerUser(String nick, String vorname, String nachname,
             String passwort) {
 
@@ -70,6 +95,11 @@ public class UserService {
         return returnValue;
     }
 
+    /**
+     * Verschlüsselt einen Input in einen MD5-Hash
+     * @param input Der Input
+     * @return Der MD5-Hash
+     */
     private String md5(String input) {
         String md5 = null;
         if (input == null) {

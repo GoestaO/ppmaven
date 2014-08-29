@@ -6,6 +6,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * Die Implementierung der Rolle
+ * @author Gösta Ostendorf (goesta.o@gmail.com)
+ */
+
 @Entity
 @Table(name = "rollen")
 public class Rolle implements Serializable {

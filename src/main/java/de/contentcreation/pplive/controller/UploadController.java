@@ -27,8 +27,10 @@ import org.jboss.logging.Logger;
 import org.primefaces.event.FileUploadEvent;
 
 /**
+ * Diese Datei ist der Controller für die Upload-Seite und sorgt dafür, dass
+ * eine Backlog-Datei in die DB eingespielt wird.
  *
- * @author Gösta Ostendorf <goesta.o@gmail.com>
+ * @author Gösta Ostendorf (goesta.o@gmail.com)
  */
 @Named
 @SessionScoped
@@ -41,9 +43,21 @@ public class UploadController implements Serializable {
 
     int counter = 0;
 
+    /**
+     * Diese Methode sorgt dafür, dass eine gewählte Datei auf den Server
+     * geladen wird. Hierzu wird zunächst die hochgeladene CSV geparst und aus
+     * den entsprechenden Spalten ein BacklogArticle-Objekt erzeugt wird. Diese
+     * Objekte werden dann in einer Liste gespeichert. Anschließend wird die
+     * Objekte in der Liste mit der Datenbank abgeglichen, ob sie schon
+     * vorhanden sind oder nicht. Noch nicht vorhandene Objekte werden dann in
+     * der Datenbank abgespeichert.
+     *
+     * @param event Das FileUpload-Event
+     */
     public void handleFileUpload(FileUploadEvent event) {
-//        UploadedFile file = event.getFile();
         List<BacklogArticle> backlogList = new ArrayList();
+        
+        // Die hochzuladende Datei auf den Server laden und in backlog.csv abspeichern
         try {
             File targetFile = new File("backlog.csv");
             InputStream inputStream = event.getFile().getInputstream();
@@ -57,23 +71,14 @@ public class UploadController implements Serializable {
             inputStream.close();
             out.flush();
             out.close();
+            
+            // Anschließend die gerade hochgeladene Datei einlesen und parsen
             FileReader reader = new FileReader(targetFile);
             BufferedReader br = new BufferedReader(reader);
             br.readLine();
             String line = br.readLine();
             while (line != null) {
                 String[] data = line.split(";", -1);
-//                String config = data[0];
-//                try {
-//                    ean = Long.parseLong(data[9]);
-//                } catch (NumberFormatException ex) {
-//                    ean = 0;
-//                }
-//                int partnerID = Integer.parseInt(data[1]);
-//                String warengruppenpfad = data[10];
-//                String saison = data[11];
-//                int appdomainID = Integer.parseInt(data[7]);
-
                 String config = data[0];
                 try {
                     ean = Long.parseLong(data[9]);
@@ -85,6 +90,8 @@ public class UploadController implements Serializable {
                 String saison = data[8];
                 int appdomainID = Integer.parseInt(data[10]);
                 String identifier = config + partnerID + appdomainID;
+                
+                // BacklogArticle-Objekt erzeugen und die Attribute setzen
                 BacklogArticle ba = new BacklogArticle();
                 ba.setIdentifier(identifier);
                 ba.setAppdomainId(appdomainID);
@@ -99,6 +106,8 @@ public class UploadController implements Serializable {
                 line = br.readLine();
             }
             br.close();
+            
+            // Die Liste an den DB-Handler übergeben, der jedes Objekt auf Vorhandensein überprüft und eventuell abspeichert
             counter = dh.checkAndAdd(backlogList);
         } catch (IOException e) {
             Logger.getLogger(UploadController.class.getClass()).log(Logger.Level.FATAL, e);

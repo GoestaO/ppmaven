@@ -1,7 +1,6 @@
 package de.contentcreation.pplive.services;
 
 import de.contentcreation.pplive.model.BacklogArticle;
-import de.contentcreation.pplive.model.Rolle;
 import de.contentcreation.pplive.model.UpdateBuchung;
 import de.contentcreation.pplive.model.User;
 import java.math.BigInteger;
@@ -17,14 +16,24 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import model.Bemerkung;
 
+/**
+ * Die Implemntierung des Datenbank-Handlers. Der Datenbank-Handler ist
+ * zuständig für alle Datenbank-Abfragen, die Artikel betreffen.
+ *
+ * @author Gösta Ostendorf (goesta.o@gmail.com)
+ */
 @Stateless
 public class DatabaseHandler {
 
     @PersistenceContext
     private EntityManager em;
 
+    /**
+     * Gibt alle offenen Backlog-Artikel aus
+     *
+     * @return Liste mit den Backlog-Artikeln
+     */
     public List<BacklogArticle> getBacklog() {
 
         TypedQuery<BacklogArticle> showBacklog = em.createQuery(
@@ -36,6 +45,13 @@ public class DatabaseHandler {
         return backlogList;
     }
 
+    /**
+     * Gibt alle offenen Backlog-Artikel aus, die von einer Liste gewisser
+     * Partnern stammen.
+     *
+     * @param partnerList
+     * @return Liste mit Backlog-Artikeln
+     */
     public List<Object[]> getBacklogByPartner(List<Integer> partnerList) {
 
         StringBuilder builder = new StringBuilder();
@@ -60,6 +76,13 @@ public class DatabaseHandler {
         return backlogList;
     }
 
+    /**
+     * Gibt alle offenen Backlog-Artikel aus, die von einer Liste gewisser
+     * Partnern stammen.
+     *
+     * @param partnerList
+     * @return Liste mit Backlog-Artikeln
+     */
     public List<BacklogArticle> getBacklogByPartner2(List<Integer> partnerList) {
 
         TypedQuery<BacklogArticle> query = em
@@ -72,6 +95,11 @@ public class DatabaseHandler {
         return backlogList;
     }
 
+    /**
+     * Gibt die Anzahl der offenen Backlog-Artikel aus.
+     *
+     * @return Anzahl der offenen Artikel
+     */
     public int getBacklogSize() {
 
         TypedQuery<BacklogArticle> showBacklog = em.createQuery(
@@ -82,6 +110,12 @@ public class DatabaseHandler {
         return backlogList.size();
     }
 
+    /**
+     * Gibt einen bestimmten Backlog-Artikel aus
+     *
+     * @param identifier Der Identifier
+     * @return Der Backlog-Artikel
+     */
     public BacklogArticle getBacklogArticle(String identifier) {
 
         BacklogArticle backlogArticle = (BacklogArticle) em.find(
@@ -91,6 +125,15 @@ public class DatabaseHandler {
         return backlogArticle;
     }
 
+    /**
+     * Iteriert eine Liste von Backlog-Artikeln und untersucht jeden dort drin
+     * befindlichen Artikel auf bereits Vorhandensein in der Datenbank. Wenn der
+     * Artikel noch nicht vorhanden ist, wird er gespeichert, ansonsten nicht.
+     * Gibt die Anzahl der hinzugefügten Artikel aus.
+     *
+     * @param backlogList
+     * @return Anzahl der hinzugefügten neuen Artikel
+     */
     public int checkAndAdd(List<BacklogArticle> backlogList) {
         int counter = 0;
 
@@ -106,6 +149,17 @@ public class DatabaseHandler {
         return counter;
     }
 
+    /**
+     * Aktualisiert den Status eines Artikels und erzeugt eine Buchung mit den gemachten Angaben.
+     * @param identifier Der Identifier
+     * @param bemerkung1 Bemerkung 1
+     * @param bemerkung2 Bemerkung 2
+     * @param bemerkung3 Bemerkung 3
+     * @param bemerkungKAM Bemerkung KAM
+     * @param neuerStatus Der neue Status: offen oder fertig
+     * @param currentUser Der Nutzer, der den Artikel bearbeitet hat
+     * @param season Die Saison
+     */
     public void updateArticleStatus(String identifier, String bemerkung1,
             String bemerkung2, String bemerkung3, String bemerkungKAM,
             boolean neuerStatus, User currentUser, String season) {
@@ -143,29 +197,10 @@ public class DatabaseHandler {
 
     }
 
-    public void setCounter() {
-
-        long start = -System.currentTimeMillis();
-
-        em.getTransaction().begin();
-        List<BacklogArticle> backlogList = getBacklog();
-        for (BacklogArticle backlogArticle : backlogList) {
-            TypedQuery<Long> nrSKUs = em
-                    .createQuery(
-                            "SELECT count(b.config) FROM BacklogArticle b where b.offen = 1 and b.config = :sku",
-                            Long.class);
-
-            nrSKUs.setParameter("sku", backlogArticle.getConfig());
-            long count = ((Long) nrSKUs.getSingleResult()).longValue();
-            System.out.println(count);
-            backlogArticle.setCounter((int) count);
-            em.merge(backlogArticle);
-        }
-        em.getTransaction().commit();
-        em.close();
-
-    }
-
+    /**
+     * Gibt alle Saisons einmalig aus, die in der DB vorhanden sind.
+     * @return 
+     */
     public List<String> getSeasons() {
 
         TypedQuery<String> getSeasons = em
@@ -178,6 +213,11 @@ public class DatabaseHandler {
         return seasons;
     }
 
+    /**
+     * Verschlüsselt einen String in einen MD5-Hash
+     * @param input Der Input
+     * @return Der MD5-Hash
+     */
     public String md5(String input) {
         String md5 = null;
         if (input == null) {
@@ -195,6 +235,10 @@ public class DatabaseHandler {
         return md5;
     }
 
+    /**
+     * Gibt alle Partner aus, von denen noch Artikel offen sind.
+     * @return Liste mit den Partnern
+     */
     public List<Integer> getPartner() {
 
         TypedQuery<Integer> getPartnerQuery = em
@@ -206,6 +250,10 @@ public class DatabaseHandler {
         return partner;
     }
 
+    /**
+     * Gibt alle Partner aus, auch von Artikeln, die bereits geschlossen wurden.
+     * @return Liste mit den Partnern
+     */
     public List<Integer> getPartner2() {
 
         TypedQuery<Integer> getPartnerQuery = em
@@ -217,18 +265,10 @@ public class DatabaseHandler {
         return partner;
     }
 
-    public List<String> getPartnerListString() {
-        List<Integer> partnerList = this.getPartner();
-
-        List<String> partnerListString = new ArrayList();
-        for (Iterator localIterator = partnerList.iterator(); localIterator
-                .hasNext();) {
-            int i = ((Integer) localIterator.next()).intValue();
-            partnerListString.add(Integer.toString(i));
-        }
-        return partnerListString;
-    }
-
+    /**
+     * Gibt alle Bemerkungen aus
+     * @return Die Bemerkungen
+     */
     public List<String> getBemerkungen() {
 
         TypedQuery<String> getBemerkungQuery = em.createQuery(
@@ -238,6 +278,11 @@ public class DatabaseHandler {
         return bemerkungen;
     }
 
+    /**
+     * Gibt die ID (Key) einer bestimmten Bemerkung aus
+     * @param value Die gesuchte Bemerkung
+     * @return Die gefundene entsprechende ID.
+     */
     public Long getBemerkungId(String value) {
         Long id;
         TypedQuery<Long> query = em.createQuery("Select b.id from Bemerkung b where b.bemerkung = :value", Long.class);

@@ -22,7 +22,7 @@
             <p:growl id="msgs" showDetail="true"/>
             <p:dataTable widgetVar = "dataTable" id="backlog" selectionMode="multiple" selection="#{overviewController.selectedArticles}" rowKey="#{article.identifier}" var="article" value="#{overviewController.backlogList}" rows="50"
                          paginator="true"
-                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" currentPageReportTemplate="{startRecord}-{endRecord} von {totalRecords}"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" currentPageReportTemplate="{startRecord}-{endRecord} von {totalRecords}, gefiltert von ursprünglich #{overviewController.backlogList.size()}"
                          rowsPerPageTemplate="10,50,100" rendered ="#{userBean.valid}" filteredValue="#{overviewController.filteredArticles}" emptyMessage="Keine Artikel gefunden" style="text-align: center;">
 <!--                <p:ajax event="rowEdit" listener="#{overviewController.onRowEdit}" update=":form:msgs" />
                 <p:ajax event="rowEditCancel" listener="#{overviewController.onRowCancel}" update=":form:msgs" />-->
@@ -84,10 +84,10 @@
                             <p:column width="120" headerText="EAN"/>
                             <p:column width="40" headerText="Appd."/>
                             <p:column width="60" headerText="Partner"/>
-                            <p:column headerText="Bemerkung 1"/>
-                            <p:column headerText="Bemerkung 2"/>
-                            <p:column headerText="Bemerkung 3"/>
-                            <p:column headerText="Bemerkung KAM"/>
+                            <p:column width="200" headerText="Bemerkung 1"/>
+                            <p:column width="200" headerText="Bemerkung 2"/>
+                            <p:column width="200" headerText="Bemerkung 3"/>
+                            <p:column width="200" headerText="Bemerkung KAM"/>
                             <p:column width="60" headerText="Datum"/>
                             <p:column width="60" headerText="Status"/>
                         </p:row>
@@ -104,11 +104,11 @@
                     <p:column>
                         <h:outputText value="#{selectedArticle.partnerId}" />
                     </p:column>
-                    <p:column>
+                    <p:column width="200">
 <!--                        <p:inputTextarea rows="2" cols="30" value="#{selectedArticle.bemerkung1}">
                             <p:ajax/>
                         </p:inputTextarea>-->
-                        <p:autoComplete size="50"  value="#{selectedArticle.bemerkung1}" completeMethod="#{overviewController.completeBemerkung}"  var="bemerkung" itemLabel="#{bemerkung}" itemValue="#{bemerkung}" immediate="false">
+                        <p:autoComplete size="30"  value="#{selectedArticle.bemerkung1}" completeMethod="#{overviewController.completeBemerkung}"  var="bemerkung" itemLabel="#{bemerkung}" itemValue="#{bemerkung}" immediate="false">
                             <p:ajax/>
                             <p:ajax event="itemSelect" listener="#{overviewController.handleSelectedBemerkung1}" />
                                 <!--<ui:param name="selectedBemerkung" value="${bemerkung}" />-->
@@ -160,6 +160,16 @@
                 </f:facet>
             </p:dialog>
         </h:form>
+
+<!--        <script type="text/javascript">
+            $().ready(function() {
+                if ($('div').hasClass('ui-state-active')){
+                    alert("Hallo");
+                }
+
+            });
+
+        </script>-->
 
     </ui:define>
 

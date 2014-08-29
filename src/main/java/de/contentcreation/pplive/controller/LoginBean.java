@@ -24,8 +24,13 @@ import javax.faces.context.FacesContext;
 import org.primefaces.context.RequestContext;
 
 /**
+ * Diese Bean ist der Controller für die Login-Seite. Sie ist für die
+ * Entgegennahme der eingegebenen Daten und Abgleich mit der
+ * dahintergeschalteten Stateless UserService zuständig. Wenn die Login-Daten
+ * zutreffen, wird der Login zugelassen und eine Session erstellt, ansonsten
+ * gibt es einen Fehlermeldung.
  *
- * @author Gösta Ostendorf <goesta.o@gmail.com>
+ * @author Gösta Ostendorf (goesta.o@gmail.com)
  */
 @Named
 @RequestScoped
@@ -48,10 +53,7 @@ public class LoginBean implements Serializable {
 
     private String password;
 
-//    @PostConstruct
-//    public void init() {
-//        partnerList = 
-//    }
+    // Getter & Setter
     public String getUsername() {
         return username;
     }
@@ -84,6 +86,12 @@ public class LoginBean implements Serializable {
         this.selectedPartners = selectedPartners;
     }
 
+    /**
+     * Diese Methode verschlüsselt das eingegebene Passwort in einen MD5-Hash
+     *
+     * @param input Das eingegebene Passwort
+     * @return MD5-Hash als String
+     */
     private String md5(String input) {
         String md5 = null;
         if (input == null) {
@@ -101,25 +109,35 @@ public class LoginBean implements Serializable {
         return md5;
     }
 
+    /**
+     * Diese Methode führt den Abgleich der eingegebenen Daten auf der
+     * Login-Seite mit in der DB hinterlegen Daten durch, indem auf den
+     * UserService zugegriffen wird und geschaut wird, ob ein Eintrag mit der
+     * Kombination aus Nutzername + Passwort existiert.
+     *
+     * @param username Der eingegebene Nutzername.
+     * @param password Das eingegebene Passwort.
+     * @param partnerList Die gewählten Partner, die für eine Sitzung bearbeitet
+     * werden sollen.
+     * @return Die Seite, zu der am Ende der Methode navigiert werden soll,
+     * entweder die Backlogübersicht, oder es gibt eine Fehlermeldung und keine
+     * Navigation.
+     */
     public String login(String username, String password, List<Integer> partnerList) {
         String direction = "";
         User user = service.login(username, password);
         if (user != null) {
-//            welcome();
             bean.setUser(user);
             bean.setValid(true);
             bean.setVorname(username);
             bean.setNachname(username);
             bean.setPartnerList(partnerList);
-//            RequestContext requestContext = RequestContext.getCurrentInstance();
-//            requestContext.execute("document.location.reload(true)");
-
             direction = "backlogOverview.jsf?faces-redirect=true";
         } else if (user == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Login nicht erfolgreich", "Benutzername '" + username + "' oder Passwort ist nicht korrekt!"));
             direction = null;
         }
         return direction;
-    }   
+    }
 
 }

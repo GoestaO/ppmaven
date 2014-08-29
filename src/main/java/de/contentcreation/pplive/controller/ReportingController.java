@@ -31,8 +31,9 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Dies ist der Controller für die Reporting-Seite.
  *
- * @author Gösta Ostendorf <goesta.o@gmail.com>
+ * @author Gösta Ostendorf (goesta.o@gmail.com)
  */
 @Named
 @RequestScoped
@@ -58,9 +59,10 @@ public class ReportingController implements Serializable {
     private List<Integer> selectedPartner;
 
     private List<Integer> partnerList;
-    
+
     private int offen;
 
+    // Getter + Setter
     public Date getLeistungDate1() {
         return leistungDate1;
     }
@@ -113,13 +115,16 @@ public class ReportingController implements Serializable {
         this.offen = offen;
     }
 
-    /**
-     * @param partnerList the partnerList to set
-     */
     public void setPartnerList(List<Integer> partnerList) {
         this.partnerList = partnerList;
     }
 
+    /**
+     * Diese Methode gibt für einen gewählten Zeitraum alle Buchungen aus.
+     *
+     * @param datum1 Das erste Datum = Start-Datum
+     * @param datum2 Das zweite Datum = End-Datum
+     */
     public void getLeistungsReport(Date datum1, Date datum2) {
         if (datum2.before(datum1)) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlerhafte Eingabe", "Das erste Datum muss kleiner als das zweite Datum sein. Bitte versuche es noch einmal."));
@@ -138,6 +143,9 @@ public class ReportingController implements Serializable {
         }
     }
 
+    /**
+     * Diese Methode gibt alle offenen Backlog-Artikel aus
+     */
     public void getPartnerReportList() {
 
         List<BacklogArticle> partnerReportList = rh.getOpenBacklogArticles();
@@ -151,6 +159,12 @@ public class ReportingController implements Serializable {
         }
     }
 
+    /**
+     * Diese Methode gibt den KAM-Report aus, gefiltert, ob die Artikel offen
+     * oder fertig sind.
+     *
+     * @param offen 1 = Artikel offen, 0 = Artikel fertig
+     */
     public void getKAMReportList(int offen) {
         List<Object[]> partnerReport = rh.getProblemArticles(offen);
         String fileName = "KeyAccountReport.xlsx";
@@ -164,6 +178,12 @@ public class ReportingController implements Serializable {
 
     }
 
+    /**
+     * Diese Methode gibt alle bereits bearbeiteten Artikel für eine Auswahl von
+     * Partnern aus.
+     *
+     * @param selectedPartner Die gewählten Partner.
+     */
     public void getEditArticlesReport(List<Integer> selectedPartner) {
         List<Object[]> editedArticlesList = rh.getEditedDataByPartner(selectedPartner);
 
@@ -177,6 +197,13 @@ public class ReportingController implements Serializable {
         }
     }
 
+    /**
+     * Diese Methode gibt alle neu hochgeladenen (neu in der Backlog
+     * erschienenen) Artikel für einen gewählten Zeitraum aus.
+     *
+     * @param datum1 Das erste Datum = Start-Datum
+     * @param datum2 Das zweite Datum = End-Datum
+     */
     public void getNewArticlesReport(Date datum1, Date datum2) {
         if (datum2.before(datum1)) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlerhafte Eingabe", "Das erste Datum muss kleiner als das zweite Datum sein. Bitte versuche es noch einmal."));
@@ -193,6 +220,14 @@ public class ReportingController implements Serializable {
         }
     }
 
+    /**
+     * Diese Methode verschiebt ein Datum um einen Tag nach hinten, ist wichtig,
+     * um bei einer Zeitraumsabfrage das End-Datum auch noch in der Abfrage zu
+     * haben.
+     *
+     * @param date
+     * @return Das Datumsobjekt.
+     */
     public Date shiftDate(Date date) {
         Calendar cal2 = Calendar.getInstance();
         cal2.setTime(date);
@@ -201,6 +236,11 @@ public class ReportingController implements Serializable {
         return secondDate;
     }
 
+    /**
+     * Diese Methode ist dafür zuständig, eine Datei von der Seite herunterzuladen.
+     * @param file Die Datei.
+     * @throws IOException 
+     */
     public void download(File file) throws IOException {
         FacesContext fc = FacesContext.getCurrentInstance();
         ExternalContext ec = fc.getExternalContext();
@@ -222,34 +262,34 @@ public class ReportingController implements Serializable {
         fc.responseComplete(); // Important! Otherwise JSF will attempt to render the response which obviously will fail since it's already written with a file and closed.
     }
 
-    public void downloadFile(File file) {
-
-        HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-
-        response.setHeader("Content-Disposition", "attachment;filename=" + file.getName() + ".xlsx");
-        response.setContentLength((int) file.length());
-        ServletOutputStream out = null;
-        try {
-            FileInputStream input = new FileInputStream(file);
-            byte[] buffer = new byte[1024];
-            out = response.getOutputStream();
-            int i = 0;
-            while ((i = input.read(buffer)) != -1) {
-                out.write(buffer);
-                out.flush();
-            }
-            FacesContext.getCurrentInstance().getResponseComplete();
-        } catch (IOException err) {
-            err.printStackTrace();
-        } finally {
-            try {
-                if (out != null) {
-                    out.close();
-                }
-            } catch (IOException err) {
-                err.printStackTrace();
-            }
-        }
-    }
+//    public void downloadFile(File file) {
+//
+//        HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+//
+//        response.setHeader("Content-Disposition", "attachment;filename=" + file.getName() + ".xlsx");
+//        response.setContentLength((int) file.length());
+//        ServletOutputStream out = null;
+//        try {
+//            FileInputStream input = new FileInputStream(file);
+//            byte[] buffer = new byte[1024];
+//            out = response.getOutputStream();
+//            int i = 0;
+//            while ((i = input.read(buffer)) != -1) {
+//                out.write(buffer);
+//                out.flush();
+//            }
+//            FacesContext.getCurrentInstance().getResponseComplete();
+//        } catch (IOException err) {
+//            err.printStackTrace();
+//        } finally {
+//            try {
+//                if (out != null) {
+//                    out.close();
+//                }
+//            } catch (IOException err) {
+//                err.printStackTrace();
+//            }
+//        }
+//    }
 
 }

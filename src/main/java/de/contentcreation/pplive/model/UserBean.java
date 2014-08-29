@@ -1,12 +1,20 @@
 package de.contentcreation.pplive.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
+
+/**
+ * Diese Bean repräsentiert die Session eines eingeloggten Users und hält diesen Zustand nebst gewählte Partner fest
+ * @author Gösta Ostendorf (goesta.o@gmail.com)
+ */
 
 @Named
 @SessionScoped
@@ -20,6 +28,16 @@ public class UserBean implements Serializable {
     private boolean isValid;
     private User user;
     private List<Integer> partnerList;
+
+    @PostConstruct
+    public void init() {
+        System.out.println("Session erstellt: " + new Date());
+    }
+
+    @PreDestroy
+    public void destroy() {
+        System.out.println("Session zerstört: " + new Date());
+    }
 
     public int getId() {
         return this.id;

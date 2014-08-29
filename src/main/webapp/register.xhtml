@@ -18,13 +18,13 @@
                 <p:growl id="message" autoUpdate="true"/>
                 <p:panelGrid columns="2" rendered="#{!userBean.valid}">
                     <p:outputLabel value="Nutzername"/>
-                    <p:inputText value ="#{registerController.username}"/>
+                    <p:inputText value ="#{registerController.username}" required="true" />
                     <p:outputLabel value="Vorname"/>
-                    <p:inputText value ="#{registerController.vorname}"/>
+                    <p:inputText value ="#{registerController.vorname}" required="true"/>
                     <p:outputLabel value="Nachname"/>
-                    <p:inputText value ="#{registerController.nachname}"/>
+                    <p:inputText value ="#{registerController.nachname}"required="true"/>
                     <p:outputLabel value="Passwort"/>
-                    <p:password value ="#{registerController.password}"/>
+                    <p:password value ="#{registerController.password}" required="true"/>
                 </p:panelGrid>
                 <br></br>
                 <p:commandButton update="message" value ="Registrieren" action="#{registerController.registerUser(registerController.username, registerController.vorname, registerController.nachname, registerController.md5(registerController.password))}"/>

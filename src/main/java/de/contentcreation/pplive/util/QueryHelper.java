@@ -3,6 +3,10 @@ package de.contentcreation.pplive.util;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Dies ist eine Hilfsklasse, die verschiedene Funktionen zur Verfügung stellt. 
+ * @author Gösta Ostendorf (goesta.o@gmail.com)
+ */
 public class QueryHelper {
     
     private static final String empty = "(NULL)";

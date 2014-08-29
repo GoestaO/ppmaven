@@ -9,6 +9,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+/**
+ * Die Implementierung des Backlogartikels 
+ * @author Gösta Ostendorf (goesta.o@gmail.com)
+ */
+
 @Entity
 @Table(name = "backlog")
 public class BacklogArticle implements Serializable {

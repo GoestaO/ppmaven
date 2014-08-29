@@ -17,8 +17,8 @@ import model.Bemerkung;
 
 
 /**
- *
- * @author Gösta Ostendorf <goesta.o@gmail.com>
+ * Die Implementierung des Bemerkungsconverters
+ * @author Gösta Ostendorf (goesta.o@gmail.com)
  */
 
 @FacesConverter(value="bemerkungsConverter", forClass = Bemerkung.class)
