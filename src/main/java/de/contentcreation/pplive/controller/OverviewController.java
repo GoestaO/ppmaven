@@ -6,6 +6,7 @@
 package de.contentcreation.pplive.controller;
 
 import de.contentcreation.pplive.model.BacklogArticle;
+import de.contentcreation.pplive.model.Bemerkung;
 import de.contentcreation.pplive.model.User;
 import de.contentcreation.pplive.model.UserBean;
 import de.contentcreation.pplive.services.DatabaseHandler;
@@ -20,7 +21,6 @@ import javax.faces.view.ViewScoped;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import model.Bemerkung;
 import org.primefaces.event.SelectEvent;
 
 /**
@@ -127,21 +127,16 @@ public class OverviewController implements Serializable {
         }
     }
 
-//    public void handleChangedBemerkung1() {
-//        String bemerkung = this.selectedArticle.getBemerkung1();
-////        try {
-////            if (this.selectedArticle != null) {
-////                this.selectedArticle.setBemerkung1(bemerkung);
-////            }
-////
-////        } catch (NullPointerException ex) {
-////
-////        }
-//        System.out.println(bemerkung);
-//    }
     public void handleSelectedBemerkung2(SelectEvent event) {
         String bemerkung = (String) event.getObject();
-        this.selectedArticle.setBemerkung2(bemerkung);
+        try {
+            if (this.selectedArticle != null) {
+                this.selectedArticle.setBemerkung2(bemerkung);
+            }
+
+        } catch (NullPointerException ex) {
+
+        }
     }
 
     public void handleSelectedBemerkung3(SelectEvent event) {
@@ -216,8 +211,21 @@ public class OverviewController implements Serializable {
      * @param query Die eingegebene Zeichenkette
      * @return Die Liste mit den zutreffenden Einträgen
      */
-    public List<String> completeBemerkung(String query) {
-        List<String> allBemerkungen = dh.getBemerkungen();
+    public List<String> completeBemerkung1(String query) {
+        List<String> allBemerkungen = dh.getBemerkungen1();
+        List<String> filteredBemerkungen = new ArrayList<>();
+
+        for (int i = 0; i < allBemerkungen.size(); i++) {
+            String bemerkung = allBemerkungen.get(i);
+            if (bemerkung.toLowerCase().contains(query)) {
+                filteredBemerkungen.add(bemerkung);
+            }
+        }
+        return filteredBemerkungen;
+    }
+
+    public List<String> completeBemerkung2(String query) {
+        List<String> allBemerkungen = dh.getBemerkungen2();
         List<String> filteredBemerkungen = new ArrayList<>();
 
         for (int i = 0; i < allBemerkungen.size(); i++) {
