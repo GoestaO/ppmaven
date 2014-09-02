@@ -120,7 +120,7 @@ public class DatabaseHandler {
 
         BacklogArticle backlogArticle = (BacklogArticle) em.find(
                 BacklogArticle.class, identifier);
-        em.close();
+        
 
         return backlogArticle;
     }
@@ -208,7 +208,7 @@ public class DatabaseHandler {
                         "select distinct(b.saison) from BacklogArticle b where b.saison !='' order by b.saison",
                         String.class);
         List<String> seasons = getSeasons.getResultList();
-        em.close();
+        
 
         return seasons;
     }

@@ -12,10 +12,11 @@ import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 
 /**
- * Diese Bean repräsentiert die Session eines eingeloggten Users und hält diesen Zustand nebst gewählte Partner fest
+ * Diese Bean repräsentiert die Session eines eingeloggten Users und hält diesen
+ * Zustand nebst gewählte Partner fest
+ *
  * @author Gösta Ostendorf (goesta.o@gmail.com)
  */
-
 @Named
 @SessionScoped
 public class UserBean implements Serializable {
@@ -29,16 +30,7 @@ public class UserBean implements Serializable {
     private User user;
     private List<Integer> partnerList;
 
-    @PostConstruct
-    public void init() {
-        System.out.println("Session erstellt: " + new Date());
-    }
-
-    @PreDestroy
-    public void destroy() {
-        System.out.println("Session zerstört: " + new Date());
-    }
-
+    
     public int getId() {
         return this.id;
     }
@@ -114,6 +106,12 @@ public class UserBean implements Serializable {
     }
 
     public void sessionIdleListener() {
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.execute("PF('sessionExpiredConfirmation').show()");
+    }
+
+    @PreDestroy
+    public void sessionExpiredMessage() {
         RequestContext context = RequestContext.getCurrentInstance();
         context.execute("PF('sessionExpiredConfirmation').show()");
     }

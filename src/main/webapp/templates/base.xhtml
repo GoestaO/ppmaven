@@ -40,16 +40,16 @@
                     <h:form>
                         <p:idleMonitor timeout="1800000">                        
                             <p:ajax event="idle" listener="#{userBean.sessionIdleListener}" />
-                            <p:ajax event="active" listener="#{userBean.keepSessionAlive}"/>
+                            <p:ajax event="active" oncomplete="rc()"/>
                         </p:idleMonitor> 
-
+                        <p:remoteCommand name = "rc" actionListener="#{userBean.keepSessionAlive}"/>
                         <p:confirmDialog  closable="true" id="sessionExpiredDlg" 
                                           message="Deine Sitzung ist abgelaufen. Bitte melde dich erneut an."  
                                           header="#{msgs['confirmDialog.initiatingDestroyProcess.label']}"
                                           severity="alert" widgetVar="sessionExpiredConfirmation" style="z-index: 25000">
-                            <p:commandButton id="confirmRouteDel" value="Ok" oncomplete="PF('sessionExpiredConfirmation').hide();" actionListener="#{userBean.resetUser}"/>
+                            <p:commandButton id="confirmRouteDel" value="Ok" oncomplete="PF('sessionExpiredConfirmation').hide();" action="#{userBean.resetUser()}"/>
                             <!--<p:button href="login.jsf" value="Zum Login" />-->
-                            <p:remoteCommand actionListener="#{userBean.keepSessionAlive}"/>
+
                         </p:confirmDialog>
                     </h:form>
                     <h:form>

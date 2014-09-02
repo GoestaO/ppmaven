@@ -20,10 +20,10 @@
         <h:form id="form">
             <p:hotkey bind="alt+n" handler="PF('varEditButton').jq.click()" />
             <p:growl id="msgs" showDetail="true"/>
-            <p:dataTable widgetVar = "dataTable" id="backlog" selectionMode="multiple" selection="#{overviewController.selectedArticles}" rowKey="#{article.identifier}" var="article" value="#{overviewController.backlogList}" rows="50"
-                         paginator="true"
+            <p:dataTable widgetVar = "dataTable" id="backlog" selectionMode="multiple" selection="#{overviewController.selectedArticles}" rowKey="#{article.identifier}" var="article" value="#{overviewController.backlogList}" rows="100"
+                         paginator="true" 
                          paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" currentPageReportTemplate="{startRecord}-{endRecord} von {totalRecords}, gefiltert von ursprünglich #{overviewController.backlogList.size()}"
-                         rowsPerPageTemplate="10,50,100" rendered ="#{userBean.valid}" filteredValue="#{overviewController.filteredArticles}" emptyMessage="Keine Artikel gefunden" style="text-align: center;">
+                         rowsPerPageTemplate="50,100,200" rendered ="#{userBean.valid}" filteredValue="#{overviewController.filteredArticles}" emptyMessage="Keine Artikel gefunden" style="text-align: center;">
 <!--                <p:ajax event="rowEdit" listener="#{overviewController.onRowEdit}" update=":form:msgs" />
                 <p:ajax event="rowEditCancel" listener="#{overviewController.onRowCancel}" update=":form:msgs" />-->
 
@@ -84,11 +84,11 @@
                             <p:column width="120" headerText="EAN"/>
                             <p:column width="40" headerText="Appd."/>
                             <p:column width="60" headerText="Partner"/>
+                            <p:column width="60" headerText="Saison"/>
                             <p:column width="200" headerText="Bemerkung 1"/>
                             <p:column width="200" headerText="Bemerkung 2"/>
                             <p:column width="200" headerText="Bemerkung 3"/>
-                            <p:column width="200" headerText="Bemerkung KAM"/>
-                            <p:column width="60" headerText="Datum"/>
+                            <p:column width="200" headerText="Bemerkung KAM"/>                            
                             <p:column width="60" headerText="Status"/>
                         </p:row>
                     </p:columnGroup>
@@ -98,11 +98,18 @@
                     <p:column width="120">
                         <h:outputText value="#{selectedArticle.ean}" />
                     </p:column>
+
                     <p:column width="40">
                         <h:outputText value="#{selectedArticle.appdomainId}" />
                     </p:column>
                     <p:column>
                         <h:outputText value="#{selectedArticle.partnerId}" />
+                    </p:column>
+                    <p:column width="40">
+                        <p:selectOneMenu value="#{selectedArticle.saison}">
+                            <f:selectItems value="#{overviewController.seasons}" var="season" itemValue="#{season}" itemLabel="#{season}"/>
+                            <p:ajax/>
+                        </p:selectOneMenu>
                     </p:column>
                     <p:column width="200">
 <!--                        <p:inputTextarea rows="2" cols="30" value="#{selectedArticle.bemerkung1}">
@@ -141,11 +148,7 @@
                             </p:ajax>
                         </p:autoComplete>-->
                     </p:column>
-                    <p:column width="60">
-                        <h:outputText value="#{selectedArticle.datum}">
-                            <f:convertDateTime dateStyle="short" locale="de" type="date" />
-                        </h:outputText>
-                    </p:column>
+
                     <p:column width="60">
                         <p:selectOneButton value="#{selectedArticle.offen}">
                             <f:selectItem itemLabel="offen" itemValue="true"/>
@@ -167,15 +170,15 @@
             </p:dialog>
         </h:form>
 
-<!--        <script type="text/javascript">
-            $().ready(function() {
-                if ($('div').hasClass('ui-state-active')){
-                    alert("Hallo");
-                }
-
-            });
-
-        </script>-->
+        <!--        <script type="text/javascript">
+                    $().ready(function() {
+                        if ($('div').hasClass('ui-state-active')){
+                            alert("Hallo");
+                        }
+        
+                    });
+        
+                </script>-->
 
     </ui:define>
 

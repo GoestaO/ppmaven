@@ -50,6 +50,8 @@ public class OverviewController implements Serializable {
     private List<Bemerkung> selectedBemerkungen;
 
     private Bemerkung selectedBemerkung;
+    
+    private List<String> seasons;
 
     @Inject
     private UserBean userBean;
@@ -107,6 +109,16 @@ public class OverviewController implements Serializable {
     public void setSelectedBemerkung(Bemerkung selectedBemerkung) {
         this.selectedBemerkung = selectedBemerkung;
     }
+
+    public List<String> getSeasons() {
+        return dh.getSeasons();
+    }
+
+    public void setSeasons(List<String> seasons) {
+        this.seasons = seasons;
+    }
+    
+    
 
     // Event-Handler
     /**
