@@ -119,6 +119,6 @@ public class UserBean implements Serializable {
     }
 
     public void keepSessionAlive() {
-
+        System.out.println("Ich lebe noch!");
     }
 }

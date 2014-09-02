@@ -25,13 +25,16 @@
                     <p:outputLabel for="password" value="Passwort:" />
                     <p:password id = "password" label="Passwort" value="#{loginBean.password}" required="true"></p:password>
                 </h:panelGrid>
-                <p:selectManyCheckbox required="true" requiredMessage="Du musst mindestens einen Partner auswählen." value="#{loginBean.selectedPartners}" layout="grid" columns ="15">
+                <p:selectManyCheckbox style = "margin-right: 5px;" required="true" requiredMessage="Du musst mindestens einen Partner auswählen." value="#{loginBean.selectedPartners}" layout="grid" columns ="20">
                     <f:selectItems value="#{loginBean.partnerList}" var="partner" itemLabel="#{partner}" itemValue="#{partner}"/>
                 </p:selectManyCheckbox>
 
                 <p:commandButton value="Login" action="#{loginBean.login(loginBean.username, loginBean.password, loginBean.selectedPartners)}" update =":growlForm:growl,loginForm"/>
-                
             </h:form>
-        </c:if>    
+        </c:if>
+        <style>
+            table {border-collapse: collapse;}
+            td    {padding: 6px;}
+        </style>
     </ui:define>
 </ui:composition>
