@@ -33,7 +33,7 @@ import org.primefaces.event.SelectEvent;
  */
 @Named
 @ViewScoped
-public class OverviewController implements Serializable {
+public class OverviewController{
 
     @EJB
     private DatabaseHandler dh;
@@ -213,7 +213,8 @@ public class OverviewController implements Serializable {
         // Bestätigungsnachricht, dass Bearbeitung erfolgreich war.
         FacesMessage msg = new FacesMessage("Artikel bearbeitet", "Artikel erfolgreich aktualisiert");
         FacesContext.getCurrentInstance().addMessage(null, msg);
-
+        
+        backlogList = this.loadData();
     }
 
     // Wenn Nutzersession abgelaufen ist, wird diese Nachricht angezeigt.
