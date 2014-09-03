@@ -272,7 +272,7 @@ public class DatabaseHandler {
     public List<String> getBemerkungen1() {
 
         TypedQuery<String> getBemerkungQuery = em.createQuery(
-                "Select b.bemerkung from Bemerkung b where b.typ = 1", String.class);
+                "Select distinct b.bemerkung from Bemerkung b where b.typ = 1", String.class);
         List<String> bemerkungen = getBemerkungQuery.getResultList();
 
         return bemerkungen;
@@ -285,7 +285,7 @@ public class DatabaseHandler {
     public List<String> getBemerkungen2() {
 
         TypedQuery<String> getBemerkungQuery = em.createQuery(
-                "Select b.bemerkung from Bemerkung b where b.typ = 2", String.class);
+                "Select distinct b.bemerkung from Bemerkung b where b.typ = 2", String.class);
         List<String> bemerkungen = getBemerkungQuery.getResultList();
 
         return bemerkungen;

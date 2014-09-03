@@ -20,50 +20,50 @@
         <h:form id="form">
             <p:hotkey bind="alt+n" handler="PF('varEditButton').jq.click()" />
             <p:growl id="msgs" showDetail="true"/>
-            <p:dataTable widgetVar = "dataTable" id="backlog" selectionMode="multiple" selection="#{overviewController.selectedArticles}" rowKey="#{article.identifier}" var="article" value="#{overviewController.backlogList}" rows="100"
+            <p:dataTable sortMode="multiple" widgetVar = "dataTable" id="backlog" selectionMode="multiple" selection="#{overviewController.selectedArticles}" rowKey="#{article.identifier}" var="article" value="#{overviewController.backlogList}" rows="100"
                          paginator="true" 
                          paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" currentPageReportTemplate="{startRecord}-{endRecord} von {totalRecords}, gefiltert von ursprünglich #{overviewController.backlogList.size()}"
                          rowsPerPageTemplate="50,100,200" rendered ="#{userBean.valid}" filteredValue="#{overviewController.filteredArticles}" emptyMessage="Keine Artikel gefunden" style="text-align: center;">
 <!--                <p:ajax event="rowEdit" listener="#{overviewController.onRowEdit}" update=":form:msgs" />
                 <p:ajax event="rowEditCancel" listener="#{overviewController.onRowCancel}" update=":form:msgs" />-->
 
-                <p:column headerText="Config" filterBy="#{article.config.toLowerCase()}" width="120" filterMatchMode="contains">
+                <p:column headerText="Config" filterBy="#{article.config}" sortBy="#{article.config}" width="120" filterFunction="#{overviewController.filterByConfig}">
                     <h:outputText value="#{article.config}"/>
                 </p:column>
-                <p:column headerText="EAN" filterBy="#{article.ean}" width="120" filterMatchMode="contains">
+                <p:column headerText="EAN" filterBy="#{article.ean}" sortBy="#{article.ean}" width="120" filterMatchMode="contains">
                     <h:outputText value="#{article.ean}"/>
                 </p:column>                
-                <p:column headerText="Anzahl" filterBy="#{article.counter}" width="40" filterStyle="width: 20px;">
+                <p:column headerText="Anzahl" filterBy="#{article.counter}" sortBy="#{article.counter}" width="40" filterStyle="width: 20px;">
                     <h:outputText value="#{article.counter}"/>
                 </p:column>
-                <p:column headerText="WG-Pfad" width="60">
+                <p:column headerText="WG-Pfad" sortBy="#{article.cgPath}" width="60">
                     <h:outputText value="#{article.cgPath}"/>
                 </p:column>
-                <p:column headerText="Partner" filterBy="#{article.partnerId}" filterMatchMode="contains" width="60" filterStyle="width: 25px;">
+                <p:column headerText="Partner" sortBy="#{article.partnerId}" filterBy="#{article.partnerId}" filterMatchMode="contains" width="60" filterStyle="width: 25px;">
                     <h:outputText value="#{article.partnerId}"/>
                 </p:column>
-                <p:column headerText="Datum" filterBy="#{article.datum}" filterMatchMode="contains" width="60" filterStyle="width: 50px;">
+                <p:column headerText="Datum" sortBy="#{article.datum}" filterBy="#{article.datum}" filterMatchMode="contains" width="60" filterStyle="width: 50px;">
                     <h:outputText value="#{article.datum}">
                         <f:convertDateTime dateStyle="short" locale="de" type="date" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="Saison" filterBy="#{article.saison.toLowerCase()}" filterMatchMode="contains" width="60" filterStyle="width: 35px;">
+                <p:column headerText="Saison" sortBy="#{article.saison}" filterBy="#{article.saison.toLowerCase()}" filterMatchMode="contains" width="60" filterStyle="width: 35px;">
                     <h:outputText value="#{article.saison}"/>
                 </p:column>
-                <p:column headerText="Appd." filterBy="#{article.appdomainId}" filterMatchMode="contains" width="40" filterStyle="width: 20px;">
+                <p:column headerText="Appd." sortBy="#{article.appdomainId}" filterBy="#{article.appdomainId}" filterMatchMode="contains" width="40" filterStyle="width: 20px;">
                     <h:outputText value="#{article.appdomainId}"/>
                 </p:column>
-                <p:column headerText="Bemerkung 1" filterBy="#{article.bemerkung1.toLowerCase()}" filterMatchMode="contains">
+                <p:column headerText="Bemerkung 1" sortBy="#{article.bemerkung1}" filterBy="#{article.bemerkung1.toLowerCase()}" filterMatchMode="contains">
                     <h:outputText value="#{article.bemerkung1}" />
 <!--                    <p:autoComplete id="acSimple" value="#{article.bemerkung1}" completeMethod="#{overviewController.completeBemerkung}"  var="bemerkung" itemLabel="#{bemerkung}" itemValue="#{bemerkung}" converter="bemerkungsConverter"/>-->
                 </p:column>
-                <p:column headerText="Bemerkung 2" filterBy="#{article.bemerkung2.toLowerCase()}" filterMatchMode="contains">
+                <p:column headerText="Bemerkung 2" sortBy="#{article.bemerkung2}" filterBy="#{article.bemerkung2.toLowerCase()}" filterMatchMode="contains">
                     <h:outputText value="#{article.bemerkung2}"/>
                 </p:column>
-                <p:column headerText="Bemerkung 3" filterBy="#{article.bemerkung3.toLowerCase()}" filterMatchMode="contains">
+                <p:column headerText="Bemerkung 3" sortBy="#{article.bemerkung3}" filterBy="#{article.bemerkung3.toLowerCase()}" filterMatchMode="contains">
                     <h:outputText value="#{article.bemerkung3}"/>
                 </p:column>
-                <p:column headerText="Bemerkung KAM" filterBy="#{article.bemerkungKAM.toLowerCase()}" filterMatchMode="contains">
+                <p:column headerText="Bemerkung KAM" sortBy="#{article.bemerkungKAM}" filterBy="#{article.bemerkungKAM.toLowerCase()}" filterMatchMode="contains">
                     <h:outputText value="#{article.bemerkungKAM}"/>
                 </p:column>
                 <p:column width="40">
@@ -151,8 +151,8 @@
 
                     <p:column width="60">
                         <p:selectOneButton value="#{selectedArticle.offen}">
-                            <f:selectItem itemLabel="offen" itemValue="true"/>
-                            <f:selectItem itemLabel="fertig" itemValue="false"/>                          
+                            <f:selectItem itemLabel="offen" itemValue="true" id="offen" />
+                            <f:selectItem itemLabel="fertig" itemValue="false" id="fertig"/>                          
                             <p:ajax/>                     
                         </p:selectOneButton>
                     </p:column>            
@@ -169,17 +169,6 @@
                 </f:facet>
             </p:dialog>
         </h:form>
-
-        <!--        <script type="text/javascript">
-                    $().ready(function() {
-                        if ($('div').hasClass('ui-state-active')){
-                            alert("Hallo");
-                        }
-        
-                    });
-        
-                </script>-->
-
     </ui:define>
 
 

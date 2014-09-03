@@ -13,6 +13,7 @@ import de.contentcreation.pplive.services.DatabaseHandler;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.html.HtmlDataTable;
@@ -50,16 +51,26 @@ public class OverviewController implements Serializable {
     private List<Bemerkung> selectedBemerkungen;
 
     private Bemerkung selectedBemerkung;
-    
+
     private List<String> seasons;
 
     @Inject
     private UserBean userBean;
 
+//    public List<BacklogArticle> getBacklogList() {
+//        List<Integer> partnerList = userBean.getPartnerList();
+//        return dh.getBacklogByPartner2(partnerList);
+//    }
     // Getter und Setter
     public List<BacklogArticle> getBacklogList() {
-        List<Integer> partnerList = userBean.getPartnerList();
-        return dh.getBacklogByPartner2(partnerList);
+        if (backlogList == null) {
+            backlogList = this.loadData();
+        }
+        return backlogList;
+    }
+
+    public void setBacklogList(List<BacklogArticle> backlogList) {
+        this.backlogList = backlogList;
     }
 
     public List<BacklogArticle> getSelectedArticles() {
@@ -117,8 +128,17 @@ public class OverviewController implements Serializable {
     public void setSeasons(List<String> seasons) {
         this.seasons = seasons;
     }
-    
-    
+
+    /**
+     * Diese Methode lädt die Daten, die in der Tabelle dargestellt werden
+     * sollen.
+     *
+     * @return Tabellendaten
+     */
+    public List<BacklogArticle> loadData() {
+        List<Integer> partnerList = userBean.getPartnerList();
+        return dh.getBacklogByPartner2(partnerList);
+    }
 
     // Event-Handler
     /**
@@ -247,6 +267,22 @@ public class OverviewController implements Serializable {
             }
         }
         return filteredBemerkungen;
+    }
+
+    public boolean filterByConfig(Object value, Object filter, Locale locale) {
+        String filterText = (filter == null) ? null : filter.toString().trim();
+        if (filterText == null || filterText.equals("")) {
+            return true;
+        }
+
+        if (value == null) {
+            return false;
+        }
+
+        String name = value.toString().toUpperCase();
+        filterText = filterText.toUpperCase();
+
+        return name.contains(filterText);
     }
 
 }
