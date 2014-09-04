@@ -51,7 +51,7 @@ public class ReportingHandler {
 
         TypedQuery<UserReport> query = em
                 .createQuery(
-                        "Select new de.contentcreation.pplive.reportingClasses.UserReport(u.vorname, u.nachname, art.appdomainId, art.config, art.partnerId, art.cgPath, art.saison, ub.timestamp, ub.status, ub.bemerkung1, ub.bemerkung2, ub.bemerkung3, ub.bemerkungKAM) from UpdateBuchung ub left join ub.user u left join ub.backlogArticle art where ub.timestamp > :datum1 and ub.timestamp < :datum2",
+                        "Select new de.contentcreation.pplive.reportingClasses.UserReport(u.vorname, u.nachname, art.appdomainId, art.config, art.partnerId, art.cgPath, ub.saison, ub.timestamp, ub.status, ub.bemerkung1, ub.bemerkung2, ub.bemerkung3, ub.bemerkungKAM) from UpdateBuchung ub left join ub.user u left join ub.backlogArticle art where ub.timestamp > :datum1 and ub.timestamp < :datum2",
                         UserReport.class);
         query.setParameter("datum1", datum1);
         query.setParameter("datum2", datum2);

@@ -33,7 +33,7 @@ import org.primefaces.event.SelectEvent;
  */
 @Named
 @ViewScoped
-public class OverviewController{
+public class OverviewController implements Serializable{
 
     @EJB
     private DatabaseHandler dh;
@@ -214,6 +214,7 @@ public class OverviewController{
         FacesMessage msg = new FacesMessage("Artikel bearbeitet", "Artikel erfolgreich aktualisiert");
         FacesContext.getCurrentInstance().addMessage(null, msg);
         
+        // Aktualisierung der Tabellen-Daten
         backlogList = this.loadData();
     }
 

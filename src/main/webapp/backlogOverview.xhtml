@@ -80,22 +80,22 @@
                 <p:dataTable id="dataTable" var="selectedArticle"  value="#{overviewController.selectedArticles}" editable="true" editMode="cell" style="font-size: 12px">                     
                     <p:columnGroup type="header">
                         <p:row>
-                            <p:column width="120" headerText="Config"/>
-                            <p:column width="120" headerText="EAN"/>
-                            <p:column width="40" headerText="Appd."/>
-                            <p:column width="60" headerText="Partner"/>
-                            <p:column width="60" headerText="Saison"/>
-                            <p:column width="200" headerText="Bemerkung 1"/>
-                            <p:column width="200" headerText="Bemerkung 2"/>
-                            <p:column width="200" headerText="Bemerkung 3"/>
-                            <p:column width="200" headerText="Bemerkung KAM"/>                            
-                            <p:column width="60" headerText="Status"/>
+                            <p:column width="40" headerText="Config"/>
+                            <p:column width="40" headerText="EAN"/>
+                            <p:column width="20" headerText="Appd."/>
+                            <p:column width="20" headerText="Partner"/>
+                            <p:column width="20" headerText="Saison"/>
+                            <p:column width="100" headerText="Bemerkung 1"/>
+                            <p:column width="100" headerText="Bemerkung 2"/>
+                            <p:column width="100" headerText="Bemerkung 3"/>
+                            <p:column width="100" headerText="Bemerkung KAM"/>                            
+                            <p:column width="20" headerText="Status"/>
                         </p:row>
                     </p:columnGroup>
-                    <p:column width="120">
+                    <p:column width="100">
                         <h:outputText value="#{selectedArticle.config}" />
                     </p:column>
-                    <p:column width="120">
+                    <p:column width="100">
                         <h:outputText value="#{selectedArticle.ean}" />
                     </p:column>
 
@@ -107,23 +107,24 @@
                     </p:column>
                     <p:column width="40">
                         <p:selectOneMenu value="#{selectedArticle.saison}">
+                            <f:selectItem itemLabel="" itemValue=""/>
                             <f:selectItems value="#{overviewController.seasons}" var="season" itemValue="#{season}" itemLabel="#{season}"/>
                             <p:ajax/>
                         </p:selectOneMenu>
                     </p:column>
-                    <p:column width="200">
+                    <p:column>
 <!--                        <p:inputTextarea rows="2" cols="30" value="#{selectedArticle.bemerkung1}">
                             <p:ajax/>
                         </p:inputTextarea>-->
-                        <p:autoComplete size="30"  value="#{selectedArticle.bemerkung1}" completeMethod="#{overviewController.completeBemerkung1}"  var="bemerkung" itemLabel="#{bemerkung}" itemValue="#{bemerkung}" immediate="false">
+                        <p:autoComplete  size="25" value="#{selectedArticle.bemerkung1}" completeMethod="#{overviewController.completeBemerkung1}"  var="bemerkung" itemLabel="#{bemerkung}" itemValue="#{bemerkung}" immediate="false">
                             <p:ajax/>
                             <p:ajax event="itemSelect" listener="#{overviewController.handleSelectedBemerkung1}" />
                                 <!--<ui:param name="selectedBemerkung" value="${bemerkung}" />-->
                             <!--<p:ajax listener="#{overviewController.handleChangedBemerkung1}" />-->
                         </p:autoComplete>
                     </p:column>
-                    <p:column width="200">
-                        <p:autoComplete size="30"  value="#{selectedArticle.bemerkung2}" completeMethod="#{overviewController.completeBemerkung2}"  var="bemerkung" itemLabel="#{bemerkung}" itemValue="#{bemerkung}" immediate="false">
+                    <p:column>
+                        <p:autoComplete  size="25" value="#{selectedArticle.bemerkung2}" completeMethod="#{overviewController.completeBemerkung2}"  var="bemerkung" itemLabel="#{bemerkung}" itemValue="#{bemerkung}" immediate="false">
                             <p:ajax/>
                             <p:ajax event="itemSelect" listener="#{overviewController.handleSelectedBemerkung2}" />
                                 <!--<ui:param name="selectedBemerkung" value="${bemerkung}" />-->
@@ -134,22 +135,21 @@
                         </p:inputTextarea>-->
                     </p:column>
                     <p:column>
-                        <p:inputTextarea rows="2" cols="30" value="#{selectedArticle.bemerkung3}" >
+                        <p:inputText size="25" value="#{selectedArticle.bemerkung3}" >
                             <p:ajax/>
-                        </p:inputTextarea>
+                        </p:inputText>
                     </p:column>
                     <p:column>
-                        <p:inputTextarea rows="2" cols="30"  value="#{selectedArticle.bemerkungKAM}">
+                        <p:inputText size="25" value="#{selectedArticle.bemerkungKAM}">
                             <p:ajax/>
-                        </p:inputTextarea>
+                        </p:inputText>
 <!--                        <p:autoComplete value="#{selectedArticle.bemerkungKAM}" completeMethod="#{overviewController.completeBemerkung}"   var="bemerkung" itemLabel="#{bemerkung}" itemValue="#{bemerkung}" immediate="false">
                             <p:ajax event="itemSelect" listener="#{overviewController.handleSelectedBemerkungKAM}"  process="@form" update=":form:msgs">
                                 <f:setPropertyActionListener target="#{overviewController.selectedArticle}" value="#{selectedArticle}"/>
                             </p:ajax>
                         </p:autoComplete>-->
                     </p:column>
-
-                    <p:column width="60">
+                    <p:column>
                         <p:selectOneButton value="#{selectedArticle.offen}">
                             <f:selectItem itemLabel="offen" itemValue="true" id="offen" />
                             <f:selectItem itemLabel="fertig" itemValue="false" id="fertig"/>                          
@@ -166,11 +166,7 @@
                     <p:commandButton value="Ja" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                     <p:commandButton value="Nein" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                 </p:confirmDialog>
-
             </p:dialog>
         </h:form>
     </ui:define>
-
-
-
 </ui:composition>
