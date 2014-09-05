@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
@@ -33,7 +33,7 @@ import org.primefaces.event.FileUploadEvent;
  * @author Gösta Ostendorf (goesta.o@gmail.com)
  */
 @Named
-@SessionScoped
+@RequestScoped
 public class UploadController implements Serializable {
 
     long ean;

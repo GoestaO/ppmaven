@@ -17,7 +17,7 @@
             #{overviewController.fatal()}
         </h:form>
 
-        <h:form id="form">
+        <h:form id="form1">
             <p:hotkey bind="alt+n" handler="PF('varEditButton').jq.click()" />
             <p:growl id="msgs" showDetail="true"/>
             <p:dataTable sortMode="multiple" widgetVar = "dataTable" id="backlog" selectionMode="multiple" selection="#{overviewController.selectedArticles}" rowKey="#{article.identifier}" var="article" value="#{overviewController.backlogList}" rows="100"
@@ -36,7 +36,7 @@
                 <p:column headerText="Anzahl" filterBy="#{article.counter}" sortBy="#{article.counter}" width="40" filterStyle="width: 20px;">
                     <h:outputText value="#{article.counter}"/>
                 </p:column>
-                <p:column headerText="WG-Pfad" sortBy="#{article.cgPath}" width="60">
+                <p:column headerText="WG-Pfad" filterBy="#{article.cgPath}" sortBy="#{article.cgPath}" width="60">
                     <h:outputText value="#{article.cgPath}"/>
                 </p:column>
                 <p:column headerText="Partner" sortBy="#{article.partnerId}" filterBy="#{article.partnerId}" filterMatchMode="contains" width="60" filterStyle="width: 25px;">
@@ -67,16 +67,17 @@
                     <h:outputText value="#{article.bemerkungKAM}"/>
                 </p:column>
                 <p:column width="40">
-                    <p:commandButton icon="ui-icon-wrench" oncomplete ="PF('editDialog').show()" update=":form:articleDetail" >
+                    <p:commandButton icon="ui-icon-wrench" oncomplete ="PF('editDialog').show()" update=":form2:articleDetail" >
                         <f:setPropertyActionListener target="#{overviewController.selectedArticles}" value="#{overviewController.toList(article)}"/>
                     </p:commandButton>
                 </p:column>
                 <f:facet name="header">                    
-                    <p:commandButton id="editButton" widgetVar="varEditButton" process="backlog" update=":form:articleDetail" icon="ui-icon-search" value="Bearbeiten" oncomplete="PF('editDialog').show()" />
+                    <p:commandButton id="editButton" widgetVar="varEditButton" update=":form2:articleDetail" icon="ui-icon-search" value="Bearbeiten" oncomplete="PF('editDialog').show()" />
                 </f:facet>
             </p:dataTable>
-
-            <p:dialog header="Artikel bearbeiten" id="articleDetail" widgetVar="editDialog" modal="true">
+        </h:form>
+        <h:form id="form2">
+                <p:dialog header="Artikel bearbeiten" id="articleDetail" widgetVar="editDialog" modal="true">
                 <p:dataTable id="dataTable" var="selectedArticle"  value="#{overviewController.selectedArticles}" editable="true" editMode="cell" style="font-size: 12px">                     
                     <p:columnGroup type="header">
                         <p:row>
@@ -158,7 +159,7 @@
                     </p:column>            
                 </p:dataTable>
                 <f:facet name="footer">
-                    <p:commandButton styleClass="dialogbutton" update=":form:backlog" value="Speichern" action="#{overviewController.update(overviewController.selectedArticles)}" oncomplete="PF('editDialog').hide()">
+                    <p:commandButton styleClass="dialogbutton" update=":form1:backlog" value="Speichern" action="#{overviewController.update(overviewController.selectedArticles)}" oncomplete="PF('editDialog').hide()">
                         <p:confirm header="Bestätigung" message="Bist du dir sicher?" icon="ui-icon-alert" />
                     </p:commandButton>
                 </f:facet>

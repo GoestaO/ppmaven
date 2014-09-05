@@ -10,7 +10,6 @@ import de.contentcreation.pplive.model.Bemerkung;
 import de.contentcreation.pplive.model.User;
 import de.contentcreation.pplive.model.UserBean;
 import de.contentcreation.pplive.services.DatabaseHandler;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -33,7 +32,7 @@ import org.primefaces.event.SelectEvent;
  */
 @Named
 @ViewScoped
-public class OverviewController implements Serializable{
+public class OverviewController{
 
     @EJB
     private DatabaseHandler dh;
