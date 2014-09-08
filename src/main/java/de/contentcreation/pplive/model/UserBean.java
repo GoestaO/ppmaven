@@ -30,7 +30,6 @@ public class UserBean implements Serializable {
     private User user;
     private List<Integer> partnerList;
 
-    
     public int getId() {
         return this.id;
     }
@@ -95,15 +94,17 @@ public class UserBean implements Serializable {
         this.partnerList = partnerList;
     }
 
-    public String resetUser() {
-        this.setNick(null);
-        this.setPasswort(null);
-        this.setValid(false);
-        this.setPartnerList(null);
-        FacesMessage message = new FacesMessage("Logout", "Logout war erfolgreich.");
-        FacesContext.getCurrentInstance().addMessage(null, message);
-        return "login.jsf?faces-redirect = true";
-    }
+//    public String resetUser() {
+//        if (this.isValid()) {
+//            this.setNick(null);
+//            this.setPasswort(null);
+//            this.setValid(false);
+//            this.setPartnerList(null);
+//        }
+//        FacesMessage message = new FacesMessage("Logout", "Logout war erfolgreich.");
+//        FacesContext.getCurrentInstance().addMessage(null, message);
+//        return "login.jsf?faces-redirect = true";
+//    }
 
     public void sessionIdleListener() {
         RequestContext context = RequestContext.getCurrentInstance();

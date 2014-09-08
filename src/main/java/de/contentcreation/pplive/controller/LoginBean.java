@@ -18,10 +18,8 @@ import de.contentcreation.pplive.services.DatabaseHandler;
 import java.io.Serializable;
 import java.util.List;
 import javax.enterprise.context.RequestScoped;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import org.primefaces.context.RequestContext;
 
 /**
  * Diese Bean ist der Controller für die Login-Seite. Sie ist für die
@@ -138,6 +136,18 @@ public class LoginBean implements Serializable {
             direction = null;
         }
         return direction;
+    }
+
+    public String resetUser() {
+        if (bean != null) {
+            bean.setNick(null);
+            bean.setPasswort(null);
+            bean.setValid(false);
+            bean.setPartnerList(null);
+        }
+        FacesMessage message = new FacesMessage("Logout", "Logout war erfolgreich.");
+        FacesContext.getCurrentInstance().addMessage(null, message);
+        return "login.jsf?faces-redirect = true";
     }
 
 }

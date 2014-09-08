@@ -16,10 +16,11 @@
         </title>
         <!--<link rel="stylesheet" type="text/css" href="css/style.css"/>-->
         <h:outputStylesheet  library="css" name="style.css" ></h:outputStylesheet>
-        <h:outputScript library="js" name="locale_de.js" />
-
+        <h:outputScript library="js" name="locale_de.js" />        
+        <link rel="shortcut icon" type="image/x-icon" href="resources/img/favicon.ico"/>
     </h:head>
     <h:body>
+
         <f:view>
             <h:panelGroup id="all">
                 <ui:insert name="metadata"/>
@@ -64,7 +65,7 @@
                                 </c:if>
                                 <f:facet name="options">                                    
                                     <p:outputLabel value="#{userBean.vorname} #{userBean.nachname}"/>
-                                    <p:commandButton id="logout" icon="ui-icon-extlink" action="#{userBean.resetUser()}" styleClass="ui-priority-primary" value="Abmelden" update=":all">
+                                    <p:commandButton id="logout" icon="ui-icon-extlink" action="#{loginBean.resetUser()}" styleClass="ui-priority-primary" value="Abmelden" update=":all">
                                     </p:commandButton>                      
                                 </f:facet>
                             </c:if>
