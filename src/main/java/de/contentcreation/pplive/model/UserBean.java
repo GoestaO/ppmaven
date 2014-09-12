@@ -105,19 +105,15 @@ public class UserBean implements Serializable {
 //        FacesContext.getCurrentInstance().addMessage(null, message);
 //        return "login.jsf?faces-redirect = true";
 //    }
-
     public void sessionIdleListener() {
         RequestContext context = RequestContext.getCurrentInstance();
         context.execute("PF('sessionExpiredConfirmation').show()");
     }
 
-    @PreDestroy
-    public void sessionExpiredMessage() {
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('sessionExpiredConfirmation').show()");
-    }
+//    @PreDestroy
+//    public void sessionExpiredMessage() {
+//        RequestContext context = RequestContext.getCurrentInstance();
+//        context.execute("PF('sessionExpiredConfirmation').show()");
+//    }
 
-    public void keepSessionAlive() {
-        System.out.println("Ich lebe noch!");
-    }
 }

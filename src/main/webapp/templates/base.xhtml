@@ -38,22 +38,21 @@
 
                     <div style="clear:both"></div>
 
-                    <!--<h:form>-->
-                    <!--                        <p:idleMonitor timeout="1740000">
-                                            <p:idleMonitor timeout="10000">
-                                                <p:ajax event="idle" oncomplete="rc();" />
-                                                <p:ajax event="active" oncomplete="rc()"/>
-                                            </p:idleMonitor> 
-                                            <p:remoteCommand name = "rc" actionListener="#{userBean.resetUser}"/>
-                                            <p:confirmDialog  closable="true" id="sessionExpiredDlg" 
-                                                              message="Deine Sitzung ist abgelaufen. Bitte melde dich erneut an."  
-                                                              header="#{msgs['confirmDialog.initiatingDestroyProcess.label']}"
-                                                              severity="alert" widgetVar="sessionExpiredConfirmation" style="z-index: 25000">
-                                                <p:commandButton id="confirmRouteDel" value="Ok" oncomplete="PF('sessionExpiredConfirmation').hide();" action="#{userBean.resetUser()}"/>
-                                                <p:button href="login.jsf" value="Zum Login" />
-                    
-                                            </p:confirmDialog>-->
-                    <!--</h:form>-->
+                    <h:form>
+                        <p:idleMonitor timeout="1740000">                          
+                            <p:ajax event="idle" oncomplete="rc();" />
+                            <p:ajax event="active" oncomplete="rc()"/>
+                        </p:idleMonitor> 
+                        <p:remoteCommand name = "rc" actionListener="#{loginBean.resetUser}"/>
+                        <p:confirmDialog  closable="true" id="sessionExpiredDlg" 
+                                          message="Deine Sitzung ist abgelaufen. Bitte melde dich erneut an."  
+                                          header="#{msgs['confirmDialog.initiatingDestroyProcess.label']}"
+                                          severity="alert" widgetVar="sessionExpiredConfirmation" style="z-index: 25000">
+                            <p:commandButton id="confirmRouteDel" value="Ok" oncomplete="PF('sessionExpiredConfirmation').hide();" action="#{userBean.resetUser()}"/>
+                            <p:button href="login.jsf" value="Zum Login" />
+
+                        </p:confirmDialog>
+                    </h:form>
                     <h:form>
                         <p:menubar id="navigation" style="height: 2em; box-sizing: content-box;"> 
 
