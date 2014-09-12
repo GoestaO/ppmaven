@@ -16,12 +16,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import javafx.event.ActionEvent;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
-
 import javax.faces.component.html.HtmlDataTable;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -37,115 +37,120 @@ import org.primefaces.event.SelectEvent;
  * @author Gösta Ostendorf (goesta.o@gmail.com)
  */
 @Named
-@SessionScoped
+@ViewScoped
 public class OverviewController implements Serializable {
-    
-    DataTable dataTable = new DataTable();
-    
+
+    DataTable dataTable;
+
     @EJB
     private DatabaseHandler dh;
-    
+
     private List<BacklogArticle> backlogList;
-    
+
     private List<BacklogArticle> selectedArticles;
-    
+
     private List<BacklogArticle> filteredArticles;
-    
+
     private HtmlDataTable myDataTable;
-    
+
     private BacklogArticle selectedArticle;
-    
+
     private List<Bemerkung> selectedBemerkungen;
-    
+
     private Bemerkung selectedBemerkung;
-    
+
     private List<String> seasons;
-    
+
     Map<String, Object> filterValues;
-    
+
     @Inject
     private UserBean userBean;
+
+    @PostConstruct
+    public void init() {
+        dataTable = new DataTable();
+    }
 
     // Getter und Setter
     public DataTable getDataTable() {
         return dataTable;
     }
-    
+
     public void setDataTable(DataTable dataTable) {
         this.dataTable = dataTable;
     }
-    
+
     public List<BacklogArticle> getBacklogList() {
         if (backlogList == null) {
             backlogList = this.loadData();
         }
         return backlogList;
     }
-    
+
     public void setBacklogList(List<BacklogArticle> backlogList) {
         this.backlogList = backlogList;
     }
-    
+
     public List<BacklogArticle> getSelectedArticles() {
         return selectedArticles;
     }
-    
+
     public void setSelectedArticles(List<BacklogArticle> selectedArticles) {
         this.selectedArticles = selectedArticles;
     }
-    
+
     public BacklogArticle getSelectedArticle() {
         return selectedArticle;
     }
-    
+
     public void setSelectedArticle(BacklogArticle selectedArticle) {
         this.selectedArticle = selectedArticle;
     }
-    
+
     public HtmlDataTable getMyDataTable() {
         return myDataTable;
     }
-    
+
     public void setMyDataTable(HtmlDataTable myDataTable) {
         this.myDataTable = myDataTable;
     }
-    
+
     public List<BacklogArticle> getFilteredArticles() {
         return filteredArticles;
     }
-    
+
     public void setFilteredArticles(List<BacklogArticle> filteredArticles) {
         this.filteredArticles = filteredArticles;
     }
-    
+
     public List<Bemerkung> getSelectedBemerkungen() {
         return selectedBemerkungen;
     }
-    
+
     public void setSelectedBemerkungen(List<Bemerkung> selectedBemerkungen) {
         this.selectedBemerkungen = selectedBemerkungen;
     }
-    
+
     public Bemerkung getSelectedBemerkung() {
         return selectedBemerkung;
     }
-    
+
     public void setSelectedBemerkung(Bemerkung selectedBemerkung) {
         this.selectedBemerkung = selectedBemerkung;
     }
-    
+
     public List<String> getSeasons() {
         return dh.getSeasons();
     }
-    
+
     public void setSeasons(List<String> seasons) {
         this.seasons = seasons;
     }
-    
+
     public Map<String, Object> getFilterValues() {
         return filterValues;
     }
-    
+
     public void setFilterValues(Map<String, Object> filterValues) {
         this.filterValues = filterValues;
     }
@@ -174,38 +179,38 @@ public class OverviewController implements Serializable {
             if (this.selectedArticle != null) {
                 this.selectedArticle.setBemerkung1(bemerkung);
             }
-            
+
         } catch (NullPointerException ex) {
-            
+
         }
     }
-    
+
     public void handleSelectedBemerkung2(SelectEvent event) {
         String bemerkung = (String) event.getObject();
         try {
             if (this.selectedArticle != null) {
                 this.selectedArticle.setBemerkung2(bemerkung);
             }
-            
+
         } catch (NullPointerException ex) {
-            
+
         }
     }
-    
+
     public void handleSelectedBemerkung3(SelectEvent event) {
         String bemerkung = (String) event.getObject();
         this.selectedArticle.setBemerkung3(bemerkung);
     }
-    
+
     public void handleSelectedBemerkungKAM(SelectEvent event) {
         String bemerkung = (String) event.getObject();
         try {
             if (this.selectedArticle != null) {
                 this.selectedArticle.setBemerkungKAM(bemerkung);
             }
-            
+
         } catch (NullPointerException ex) {
-            
+
         }
     }
 
@@ -218,7 +223,7 @@ public class OverviewController implements Serializable {
      * Bearbeitungsdialog bearbeitet wurden.
      */
     public void update(List<BacklogArticle> selectedArticles) {
-        
+
         for (BacklogArticle editedArticle : selectedArticles) {
             String identifier = editedArticle.getIdentifier();
             String bemerkung1 = editedArticle.getBemerkung1();
@@ -238,7 +243,7 @@ public class OverviewController implements Serializable {
         // Aktualisierung der Tabellen-Daten
 //        backlogList = this.loadData();
     }
-    
+
     public void updateHandler(ActionEvent event) {
         for (BacklogArticle editedArticle : selectedArticles) {
             String identifier = editedArticle.getIdentifier();
@@ -250,15 +255,14 @@ public class OverviewController implements Serializable {
             User currentUser = userBean.getUser();
             String season = editedArticle.getSaison();
             dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
-            
-            
+
             // Die Filterwerte aus der Tabelle ziehen und in der Session speichern
-            filterValues = dataTable.getFilters(); 
-            
+            filterValues = dataTable.getFilters();
+
             // Aktualisierung der Tabellen-Daten
             backlogList = this.loadData();
         }
-        
+
     }
 
     // Wenn Nutzersession abgelaufen ist, wird diese Nachricht angezeigt.
@@ -291,7 +295,7 @@ public class OverviewController implements Serializable {
     public List<String> completeBemerkung1(String query) {
         List<String> allBemerkungen = dh.getBemerkungen1();
         List<String> filteredBemerkungen = new ArrayList<>();
-        
+
         for (int i = 0; i < allBemerkungen.size(); i++) {
             String bemerkung = allBemerkungen.get(i);
             if (bemerkung.toLowerCase().contains(query)) {
@@ -300,11 +304,11 @@ public class OverviewController implements Serializable {
         }
         return filteredBemerkungen;
     }
-    
+
     public List<String> completeBemerkung2(String query) {
         List<String> allBemerkungen = dh.getBemerkungen2();
         List<String> filteredBemerkungen = new ArrayList<>();
-        
+
         for (int i = 0; i < allBemerkungen.size(); i++) {
             String bemerkung = allBemerkungen.get(i);
             if (bemerkung.toLowerCase().contains(query)) {
@@ -313,26 +317,26 @@ public class OverviewController implements Serializable {
         }
         return filteredBemerkungen;
     }
-    
+
     public boolean filterByConfig(Object value, Object filter, Locale locale) {
         String filterText = (filter == null) ? null : filter.toString().trim();
         if (filterText == null || filterText.equals("")) {
             return true;
         }
-        
+
         if (value == null) {
             return false;
         }
-        
+
         String name = value.toString().toUpperCase();
         filterText = filterText.toUpperCase();
-        
+
         return name.contains(filterText);
     }
-    
+
     public void clearFilters() {
         RequestContext.getCurrentInstance().execute("PF('dataTable').clearFilters();");
         filterValues = null;
     }
-    
+
 }
