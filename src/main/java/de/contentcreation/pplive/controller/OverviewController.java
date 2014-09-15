@@ -63,6 +63,8 @@ public class OverviewController implements Serializable {
 
     Map<String, Object> filterValues;
 
+    Map<String, Object> storedFilterValues;
+
     @Inject
     private UserBean userBean;
 
@@ -258,9 +260,20 @@ public class OverviewController implements Serializable {
 
             // Die Filterwerte aus der Tabelle ziehen und in der Session speichern
             filterValues = dataTable.getFilters();
+            
+            // Die aktuellen Filterwerte sichern
+            storedFilterValues = filterValues;
+
+            // Den aktuellen Filter null setzen
+            filterValues = null;
 
             // Aktualisierung der Tabellen-Daten
             backlogList = this.loadData();
+
+            // Filter wieder reinsetzen und Tabelle filtern.
+            filterValues = storedFilterValues;
+            RequestContext.getCurrentInstance().execute("PF('dataTable').filter();");
+
         }
 
     }
