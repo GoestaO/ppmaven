@@ -298,7 +298,7 @@ public class OverviewController implements Serializable {
 
         for (int i = 0; i < allBemerkungen.size(); i++) {
             String bemerkung = allBemerkungen.get(i);
-            if (bemerkung.toLowerCase().contains(query)) {
+            if (bemerkung.toLowerCase().contains(query.toLowerCase())) {
                 filteredBemerkungen.add(bemerkung);
             }
         }
@@ -311,7 +311,7 @@ public class OverviewController implements Serializable {
 
         for (int i = 0; i < allBemerkungen.size(); i++) {
             String bemerkung = allBemerkungen.get(i);
-            if (bemerkung.toLowerCase().contains(query)) {
+            if (bemerkung.toLowerCase().contains(query.toLowerCase())) {
                 filteredBemerkungen.add(bemerkung);
             }
         }
