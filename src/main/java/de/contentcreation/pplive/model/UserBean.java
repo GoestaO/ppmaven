@@ -1,13 +1,8 @@
 package de.contentcreation.pplive.model;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 
@@ -94,17 +89,11 @@ public class UserBean implements Serializable {
         this.partnerList = partnerList;
     }
 
-//    public String resetUser() {
-//        if (this.isValid()) {
-//            this.setNick(null);
-//            this.setPasswort(null);
-//            this.setValid(false);
-//            this.setPartnerList(null);
-//        }
-//        FacesMessage message = new FacesMessage("Logout", "Logout war erfolgreich.");
-//        FacesContext.getCurrentInstance().addMessage(null, message);
-//        return "login.jsf?faces-redirect = true";
-//    }
+    public void keepSessionAlive(){
+        
+    }
+    
+    
     public void sessionIdleListener() {
         RequestContext context = RequestContext.getCurrentInstance();
         context.execute("PF('sessionExpiredConfirmation').show()");
