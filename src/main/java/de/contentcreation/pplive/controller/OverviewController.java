@@ -260,7 +260,7 @@ public class OverviewController implements Serializable {
 
             // Die Filterwerte aus der Tabelle ziehen und in der Session speichern
             filterValues = dataTable.getFilters();
-            
+
             // Die aktuellen Filterwerte sichern
             storedFilterValues = filterValues;
 

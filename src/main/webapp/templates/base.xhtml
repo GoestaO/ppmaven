@@ -43,7 +43,6 @@
                             <p:ajax event="idle" listener="#{userBean.sessionIdleListener}" />
                             <!--<p:ajax event="active" listener="#{userBean.keepSessionAlive}"/>-->
                         </p:idleMonitor> 
-                        <!--<p:remoteCommand name = "rc" actionListener="#{loginBean.resetUser}"/>-->
                         <p:confirmDialog  closable="true" id="sessionExpiredDlg" 
                                           message="Deine Sitzung ist abgelaufen. Bitte melde dich erneut an."  
                                           header="#{msgs['confirmDialog.initiatingDestroyProcess.label']}"

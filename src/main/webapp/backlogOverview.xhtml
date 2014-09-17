@@ -18,6 +18,10 @@
         </h:form>
 
         <h:form id="form1">
+<!--            <p:contextMenu for="backlog">
+                <p:menuitem value="Bearbeiten" update=":form2:articleDetail" icon="ui-icon-search" oncomplete="PF('editDialog').show()"/>
+                <p:menuitem value="Config kopieren" icon="ui-icon-copy" actionListener="#{overviewController.copyEANToClipboard}"/>
+            </p:contextMenu>-->
             <p:hotkey bind="alt+n" handler="PF('varEditButton').jq.click()" />
             <p:growl id="msgs" showDetail="true"/>
             <p:dataTable binding="#{overviewController.dataTable}" sortMode="multiple" widgetVar = "dataTable" id="backlog" selectionMode="multiple" selection="#{overviewController.selectedArticles}" rowKey="#{article.identifier}" var="article" value="#{overviewController.backlogList}" 
