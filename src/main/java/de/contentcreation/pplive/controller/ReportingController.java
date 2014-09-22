@@ -132,7 +132,7 @@ public class ReportingController implements Serializable {
             datum2 = this.shiftDate(datum2);
             List<UserReport> userReport = rh.getUserReport(datum1, datum2);
 
-            String fileName = "UserReport.xlsx";
+            String fileName = "UserReport";
             File reportFile = new File(fileName);
             ex.createUserReport(reportFile, userReport);
             try {
@@ -149,7 +149,7 @@ public class ReportingController implements Serializable {
     public void getPartnerReportList() {
 
         List<BacklogArticle> partnerReportList = rh.getOpenBacklogArticles();
-        String fileName = "Offene_Artikel.xlsx";
+        String fileName = "Offene_Artikel";
         File reportFile = new File(fileName);
         ex.createPartnerReport(reportFile, partnerReportList);
         try {
@@ -167,7 +167,7 @@ public class ReportingController implements Serializable {
      */
     public void getKAMReportList(int offen) {
         List<Object[]> partnerReport = rh.getProblemArticles(offen);
-        String fileName = "KeyAccountReport.xlsx";
+        String fileName = "KeyAccountReport";
         File reportFile = new File(fileName);
         ex.createKeyAccountReport(reportFile, partnerReport);
         try {
@@ -187,7 +187,7 @@ public class ReportingController implements Serializable {
     public void getEditArticlesReport(List<Integer> selectedPartner) {
         List<Object[]> editedArticlesList = rh.getEditedDataByPartner(selectedPartner);
 
-        String fileName = "GepflegteArtikel_Partner" + selectedPartner + ".xlsx";
+        String fileName = "GepflegteArtikel_Partner" + selectedPartner;
         File reportFile = new File(fileName);
         ex.createEditedArticlesReport(reportFile, editedArticlesList);
         try {
@@ -209,7 +209,7 @@ public class ReportingController implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlerhafte Eingabe", "Das erste Datum muss kleiner als das zweite Datum sein. Bitte versuche es noch einmal."));
         } else {
             datum2 = this.shiftDate(datum2);
-            String fileName = "neueArtikel.xlsx";
+            String fileName = "neueArtikel";
             File reportFile = new File(fileName);
             ex.createNewArticlesReport(reportFile, datum1, datum2);
             try {
