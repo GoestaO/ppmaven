@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 /**
  * Die Implementierung des Backlogartikels 
@@ -41,12 +42,16 @@ public class BacklogArticle implements Serializable {
     private Date datum;
     @Column(name = "OFFEN")
     private boolean offen;
-    @Column(name = "Bemerkung1")
+    
+    @Column(name = "Bemerkung1")   
     private String bemerkung1;
+   
     @Column(name = "Bemerkung2")
     private String bemerkung2;
+   
     @Column(name = "Bemerkung3")
     private String bemerkung3;
+   
     @Column(name = "BemerkungKAM")
     private String bemerkungKAM;
     @Column(name = "Counter")

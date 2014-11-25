@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import javafx.event.ActionEvent;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.html.HtmlDataTable;
@@ -25,6 +24,7 @@ import javax.faces.view.ViewScoped;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.apache.commons.codec.binary.StringUtils;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
@@ -68,11 +68,10 @@ public class OverviewController implements Serializable {
     @Inject
     private UserBean userBean;
 
-    @PostConstruct
-    public void init() {
-        dataTable = new DataTable();
-    }
-
+//    @PostConstruct
+//    public void init() {
+//        dataTable = new DataTable();
+//    }
     // Getter und Setter
     public DataTable getDataTable() {
         return dataTable;
@@ -178,6 +177,7 @@ public class OverviewController implements Serializable {
     public void handleSelectedBemerkung1(SelectEvent event) {
         String bemerkung = (String) event.getObject();
         try {
+
             if (this.selectedArticle != null) {
                 this.selectedArticle.setBemerkung1(bemerkung);
             }
@@ -315,18 +315,19 @@ public class OverviewController implements Serializable {
                 filteredBemerkungen.add(bemerkung);
             }
         }
+
         return filteredBemerkungen;
     }
 
     public List<String> completeBemerkung2(String query) {
         List<String> allBemerkungen = dh.getBemerkungen2();
         List<String> filteredBemerkungen = new ArrayList<>();
-
         for (int i = 0; i < allBemerkungen.size(); i++) {
             String bemerkung = allBemerkungen.get(i);
             if (bemerkung.toLowerCase().contains(query.toLowerCase())) {
                 filteredBemerkungen.add(bemerkung);
             }
+
         }
         return filteredBemerkungen;
     }
