@@ -44,16 +44,16 @@ public class BacklogArticle implements Serializable {
     private boolean offen;
     
     @Column(name = "Bemerkung1")   
-    private String bemerkung1;
+    private String bemerkung1 = null;
    
     @Column(name = "Bemerkung2")
-    private String bemerkung2;
+    private String bemerkung2 = null;
    
     @Column(name = "Bemerkung3")
-    private String bemerkung3;
+    private String bemerkung3 = null;
    
     @Column(name = "BemerkungKAM")
-    private String bemerkungKAM;
+    private String bemerkungKAM = null;
     @Column(name = "Counter")
     private int counter;
 
