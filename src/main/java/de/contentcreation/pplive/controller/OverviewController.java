@@ -201,7 +201,15 @@ public class OverviewController implements Serializable {
 
     public void handleSelectedBemerkung3(SelectEvent event) {
         String bemerkung = (String) event.getObject();
-        this.selectedArticle.setBemerkung3(bemerkung);
+        try {
+            if (this.selectedArticle != null) {
+                this.selectedArticle.setBemerkung3(bemerkung);
+            }
+
+        } catch (NullPointerException ex) {
+
+        }
+
     }
 
     public void handleSelectedBemerkungKAM(SelectEvent event) {
@@ -252,7 +260,13 @@ public class OverviewController implements Serializable {
             String bemerkung1 = editedArticle.getBemerkung1();
             String bemerkung2 = editedArticle.getBemerkung2();
             String bemerkung3 = editedArticle.getBemerkung3();
+            if (bemerkung3.equals("")) {
+                bemerkung3 = null;
+            }
             String bemerkungKAM = editedArticle.getBemerkungKAM();
+            if (bemerkungKAM.equals("")) {
+                bemerkungKAM = null;
+            }
             boolean neuerStatus = editedArticle.isOffen();
             User currentUser = userBean.getUser();
             String season = editedArticle.getSaison();
