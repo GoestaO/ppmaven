@@ -5,12 +5,12 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import de.contentcreation.pplive.model.Rolle;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import javax.persistence.CacheStoreMode;
 import javax.persistence.TypedQuery;
 
 /**
@@ -25,8 +25,6 @@ public class UserService {
     @PersistenceContext
     private EntityManager em;
 
-    User user;
-
     /**
      * Sucht ein Userobjekt mit Hilfe des Nutzernamens und des Passworts, wenn
      * ein Eintrag mit dieser Konstellation gefunden wurde, wird das Userobjekt
@@ -38,21 +36,17 @@ public class UserService {
      */
     public User login(String username, String password) {
 
-        Query q = em
-                .createQuery("select u from User u where u.nick = :username and u.passwort = :password");
+        TypedQuery q = em
+                .createQuery("select u from User u where u.nick = :username and u.passwort = :password", User.class);
+
         q.setParameter("username", username);
         q.setParameter("password", password);
+
+        // Im Cache befindliche Objekte sollen aktualisiert werden.
+        q.setHint("javax.persistence.cache.storeMode", CacheStoreMode.REFRESH);
+        User user = null;
         try {
             user = (User) q.getSingleResult();
-            if (user != null) {
-                String vorname = user.getVorname();
-                String nachname = user.getNachname();
-                Rolle rolle = user.getRolle();
-                user.setVorname(vorname);
-                user.setNachname(nachname);
-                user.setRolle(rolle);
-                user.setValid(true);
-            }
         } catch (NoResultException nrex) {
             user = null;
         }
@@ -97,6 +91,7 @@ public class UserService {
 
     /**
      * Verschlüsselt einen Input in einen MD5-Hash
+     *
      * @param input Der Input
      * @return Der MD5-Hash
      */

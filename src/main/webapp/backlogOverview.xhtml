@@ -26,7 +26,7 @@
             <p:growl id="msgs" showDetail="true"/>
 
             <p:contextMenu for="backlog">
-                <p:menuitem value="Bearbeiten" update=":form2:articleDetail" icon="ui-icon-search" oncomplete="PF('editDialog').show()"/>
+                <p:menuitem value="Bearbeiten" update=":form2:articleDetail" icon="ui-icon-wrench" oncomplete="PF('editDialog').show()"/>
                 <!--<p:menuitem value="Delete" update="cars" icon="ui-icon-close" actionListener="#{dtContextMenuView.deleteCar}"/>-->
             </p:contextMenu>
             <p:dataTable binding="#{overviewController.dataTable}" sortMode="single" widgetVar = "dataTable" id="backlog" selectionMode="multiple" selection="#{overviewController.selectedArticles}" rowKey="#{article.identifier}" var="article" value="#{overviewController.backlogList}" 

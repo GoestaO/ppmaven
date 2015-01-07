@@ -20,6 +20,8 @@ import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.persistence.CacheStoreMode;
+import javax.servlet.http.HttpSession;
 
 /**
  * Diese Bean ist der Controller für die Login-Seite. Sie ist für die
@@ -124,6 +126,7 @@ public class LoginBean implements Serializable {
     public String login(String username, String password, List<Integer> partnerList) {
         String direction = "";
         User user = service.login(username, password);
+//        System.out.println("user = " + user.getRolle().getId());
         if (user != null) {
             bean.setUser(user);
             bean.setValid(true);
@@ -138,12 +141,23 @@ public class LoginBean implements Serializable {
         return direction;
     }
 
-    public String resetUser() {
+       public String resetUser() {
         if (bean != null) {
+            
+            // Bean zerstören
             bean.setNick(null);
             bean.setPasswort(null);
             bean.setValid(false);
             bean.setPartnerList(null);
+            bean.setUser(null);
+            bean = null;
+            
+            // Session zerstören
+            HttpSession session = (HttpSession) FacesContext
+                    .getCurrentInstance().getExternalContext().getSession(false);
+            session.invalidate();
+            FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+
         }
         FacesMessage message = new FacesMessage("Logout", "Logout war erfolgreich.");
         FacesContext.getCurrentInstance().addMessage(null, message);
