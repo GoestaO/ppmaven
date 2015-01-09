@@ -132,7 +132,7 @@ public class ReportingController implements Serializable {
             datum2 = this.shiftDate(datum2);
             List<UserReport> userReport = rh.getUserReport(datum1, datum2);
 
-            String fileName = "UserReport";
+            String fileName = "UserReport.xlsx";
             File reportFile = new File(fileName);
             ex.createUserReport(reportFile, userReport);
             try {
@@ -149,7 +149,7 @@ public class ReportingController implements Serializable {
     public void getPartnerReportList() {
 
         List<BacklogArticle> partnerReportList = rh.getOpenBacklogArticles();
-        String fileName = "Offene_Artikel";
+        String fileName = "Offene_Artikel.xlsx";
         File reportFile = new File(fileName);
         ex.createPartnerReport(reportFile, partnerReportList);
         try {
@@ -167,7 +167,7 @@ public class ReportingController implements Serializable {
      */
     public void getKAMReportList(int offen) {
         List<Object[]> partnerReport = rh.getProblemArticles(offen);
-        String fileName = "KeyAccountReport";
+        String fileName = "KeyAccountReport.xlsx";
         File reportFile = new File(fileName);
         ex.createKeyAccountReport(reportFile, partnerReport);
         try {
@@ -186,7 +186,7 @@ public class ReportingController implements Serializable {
      */
     public void getEditArticlesReport(List<Integer> selectedPartner) {
         List<Object[]> editedArticlesList = rh.getEditedDataByPartner(selectedPartner);
-        String fileName = "GepflegteArtikel_Partner" + selectedPartner;
+        String fileName = "GepflegteArtikel_Partner" + selectedPartner + ".xlsx";
         File reportFile = new File(fileName);
         ex.createEditedArticlesReport(reportFile, editedArticlesList);
         try {
@@ -208,7 +208,7 @@ public class ReportingController implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlerhafte Eingabe", "Das erste Datum muss kleiner als das zweite Datum sein. Bitte versuche es noch einmal."));
         } else {
             datum2 = this.shiftDate(datum2);
-            String fileName = "neueArtikel";
+            String fileName = "neueArtikel.xlsx";
             File reportFile = new File(fileName);
             ex.createNewArticlesReport(reportFile, datum1, datum2);
             try {
@@ -244,7 +244,7 @@ public class ReportingController implements Serializable {
         FacesContext fc = FacesContext.getCurrentInstance();
         ExternalContext ec = fc.getExternalContext();
         ec.responseReset(); // Some JSF component library or some Filter might have set some headers in the buffer beforehand. We want to get rid of them, else it may collide.
-        ec.setResponseContentType("application/vnd.ms-excel"); // Check http://www.iana.org/assignments/media-types for all types. Use if necessary ExternalContext#getMimeType() for auto-detection based on filename.
+        ec.setResponseContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); // Check http://www.iana.org/assignments/media-types for all types. Use if necessary ExternalContext#getMimeType() for auto-detection based on filename.
 
         ec.setResponseContentLength((int) file.length()); // Set it with the file size. This header is optional. It will work if it's omitted, but the download progress will be unknown.
         ec.setResponseHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + "\""); // The Save As popup magic is done here. You can give it any file name you want, this only won't work in MSIE, it will use current request URL as file name instead.
