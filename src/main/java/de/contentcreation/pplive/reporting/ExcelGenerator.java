@@ -36,9 +36,9 @@ public class ExcelGenerator {
     @EJB
     private ReportingHandler rh;
 
-    
     /**
      * Erzeugt den Excel-Report für die neu hochgeladenen Artikel
+     *
      * @param filename Die Datei, in der der Report gespeichert werden soll.
      * @param datum1 Startdatum
      * @param datum2 Enddatum
@@ -120,6 +120,7 @@ public class ExcelGenerator {
 
     /**
      * Erzeugt den Excel-Report für die bearbeiteten Artikel
+     *
      * @param filename Die Datei, in der der Report gespeichert werden soll
      * @param partnerReport Das Resultat der Datenbankabfrage.
      */
@@ -192,8 +193,11 @@ public class ExcelGenerator {
             cgPathCell.setCellValue(ba[4].toString());
 
             Cell seasonCell = row.createCell(4);
-            seasonCell.setCellValue(ba[5].toString());
-
+            try {
+                seasonCell.setCellValue(ba[5].toString());
+            } catch (NullPointerException npex) {
+                seasonCell.setCellValue("");
+            }
             Cell dateCell = row.createCell(5);
             dateCell.setCellStyle(dateCellStyle);
             String date = ba[6].toString();
@@ -248,6 +252,7 @@ public class ExcelGenerator {
 
     /**
      * Erzeugt den Excel-Report für den Partner-Report
+     *
      * @param filename Die Datei, in der der Report gespeichert werden soll
      * @param partnerReport Das Resultat der Datenbankabfrage.
      */
@@ -359,6 +364,7 @@ public class ExcelGenerator {
 
     /**
      * Erzeugt den Excel-Report für den User-Report
+     *
      * @param filename Die Datei, in der der Report gespeichert werden soll
      * @param userReport Das Resultat der Datenbankabfrage.
      */
@@ -477,6 +483,7 @@ public class ExcelGenerator {
 
     /**
      * Erzeugt den Excel-Report für den KAM-Report
+     *
      * @param filename Die Datei, in der der Report gespeichert werden soll
      * @param partnerReport Das Resultat der Datenbankabfrage.
      */

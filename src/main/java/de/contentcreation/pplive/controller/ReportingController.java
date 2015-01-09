@@ -186,7 +186,6 @@ public class ReportingController implements Serializable {
      */
     public void getEditArticlesReport(List<Integer> selectedPartner) {
         List<Object[]> editedArticlesList = rh.getEditedDataByPartner(selectedPartner);
-
         String fileName = "GepflegteArtikel_Partner" + selectedPartner;
         File reportFile = new File(fileName);
         ex.createEditedArticlesReport(reportFile, editedArticlesList);
