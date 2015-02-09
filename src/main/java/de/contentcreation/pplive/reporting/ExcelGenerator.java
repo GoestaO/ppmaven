@@ -1,6 +1,9 @@
 package de.contentcreation.pplive.reporting;
 
 import de.contentcreation.pplive.model.BacklogArticle;
+import de.contentcreation.pplive.reportingClasses.RejectReportBemerkung1;
+import de.contentcreation.pplive.reportingClasses.RejectReportBemerkung2;
+import de.contentcreation.pplive.reportingClasses.RejectReportOverview;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -22,6 +25,7 @@ import java.util.Date;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 /**
  * Diese Bean ist für die Generierung von Excel-Dateien mit Hilfe der
@@ -479,6 +483,108 @@ public class ExcelGenerator {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void createRejectReport(File filename, List<RejectReportOverview> overviewList, List<RejectReportBemerkung1> bemerkung1List, List<RejectReportBemerkung2> bemerkung2List) {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("RejectReport");
+
+        Row labelRow = sheet.createRow(0);
+
+        Row headerRow = sheet.createRow(2);
+
+        // Gesamtübersicht
+        Cell overViewLabel = labelRow.createCell(0);
+        overViewLabel.setCellValue("Gesamtübersicht");
+        headerRow.createCell(0).setCellValue("Partner");
+        headerRow.createCell(1).setCellValue("Anzahl");
+        int rowNr = 3;
+        for (RejectReportOverview r : overviewList) {
+            Row row = sheet.createRow(rowNr);
+            row.createCell(0).setCellValue(r.getPartnerId());
+            row.createCell(1).setCellValue(r.getQuantity());
+            rowNr++;
+        }
+
+        // Übersicht Bemerkung 1
+        Cell bemerkung1Label = labelRow.createCell(3);
+        bemerkung1Label.setCellValue("Übersicht Bemerkung 1");
+        headerRow.createCell(3).setCellValue("Partner");
+        headerRow.createCell(4).setCellValue("Bemerkung 1");
+        headerRow.createCell(5).setCellValue("Anzahl");
+        rowNr = 3;
+        for (RejectReportBemerkung1 r : bemerkung1List) {
+            Row row = null;
+            row = sheet.getRow(rowNr);
+            if (row == null) {
+                row = sheet.createRow(rowNr);
+            }
+            row.createCell(3).setCellValue(r.getPartnerId());
+            row.createCell(4).setCellValue(r.getBemerkung1());
+            row.createCell(5).setCellValue(r.getQuantity());
+            rowNr++;
+        }
+
+        // Übersicht Bemerkung 2
+        Cell bemerkung2Label = labelRow.createCell(7);
+        bemerkung2Label.setCellValue("Übersicht Bemerkung 2");
+        headerRow.createCell(7).setCellValue("Partner");
+        headerRow.createCell(8).setCellValue("Bemerkung 2");
+        headerRow.createCell(9).setCellValue("Anzahl");
+        rowNr = 3;
+        for (RejectReportBemerkung2 r : bemerkung2List) {
+            Row row = null;
+            row = sheet.getRow(rowNr);
+            if (row == null) {
+                row = sheet.createRow(rowNr);
+            }
+            row.createCell(7).setCellValue(r.getPartnerId());
+            row.createCell(8).setCellValue(r.getBemerkung2());
+            row.createCell(9).setCellValue(r.getQuantity());
+            rowNr++;
+        }
+
+        // Gesamtübersichtsheader zusammenfassen
+        sheet.addMergedRegion(new CellRangeAddress(
+                0, //first row (0-based)
+                0, //last row  (0-based)
+                0, //first column (0-based)
+                1 //last column  (0-based)
+        ));
+
+        // Bemerkung1Header zusammenfassen
+        sheet.addMergedRegion(new CellRangeAddress(
+                0, //first row (0-based)
+                0, //last row  (0-based)
+                3, //first column (0-based)
+                5 //last column  (0-based)
+        ));
+
+        // Bemerkung2Header zusammenfassen
+        sheet.addMergedRegion(new CellRangeAddress(
+                0, //first row (0-based)
+                0, //last row  (0-based)
+                7, //first column (0-based)
+                9 //last column  (0-based)
+        ));
+
+        // Spaltenbreite automatisch anpassen
+        for (int i = 1; i < 10; i++) {
+            sheet.autoSizeColumn(i, true);
+        }
+        
+        sheet.setColumnWidth(0, 2500);
+        
+        try {
+            FileOutputStream out = new FileOutputStream(filename);
+            workbook.write(out);
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**

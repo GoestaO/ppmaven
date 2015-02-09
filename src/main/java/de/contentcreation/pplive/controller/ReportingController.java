@@ -7,6 +7,9 @@ package de.contentcreation.pplive.controller;
 
 import de.contentcreation.pplive.model.BacklogArticle;
 import de.contentcreation.pplive.reporting.ExcelGenerator;
+import de.contentcreation.pplive.reportingClasses.RejectReportBemerkung1;
+import de.contentcreation.pplive.reportingClasses.RejectReportBemerkung2;
+import de.contentcreation.pplive.reportingClasses.RejectReportOverview;
 import de.contentcreation.pplive.reportingClasses.UserReport;
 import de.contentcreation.pplive.services.DatabaseHandler;
 import de.contentcreation.pplive.services.ReportingHandler;
@@ -15,6 +18,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -27,8 +32,6 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Dies ist der Controller für die Reporting-Seite.
@@ -61,6 +64,10 @@ public class ReportingController implements Serializable {
     private List<Integer> partnerList;
 
     private int offen;
+
+    private Date rejectedDate1;
+
+    private Date rejectedDate2;
 
     // Getter + Setter
     public Date getLeistungDate1() {
@@ -119,6 +126,22 @@ public class ReportingController implements Serializable {
         this.partnerList = partnerList;
     }
 
+    public Date getRejectedDate1() {
+        return rejectedDate1;
+    }
+
+    public void setRejectedDate1(Date rejectedDate1) {
+        this.rejectedDate1 = rejectedDate1;
+    }
+
+    public Date getRejectedDate2() {
+        return rejectedDate2;
+    }
+
+    public void setRejectedDate2(Date rejectedDate2) {
+        this.rejectedDate2 = rejectedDate2;
+    }
+
     /**
      * Diese Methode gibt für einen gewählten Zeitraum alle Buchungen aus.
      *
@@ -135,6 +158,34 @@ public class ReportingController implements Serializable {
             String fileName = "UserReport.xlsx";
             File reportFile = new File(fileName);
             ex.createUserReport(reportFile, userReport);
+            try {
+                download(reportFile);
+            } catch (IOException ex) {
+                Logger.getLogger(ReportingController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    /**
+     * Diese Methode gibt für einen gewählten Zeitraum alle Buchungen aus.
+     *
+     * @param datum1 Das erste Datum = Start-Datum
+     * @param datum2 Das zweite Datum = End-Datum
+     */
+    public void getRejectReport(Date datum1, Date datum2) {
+        String date1String = getDateString(datum1);
+        String date2String = getDateString(datum2);
+        if (datum2.before(datum1)) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlerhafte Eingabe", "Das erste Datum muss kleiner als das zweite Datum sein. Bitte versuche es noch einmal."));
+        } else {
+            datum2 = this.shiftDate(datum2);
+            List<RejectReportOverview> overviewList = rh.getRejectReportOverview(datum1, datum2);
+            List<RejectReportBemerkung1> bemerkung1List = rh.getRejectReportBemerkung1(datum1, datum2);
+            List<RejectReportBemerkung2> bemerkung2List = rh.getRejectReportBemerkung2(datum1, datum2);
+
+            String fileName = "RejectReport_" + date1String + "_" + date2String + ".xlsx";
+            File reportFile = new File(fileName);
+            ex.createRejectReport(reportFile, overviewList, bemerkung1List, bemerkung2List);
             try {
                 download(reportFile);
             } catch (IOException ex) {
@@ -236,9 +287,11 @@ public class ReportingController implements Serializable {
     }
 
     /**
-     * Diese Methode ist dafür zuständig, eine Datei von der Seite herunterzuladen.
+     * Diese Methode ist dafür zuständig, eine Datei von der Seite
+     * herunterzuladen.
+     *
      * @param file Die Datei.
-     * @throws IOException 
+     * @throws IOException
      */
     public void download(File file) throws IOException {
         FacesContext fc = FacesContext.getCurrentInstance();
@@ -290,5 +343,8 @@ public class ReportingController implements Serializable {
 //            }
 //        }
 //    }
-
+    private String getDateString(Date date) {
+        DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+        return df.format(date);
+    }
 }
