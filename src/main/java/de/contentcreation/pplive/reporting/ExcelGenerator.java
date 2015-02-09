@@ -512,6 +512,7 @@ public class ExcelGenerator {
         headerRow.createCell(3).setCellValue("Partner");
         headerRow.createCell(4).setCellValue("Bemerkung 1");
         headerRow.createCell(5).setCellValue("Anzahl");
+        headerRow.createCell(6).setCellValue("Status");
         rowNr = 3;
         for (RejectReportBemerkung1 r : bemerkung1List) {
             Row row = null;
@@ -522,15 +523,17 @@ public class ExcelGenerator {
             row.createCell(3).setCellValue(r.getPartnerId());
             row.createCell(4).setCellValue(r.getBemerkung1());
             row.createCell(5).setCellValue(r.getQuantity());
+            row.createCell(6).setCellValue(r.getStatus());
             rowNr++;
         }
 
         // Übersicht Bemerkung 2
-        Cell bemerkung2Label = labelRow.createCell(7);
+        Cell bemerkung2Label = labelRow.createCell(8);
         bemerkung2Label.setCellValue("Übersicht Bemerkung 2");
-        headerRow.createCell(7).setCellValue("Partner");
-        headerRow.createCell(8).setCellValue("Bemerkung 2");
-        headerRow.createCell(9).setCellValue("Anzahl");
+        headerRow.createCell(8).setCellValue("Partner");
+        headerRow.createCell(9).setCellValue("Bemerkung 2");
+        headerRow.createCell(10).setCellValue("Anzahl");
+        headerRow.createCell(11).setCellValue("Status");
         rowNr = 3;
         for (RejectReportBemerkung2 r : bemerkung2List) {
             Row row = null;
@@ -538,9 +541,10 @@ public class ExcelGenerator {
             if (row == null) {
                 row = sheet.createRow(rowNr);
             }
-            row.createCell(7).setCellValue(r.getPartnerId());
-            row.createCell(8).setCellValue(r.getBemerkung2());
-            row.createCell(9).setCellValue(r.getQuantity());
+            row.createCell(8).setCellValue(r.getPartnerId());
+            row.createCell(9).setCellValue(r.getBemerkung2());
+            row.createCell(10).setCellValue(r.getQuantity());
+             row.createCell(11).setCellValue(r.getStatus());
             rowNr++;
         }
 
@@ -557,22 +561,22 @@ public class ExcelGenerator {
                 0, //first row (0-based)
                 0, //last row  (0-based)
                 3, //first column (0-based)
-                5 //last column  (0-based)
+                6 //last column  (0-based)
         ));
 
         // Bemerkung2Header zusammenfassen
         sheet.addMergedRegion(new CellRangeAddress(
                 0, //first row (0-based)
                 0, //last row  (0-based)
-                7, //first column (0-based)
-                9 //last column  (0-based)
+                8, //first column (0-based)
+                11 //last column  (0-based)
         ));
 
         // Spaltenbreite automatisch anpassen
-        for (int i = 1; i < 10; i++) {
+        for (int i = 1; i < 12; i++) {
             sheet.autoSizeColumn(i, true);
         }
-        
+//        
         sheet.setColumnWidth(0, 2500);
         
         try {

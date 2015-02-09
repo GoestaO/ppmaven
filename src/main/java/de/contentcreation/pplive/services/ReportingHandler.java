@@ -13,6 +13,7 @@ import de.contentcreation.pplive.reportingClasses.RejectReportBemerkung2;
 import de.contentcreation.pplive.reportingClasses.RejectReportOverview;
 import de.contentcreation.pplive.reportingClasses.UserReport;
 import de.contentcreation.pplive.util.QueryHelper;
+import java.util.ArrayList;
 import javax.ejb.Stateless;
 import javax.persistence.PersistenceContext;
 
@@ -125,26 +126,55 @@ public class ReportingHandler {
     }
 
     public List<RejectReportOverview> getRejectReportOverview(Date date1, Date date2) {
-        TypedQuery query = em.createQuery("select new de.contentcreation.pplive.reportingClasses.RejectReportOverview(b.partnerId, count(b.config)) from UpdateBuchung u inner join u.backlogArticle b where u.timestamp between :date1 and :date2 and (u.bemerkung1 is not null and u.bemerkung1 != '' or u.bemerkung2 is not null and u.bemerkung2 != '') group by b.partnerId", RejectReportOverview.class);       
+        TypedQuery query = em.createQuery("select new de.contentcreation.pplive.reportingClasses.RejectReportOverview(b.partnerId, count(b.config)) from UpdateBuchung u inner join u.backlogArticle b where u.timestamp between :date1 and :date2 and (u.bemerkung1 is not null and u.bemerkung1 != '' or u.bemerkung2 is not null and u.bemerkung2 != '') group by b.partnerId", RejectReportOverview.class);
         query.setParameter("date1", date1);
         query.setParameter("date2", date2);
         List<RejectReportOverview> result = query.getResultList();
         return result;
     }
 
-    public List<RejectReportBemerkung1> getRejectReportBemerkung1(Date date1, Date date2) {
-        TypedQuery query = em.createQuery("select new de.contentcreation.pplive.reportingClasses.RejectReportBemerkung1(b.partnerId, u.bemerkung1, count(b.bemerkung1)) from UpdateBuchung u inner join u.backlogArticle b where u.timestamp between :date1 and :date2 and (u.bemerkung1 is not null or u.bemerkung1 != '') group by b.partnerId", RejectReportBemerkung1.class);
-        query.setParameter("date1", date1);
-        query.setParameter("date2", date2);
-        List<RejectReportBemerkung1> result = query.getResultList();
-        return result;
+    public List<RejectReportBemerkung1> getRejectReportBemerkung1(String date1, String date2) {
+        Query query = em.createNativeQuery("select a.PartnerID, a.Bemerkung1, count(a.Bemerkung1), a.Status from  (select backlog.PartnerID, buchungen.Bemerkung1, max(buchungen.Timestamp), buchungen.Status \n"
+                + "from buchungen inner join backlog on buchungen.Identifier = backlog.Identifier\n"
+                + "where buchungen.Timestamp between '" + date1 + "' and '" + date2 + "'\n"
+                + "and buchungen.Bemerkung1 is not null and buchungen.Bemerkung1 != ''\n"
+                + "group by buchungen.Identifier, buchungen.Bemerkung1, buchungen.Status) a\n"
+                + "group by a.PartnerID, a.Bemerkung1");
+
+        List<Object[]> result = query.getResultList();
+        List<RejectReportBemerkung1> list = new ArrayList<>();
+        for (Object[] o : result) {
+            int partnerId = (int) o[0];
+            String bemerkung1 = String.valueOf(o[1]);
+            long qty = (long) o[2];
+            String status = String.valueOf(o[3]);
+            RejectReportBemerkung1 r = new RejectReportBemerkung1(partnerId, bemerkung1, qty, status);
+            list.add(r);
+        }
+        return list;
     }
 
-    public List<RejectReportBemerkung2> getRejectReportBemerkung2(Date date1, Date date2) {
-        TypedQuery query = em.createQuery("select new de.contentcreation.pplive.reportingClasses.RejectReportBemerkung2(b.partnerId, u.bemerkung2, count(b.bemerkung2)) from UpdateBuchung u inner join u.backlogArticle b where u.timestamp between :date1 and :date2 and (u.bemerkung2 is not null and u.bemerkung2 != '') group by b.partnerId", RejectReportBemerkung2.class);
-        query.setParameter("date1", date1);
-        query.setParameter("date2", date2);
-        List<RejectReportBemerkung2> result = query.getResultList();
-        return result;
+    public List<RejectReportBemerkung2> getRejectReportBemerkung2(String date1, String date2) {
+        Query query = em.createNativeQuery("select a.PartnerID, a.Bemerkung2, count(a.Bemerkung2),a.Status from  (select backlog.PartnerID, buchungen.Bemerkung2, max(buchungen.Timestamp),buchungen.Status \n"
+                + "from buchungen inner join backlog on buchungen.Identifier = backlog.Identifier\n"
+                + "where buchungen.Timestamp between '" + date1 + "' and '" + date2 + "'\n"
+                + "and buchungen.Bemerkung2 is not null and buchungen.Bemerkung2 != ''\n"
+                + "group by buchungen.Identifier, buchungen.Bemerkung2, buchungen.Status) a\n"
+                + "group by a.PartnerID, a.Bemerkung2");
+
+        List<Object[]> result = query.getResultList();
+        List<RejectReportBemerkung2> list = new ArrayList<>();
+        for (Object[] o : result) {
+            int partnerId = (int) o[0];
+            String bemerkung2 = String.valueOf(o[1]);
+            long qty = (long) o[2];
+            String status = String.valueOf(o[3]);
+            RejectReportBemerkung2 r = new RejectReportBemerkung2(partnerId, bemerkung2, qty, status);
+            list.add(r);
+        }
+        return list;
     }
+    
+    
+    
 }

@@ -17,10 +17,13 @@ public class RejectReportBemerkung2 {
 
     private long quantity;
 
-    public RejectReportBemerkung2(int partnerId, String bemerkung2, long quantity) {
+    private String status;
+
+    public RejectReportBemerkung2(int partnerId, String bemerkung2, long quantity, String status) {
         this.partnerId = partnerId;
         this.bemerkung2 = bemerkung2;
         this.quantity = quantity;
+        this.status = status;
     }
 
     public int getPartnerId() {
@@ -45,6 +48,14 @@ public class RejectReportBemerkung2 {
 
     public void setQuantity(long quantity) {
         this.quantity = quantity;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
 }

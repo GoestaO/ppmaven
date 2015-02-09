@@ -13,6 +13,7 @@ import de.contentcreation.pplive.reportingClasses.RejectReportOverview;
 import de.contentcreation.pplive.reportingClasses.UserReport;
 import de.contentcreation.pplive.services.DatabaseHandler;
 import de.contentcreation.pplive.services.ReportingHandler;
+import de.contentcreation.pplive.util.DateHelper;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -149,6 +150,10 @@ public class ReportingController implements Serializable {
      * @param datum2 Das zweite Datum = End-Datum
      */
     public void getLeistungsReport(Date datum1, Date datum2) {
+        if (datum2 == null) {
+            datum2 = new Date();
+        }
+        
         if (datum2.before(datum1)) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlerhafte Eingabe", "Das erste Datum muss kleiner als das zweite Datum sein. Bitte versuche es noch einmal."));
         } else {
@@ -173,15 +178,22 @@ public class ReportingController implements Serializable {
      * @param datum2 Das zweite Datum = End-Datum
      */
     public void getRejectReport(Date datum1, Date datum2) {
+        if (datum2 == null) {
+            datum2 = new Date();
+        }
         String date1String = getDateString(datum1);
         String date2String = getDateString(datum2);
+        String nativeDate1 = DateHelper.getFirstDate(datum1);
+        String nativeDate2 = DateHelper.getSecondDate(datum2);
+
         if (datum2.before(datum1)) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlerhafte Eingabe", "Das erste Datum muss kleiner als das zweite Datum sein. Bitte versuche es noch einmal."));
         } else {
             datum2 = this.shiftDate(datum2);
+
             List<RejectReportOverview> overviewList = rh.getRejectReportOverview(datum1, datum2);
-            List<RejectReportBemerkung1> bemerkung1List = rh.getRejectReportBemerkung1(datum1, datum2);
-            List<RejectReportBemerkung2> bemerkung2List = rh.getRejectReportBemerkung2(datum1, datum2);
+            List<RejectReportBemerkung1> bemerkung1List = rh.getRejectReportBemerkung1(nativeDate1, nativeDate2);
+            List<RejectReportBemerkung2> bemerkung2List = rh.getRejectReportBemerkung2(nativeDate1, nativeDate2);
 
             String fileName = "RejectReport_" + date1String + "_" + date2String + ".xlsx";
             File reportFile = new File(fileName);
@@ -205,8 +217,10 @@ public class ReportingController implements Serializable {
         ex.createPartnerReport(reportFile, partnerReportList);
         try {
             download(reportFile);
+
         } catch (IOException ex) {
-            Logger.getLogger(ReportingController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ReportingController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -223,8 +237,10 @@ public class ReportingController implements Serializable {
         ex.createKeyAccountReport(reportFile, partnerReport);
         try {
             download(reportFile);
+
         } catch (IOException ex) {
-            Logger.getLogger(ReportingController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ReportingController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -242,8 +258,10 @@ public class ReportingController implements Serializable {
         ex.createEditedArticlesReport(reportFile, editedArticlesList);
         try {
             download(reportFile);
+
         } catch (IOException ex) {
-            Logger.getLogger(ReportingController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ReportingController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -264,8 +282,10 @@ public class ReportingController implements Serializable {
             ex.createNewArticlesReport(reportFile, datum1, datum2);
             try {
                 download(reportFile);
+
             } catch (IOException ex) {
-                Logger.getLogger(ReportingController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ReportingController.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
