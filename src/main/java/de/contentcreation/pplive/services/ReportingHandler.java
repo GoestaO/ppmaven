@@ -1,6 +1,7 @@
 package de.contentcreation.pplive.services;
 
 import de.contentcreation.pplive.model.BacklogArticle;
+import de.contentcreation.pplive.model.User;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +17,7 @@ import de.contentcreation.pplive.util.QueryHelper;
 import java.util.ArrayList;
 import javax.ejb.Stateless;
 import javax.persistence.PersistenceContext;
+import org.primefaces.context.RequestContext;
 
 @Stateless
 public class ReportingHandler {
@@ -174,7 +176,46 @@ public class ReportingHandler {
         }
         return list;
     }
-    
-    
-    
+
+    public List<User> getUsers() {
+        TypedQuery q = em.createQuery("select distinct(ub.user) from UpdateBuchung ub", User.class);
+        List<User> result = q.getResultList();
+        List<User> tempList = new ArrayList<>();
+        // Admin, Testuser etc. entfernen
+        for (User u : result) {
+            if (u.getId() == 1 || u.getId() == 11 || u.getId() == 46) {
+                tempList.add(u);
+            }
+        }
+        result.removeAll(tempList);
+        return result;
+    }
+
+    public List<Object[]> getKWNutzeruebersicht(String datum1, String datum2, String userList) {
+        String query = "select WEEKOFYEAR(b.Timestamp)+1 as 'KW', CONCAT(UPPER(user.VORNAME), ' ', upper(user.NACHNAME)) as 'Name', b.`Status`, count(b.`Status`) as 'Anzahl' from buchungen b \n"
+                + "inner join user on b.User = user.ID\n"
+                + "inner join backlog on b.Identifier = backlog.Identifier\n"
+                + "where b.Timestamp between '" + datum1 + "' and '" + datum2 + "'\n"
+                + "and b.User in " + userList + "\n"
+                + "group by KW, Name, b.`Status` desc";
+        Query q = em.createNativeQuery(query);
+        List<Object[]> result = q.getResultList();
+        return result;
+    }
+
+    public List<Object[]> getTagesNutzeruebersicht(String datum1, String datum2, String userList) {
+        String query = "select DATE_FORMAT(b.Timestamp, '%d.%m.%Y') as 'Tag', \n"
+                + "CONCAT(UPPER(user.VORNAME), ' ', upper(user.NACHNAME)) as 'Name', b.`Status`, \n"
+                + "count(b.`Status`) as 'Anzahl' \n"
+                + "from buchungen b \n"
+                + "inner join user on b.User = user.ID\n"
+                + "inner join backlog on b.Identifier = backlog.Identifier\n"
+                + "where b.Timestamp between '" + datum1 + "' and '" + datum2 + "'\n"
+                + "and b.User in " + userList + "\n"
+                + "group by DATE(b.Timestamp), Name, b.`Status` desc";
+        Query q = em.createNativeQuery(query);
+        List<Object[]> result = q.getResultList();
+        return result;
+    }
+
 }

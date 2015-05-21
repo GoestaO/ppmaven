@@ -111,4 +111,18 @@ public class UserService {
         }
         return md5;
     }
+
+    public User findByName(String name) {
+        TypedQuery q = em.createQuery("select u from User u where u.nick = :name", User.class);
+        User u = (User) q.getSingleResult();
+        if (u != null) {
+            return u;
+        }
+        return null;
+    }
+
+    public List<User> findAll() {
+        TypedQuery q = em.createQuery("select u from User u", User.class);
+        return q.getResultList();
+    }
 }

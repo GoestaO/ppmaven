@@ -1,6 +1,7 @@
 package de.contentcreation.pplive.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -90,4 +91,43 @@ public class User implements Serializable {
 	public void setValid(boolean isValid) {
 		this.isValid = isValid;
 	}
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 41 * hash + this.id;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final User other = (User) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        if (!Objects.equals(this.nachname, other.nachname)) {
+            return false;
+        }
+        if (!Objects.equals(this.nick, other.nick)) {
+            return false;
+        }
+        if (!Objects.equals(this.vorname, other.vorname)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return vorname.toUpperCase() + " " + nachname.toUpperCase();
+    }
+      
+    
+        
 }

@@ -6,6 +6,7 @@
 package de.contentcreation.pplive.controller;
 
 import de.contentcreation.pplive.model.BacklogArticle;
+import de.contentcreation.pplive.model.User;
 import de.contentcreation.pplive.reporting.ExcelGenerator;
 import de.contentcreation.pplive.reportingClasses.RejectReportBemerkung1;
 import de.contentcreation.pplive.reportingClasses.RejectReportBemerkung2;
@@ -14,6 +15,7 @@ import de.contentcreation.pplive.reportingClasses.UserReport;
 import de.contentcreation.pplive.services.DatabaseHandler;
 import de.contentcreation.pplive.services.ReportingHandler;
 import de.contentcreation.pplive.util.DateHelper;
+import de.contentcreation.pplive.util.QueryHelper;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -27,12 +29,13 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.primefaces.context.RequestContext;
 
 /**
  * Dies ist der Controller für die Reporting-Seite.
@@ -40,7 +43,7 @@ import javax.inject.Named;
  * @author Gösta Ostendorf (goesta.o@gmail.com)
  */
 @Named
-@RequestScoped
+@SessionScoped
 public class ReportingController implements Serializable {
 
     @EJB
@@ -69,6 +72,14 @@ public class ReportingController implements Serializable {
     private Date rejectedDate1;
 
     private Date rejectedDate2;
+
+    private List<User> userList;
+
+    private List<User> selectedUsers;
+
+    private List<Object[]> kwNutzerStatistik;
+
+    private List<Object[]> tagesNutzerStatistik;
 
     // Getter + Setter
     public Date getLeistungDate1() {
@@ -143,6 +154,46 @@ public class ReportingController implements Serializable {
         this.rejectedDate2 = rejectedDate2;
     }
 
+    public List<User> getUserList() {
+        if (userList == null) {
+            userList = this.loadUserList();
+        }
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
+
+    public List<User> getSelectedUsers() {
+        return selectedUsers;
+    }
+
+    public void setSelectedUsers(List<User> selectedUsers) {
+        this.selectedUsers = selectedUsers;
+    }
+
+    public List<Object[]> getKwNutzerStatistik() {
+        return kwNutzerStatistik;
+    }
+
+    public void setKwNutzerStatistik(List<Object[]> kwNutzerStatistik) {
+        this.kwNutzerStatistik = kwNutzerStatistik;
+    }
+
+    public List<Object[]> getTagesNutzerStatistik() {
+        return tagesNutzerStatistik;
+    }
+
+    public void setTagesNutzerStatistik(List<Object[]> tagesNutzerStatistik) {
+        this.tagesNutzerStatistik = tagesNutzerStatistik;
+    }
+
+//    Methoden
+    private List<User> loadUserList() {
+        return rh.getUsers();
+    }
+
     /**
      * Diese Methode gibt für einen gewählten Zeitraum alle Buchungen aus.
      *
@@ -153,7 +204,7 @@ public class ReportingController implements Serializable {
         if (datum2 == null) {
             datum2 = new Date();
         }
-        
+
         if (datum2.before(datum1)) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlerhafte Eingabe", "Das erste Datum muss kleiner als das zweite Datum sein. Bitte versuche es noch einmal."));
         } else {
@@ -367,4 +418,34 @@ public class ReportingController implements Serializable {
         DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
         return df.format(date);
     }
+
+    public void click(String page) {
+
+        RequestContext requestContext = RequestContext.getCurrentInstance();
+
+        // Weiterleitung
+        requestContext.execute("window.open('" + page + "', '_blank');");
+    }
+
+    public void test() {
+        kwNutzerStatistik = this.loadKWUebersicht(leistungDate1, leistungDate2, selectedUsers);
+        tagesNutzerStatistik = this.loadTagesuebersicht(leistungDate1, leistungDate2, selectedUsers);
+//        System.out.println("tagesNutzerStatistik = " + tagesNutzerStatistik.size());
+        click("leistungsreport.jsf");
+    }
+
+    public List<Object[]> loadKWUebersicht(Date datum1, Date datum2, List<User> userList) {
+        String datum1String = DateHelper.getFirstDate(datum1);
+        String datum2String = DateHelper.getSecondDate(datum2);
+        String userListString = QueryHelper.getInClauseUserList(userList);
+        return rh.getKWNutzeruebersicht(datum1String, datum2String, userListString);
+    }
+
+    public List<Object[]> loadTagesuebersicht(Date datum1, Date datum2, List<User> userList) {
+        String datum1String = DateHelper.getFirstDate(datum1);
+        String datum2String = DateHelper.getSecondDate(datum2);
+        String userListString = QueryHelper.getInClauseUserList(userList);
+        return rh.getTagesNutzeruebersicht(datum1String, datum2String, userListString);
+    }
+
 }

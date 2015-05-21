@@ -28,6 +28,7 @@ import org.apache.commons.codec.binary.StringUtils;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.chart.LineChartModel;
 
 /**
  * Diese Bean ist der Controller für die Backlog-Übersichtsseite. Sie ist für
@@ -67,6 +68,10 @@ public class OverviewController implements Serializable {
 
     @Inject
     private UserBean userBean;
+
+    private List<LineChartModel> userChartList;
+
+    private LineChartModel allUsersChart;
 
 //    @PostConstruct
 //    public void init() {
@@ -156,13 +161,29 @@ public class OverviewController implements Serializable {
         this.filterValues = filterValues;
     }
 
+    public List<LineChartModel> getUserChartList() {
+        return userChartList;
+    }
+
+    public void setUserChartList(List<LineChartModel> userChartList) {
+        this.userChartList = userChartList;
+    }
+
+    public LineChartModel getAllUsersChart() {
+        return allUsersChart;
+    }
+
+    public void setAllUsersChart(LineChartModel allUsersChart) {
+        this.allUsersChart = allUsersChart;
+    }
+
     /**
      * Diese Methode lädt die Daten, die in der Tabelle dargestellt werden
      * sollen.
      *
      * @return Tabellendaten
      */
-    public List<BacklogArticle> loadData() {
+    private List<BacklogArticle> loadData() {
         List<Integer> partnerList = userBean.getPartnerList();
         return dh.getBacklogByPartner2(partnerList);
     }
@@ -236,25 +257,35 @@ public class OverviewController implements Serializable {
 
         for (BacklogArticle editedArticle : selectedArticles) {
             String identifier = editedArticle.getIdentifier();
+            BacklogArticle usprungsArtikel = dh.getBacklogArticle(identifier);
             String bemerkung1 = editedArticle.getBemerkung1();
+            boolean neuerStatus = editedArticle.isOffen();
             String bemerkung2 = editedArticle.getBemerkung2();
             String bemerkung3 = editedArticle.getBemerkung3();
             String bemerkungKAM = editedArticle.getBemerkungKAM();
-            boolean neuerStatus = editedArticle.isOffen();
             User currentUser = userBean.getUser();
             String season = editedArticle.getSaison();
-            dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
+//            System.out.println("usprungsArtikel.getBemerkung1() = " + usprungsArtikel.getBemerkung1());
+            if (neuerStatus && !usprungsArtikel.getBemerkung1().equals(bemerkung1)) {
+                dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
+            } else if (neuerStatus == false) {
+                dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
+            } else {
+                System.out.println(editedArticle.getIdentifier() + " wurde nicht aktualisiert.");
+            }
         }
 
         // Bestätigungsnachricht, dass Bearbeitung erfolgreich war.
         FacesMessage msg = new FacesMessage("Artikel bearbeitet", "Artikel erfolgreich aktualisiert");
         FacesContext.getCurrentInstance().addMessage(null, msg);
 
-        // Aktualisierung der Tabellen-Daten
-//        backlogList = this.loadData();
     }
 
     public void updateHandler(ActionEvent event) {
+
+        List<BacklogArticle> refusedList = new ArrayList<>();
+        List<BacklogArticle> updatedList = new ArrayList<>();
+        List<BacklogArticle> finishedList = new ArrayList<>();
         for (BacklogArticle editedArticle : selectedArticles) {
             String identifier = editedArticle.getIdentifier();
             String bemerkung1 = editedArticle.getBemerkung1();
@@ -270,7 +301,23 @@ public class OverviewController implements Serializable {
             boolean neuerStatus = editedArticle.isOffen();
             User currentUser = userBean.getUser();
             String season = editedArticle.getSaison();
-            dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
+
+            BacklogArticle usprungsArtikel = dh.getBacklogArticle(identifier);
+
+//            System.out.println("equals = " + usprungsArtikel.equals(editedArticle));
+//            System.out.println("equalsWithNulls = " + usprungsArtikel.equalsWithNulls(editedArticle));
+            // Wenn Status auf "fertig" gesetzt, dann auf finishedList setzen und Updatebuchung durchführen
+            if (neuerStatus == false) {
+                finishedList.add(editedArticle);
+                dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
+
+                // Schauen, ob es bei dem Artikel Veränderungen gab, wenn es keine gab, keine Buchung durchführen
+            } else if (neuerStatus && usprungsArtikel.equals(editedArticle) || usprungsArtikel.equalsWithNulls(editedArticle)) {
+                refusedList.add(editedArticle);
+            } else {
+                updatedList.add(editedArticle);
+                dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
+            }
 
             // Die Filterwerte aus der Tabelle ziehen und in der Session speichern
             filterValues = dataTable.getFilters();
@@ -290,6 +337,11 @@ public class OverviewController implements Serializable {
 
         }
 
+        // Bestätigungsnachricht generieren und ausgeben
+        String message = generateMessage(finishedList, updatedList, refusedList);
+
+        FacesContext.getCurrentInstance()
+                .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Zusammenfassung", message));
     }
 
     // Wenn Nutzersession abgelaufen ist, wird diese Nachricht angezeigt.
@@ -297,14 +349,38 @@ public class OverviewController implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Nicht eingeloggt!", "Du musst dich erst einloggen, bevor du loslegen kannst."));
     }
 
+    private String generateMessage(List<BacklogArticle> finishedList, List<BacklogArticle> updatedList, List<BacklogArticle> refusedList) {
+        StringBuilder message = new StringBuilder("<html><body>");
+
+        if (finishedList.size() > 0) {
+            message.append(
+                    "<p>").append(finishedList).append(" abgeschlossen </p>");
+        }
+
+        if (updatedList.size() > 0) {
+            message.append(
+                    "<p>").append(updatedList).append(" aktualisiert </p>");
+        }
+
+        if (refusedList.size() > 0) {
+            message.append(
+                    "<p>").append(refusedList).append(" nicht aktualisiert, da keine Veränderungen vorgenommen wurden. </p>");
+        }
+
+        message.append(
+                "</body></html>");
+
+        return message.toString();
+    }
+
     /**
      * Diese Methode wandelt ein einzelnes BacklogArticle-Objekt in eine Liste
      * mit dem Objekt um
      *
      * @param article Das BacklogArticle-Objekt
-     * @return Die Liste
+     * @return Die Liste *
      */
-    public List<BacklogArticle> toList(BacklogArticle article) {
+    private List<BacklogArticle> toList(BacklogArticle article) {
         List<BacklogArticle> list = new ArrayList<>();
         list.add(article);
         return list;

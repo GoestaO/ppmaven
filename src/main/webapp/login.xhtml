@@ -12,9 +12,9 @@
     </ui:define>
 
     <ui:define name="content" >
-       
+
         <h:form id="growlForm">
-            <p:growl id="growl" showDetail="true" sticky="true" life="3000"/>
+            <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" life="3000"/>
         </h:form>
 
         <c:if test="${!userBean.valid}">
@@ -25,7 +25,7 @@
                     <p:outputLabel for="password" value="Passwort:" />
                     <p:password id = "password" label="Passwort" value="#{loginBean.password}" required="true"></p:password>
                 </h:panelGrid>
-                <p:selectManyCheckbox style = "margin-right: 5px;" required="true" requiredMessage="Du musst mindestens einen Partner auswählen." value="#{loginBean.selectedPartners}" layout="grid" columns ="20">
+                <p:selectManyCheckbox style = "margin-right: 5px;" requiredMessage="" required="true" value="#{loginBean.selectedPartners}" layout="grid" columns ="20">
                     <f:selectItems value="#{loginBean.partnerList}" var="partner" itemLabel="#{partner}" itemValue="#{partner}"/>
                 </p:selectManyCheckbox>
 

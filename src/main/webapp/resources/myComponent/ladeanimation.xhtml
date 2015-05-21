@@ -1,0 +1,15 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <cc:interface>        
+
+    </cc:interface>
+    <cc:implementation>
+        <p:ajaxStatus onstart="PF('dialog').show();" onsuccess="PF('dialog').hide();"/>
+        <p:dialog widgetVar="dialog" closable="false" draggable="false" dynamic="false" modal="true" closeOnEscape="false">
+            <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+        </p:dialog>
+    </cc:implementation>
+</ui:composition>
+

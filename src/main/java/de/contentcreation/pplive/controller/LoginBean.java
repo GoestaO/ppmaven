@@ -125,9 +125,12 @@ public class LoginBean implements Serializable {
      */
     public String login(String username, String password, List<Integer> partnerList) {
         String direction = "";
+        if (partnerList == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Kein Partner ausgewählt", "Bitte mindestens einen Partner auswählen."));
+            direction = null;
+        }
         User user = service.login(username, password);
-//        System.out.println("user = " + user.getRolle().getId());
-        if (user != null) {
+        if (user != null && partnerList != null) {
             bean.setUser(user);
             bean.setValid(true);
             bean.setVorname(username);
@@ -135,15 +138,15 @@ public class LoginBean implements Serializable {
             bean.setPartnerList(partnerList);
             direction = "backlogOverview.jsf?faces-redirect=true";
         } else if (user == null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Login nicht erfolgreich", "Benutzername '" + username + "' oder Passwort ist nicht korrekt!"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "Benutzername '" + username + "' oder Passwort ist nicht korrekt!"));
             direction = null;
         }
         return direction;
     }
 
-       public String resetUser() {
+    public String resetUser() {
         if (bean != null) {
-            
+
             // Bean zerstören
             bean.setNick(null);
             bean.setPasswort(null);
@@ -151,7 +154,7 @@ public class LoginBean implements Serializable {
             bean.setPartnerList(null);
             bean.setUser(null);
             bean = null;
-            
+
             // Session zerstören
             HttpSession session = (HttpSession) FacesContext
                     .getCurrentInstance().getExternalContext().getSession(false);
@@ -159,7 +162,8 @@ public class LoginBean implements Serializable {
             FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 
         }
-        FacesMessage message = new FacesMessage("Logout", "Logout war erfolgreich.");
+
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Logout war erfolgreich.");
         FacesContext.getCurrentInstance().addMessage(null, message);
         return "login.jsf?faces-redirect = true";
     }

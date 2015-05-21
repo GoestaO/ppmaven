@@ -10,12 +10,7 @@
 
     <ui:define name="content">
 
-        <h:form rendered ="#{!userBean.valid}">
-            <p:button href="login.jsf" value="Zum Login" />
-            <p:button href="register.jsf" value="Zur Registrierung" />
-            <!--<p:messages id="message" showDetail="true"/>-->
-            #{overviewController.fatal()}
-        </h:form>
+        <mc:checkSession/>
 
         <h:form id="form1">
             <!--            <p:contextMenu for="backlog">
@@ -23,8 +18,8 @@
                             <p:menuitem value="Config kopieren" icon="ui-icon-copy" actionListener="#{overviewController.copyEANToClipboard}"/>
                         </p:contextMenu>-->
             <p:hotkey bind="alt+n" handler="PF('varEditButton').jq.click()" />
-            <p:growl id="msgs" showDetail="true"/>
-
+            <!--<p:growl id="msgs" showDetail="true"/>-->
+            <p:growl id="msgs" escape="false" showDetail="true" />
             <p:contextMenu for="backlog">
                 <p:menuitem value="Bearbeiten" update=":form2:articleDetail" icon="ui-icon-wrench" oncomplete="PF('editDialog').show()"/>
                 <!--<p:menuitem value="Delete" update="cars" icon="ui-icon-close" actionListener="#{dtContextMenuView.deleteCar}"/>-->
@@ -188,7 +183,7 @@
                     </p:column>            
                 </p:dataTable>
                 <f:facet name="footer">
-                    <p:commandButton styleClass="dialogbutton" update=":form1:backlog" value="Speichern" actionListener="#{overviewController.updateHandler(event)}" oncomplete="PF('editDialog').hide();">
+                    <p:commandButton styleClass="dialogbutton" update=":form1:backlog, :form1:msgs" value="Speichern" actionListener="#{overviewController.updateHandler(event)}" oncomplete="PF('editDialog').hide();">
                         <p:confirm header="Bestätigung" message="Bist du dir sicher?" icon="ui-icon-alert" />
                     </p:commandButton>
                 </f:facet>
