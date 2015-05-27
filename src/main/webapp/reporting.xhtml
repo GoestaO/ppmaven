@@ -7,6 +7,20 @@
                 xmlns:mc="http://xmlns.jcp.org/jsf/composite/myComponent"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
+    <h:head>
+
+        <script type="text/javascript">
+            function ext() {
+//this = chart widget instance
+//this.cfg = options
+                this.cfg.seriesDefaults = {
+                    shadowDepth: 5
+                };
+            }
+
+        </script>
+    </h:head>
+
     <ui:define name="content">   
 
         <mc:ladeanimation/>
@@ -15,104 +29,111 @@
         <p:growl id="messages" showDetail="true" />
         <!--<c:if test="#{userBean.valid and userBean.user.rolle.id != 4}">-->
 <!--        <p:panelGrid columns="3" rendered ="#{userBean.valid and userBean.user.rolle.id != 4}">-->
-            <p:panelGrid columns="3">
-                <p:panel header="Leistungsreport" style="width: 400px; height: 200px">
-                    <h:form>
-                        <h3>Bitte Start- und Enddatum angeben</h3>                    
-                        <p:panelGrid columns="2">
-                            <h:outputLabel for="date1" value="Erstes Datum:" />
-                            <h:outputLabel for="date2" value="Zweites Datum:" />
-                            <p:calendar id="date1" value="#{reportingController.leistungDate1}" locale="de" pattern="dd.MM.yyyy"/>
-                            <p:calendar id="date2" value="#{reportingController.leistungDate2}" locale="de" pattern="dd.MM.yyyy"/>                        
-                        </p:panelGrid>
-                        <br></br>
-                        <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getLeistungsReport(reportingController.leistungDate1, reportingController.leistungDate2)}"/>
-                    </h:form>
-                </p:panel>
+        <p:panelGrid columns="3">
+            <p:panel header="Leistungsreport" style="width: 400px; height: 200px">
+                <h:form>
+                    <h3>Bitte Start- und Enddatum angeben</h3>                    
+                    <p:panelGrid columns="2">
+                        <h:outputLabel for="date1" value="Erstes Datum:" />
+                        <h:outputLabel for="date2" value="Zweites Datum:" />
+                        <p:calendar id="date1" value="#{reportingController.leistungDate1}" locale="de" pattern="dd.MM.yyyy"/>
+                        <p:calendar id="date2" value="#{reportingController.leistungDate2}" locale="de" pattern="dd.MM.yyyy"/>                        
+                    </p:panelGrid>
+                    <br></br>
+                    <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getLeistungsReport(reportingController.leistungDate1, reportingController.leistungDate2)}"/>
+                </h:form>
+            </p:panel>
 
-                <p:panel header="Leistungsreport2" style="width: 400px; height: 200px">
-                    <h:form>
-                        <h3>Bitte Start- und Enddatum angeben</h3>                    
-                        <p:panelGrid columns="2">
-                            <h:outputLabel for="date1" value="Erstes Datum:" />
-                            <h:outputLabel for="date2" value="Zweites Datum:" />
-                            <p:calendar id="date1" value="#{reportingController.leistungDate1}" locale="de" pattern="dd.MM.yyyy"/>
-                            <p:calendar id="date2" value="#{reportingController.leistungDate2}" locale="de" pattern="dd.MM.yyyy"/>                        
-                        </p:panelGrid>
-                        <p:selectCheckboxMenu label = "User" converter="userConverter" value="#{reportingController.selectedUsers}">
-                            <f:selectItems value="#{reportingController.userList}" var="user" itemLabel="#{user.toString()}" itemValue="#{user}"/>
-                            <f:converter converterId="userConverter"/>
-                        </p:selectCheckboxMenu> 
-                        <br></br>
-                        <p:commandButton value="Test" icon="ui-icon-arrowthick-1-s" action="#{reportingController.test()}"/>
-                    </h:form>
-                </p:panel>
+            <p:panel header="Leistungsreport2" style="width: 400px; height: 200px">
+                <h:form>
+                    <h3>Bitte Start- und Enddatum angeben</h3>                    
+                    <p:panelGrid columns="2">
+                        <h:outputLabel for="date1" value="Erstes Datum:" />
+                        <h:outputLabel for="date2" value="Zweites Datum:" />
+                        <p:calendar id="date1" value="#{reportingController.leistungDate1}" locale="de" pattern="dd.MM.yyyy"/>
+                        <p:calendar id="date2" value="#{reportingController.leistungDate2}" locale="de" pattern="dd.MM.yyyy"/>                        
+                    </p:panelGrid>
+                    <p:selectCheckboxMenu label = "User" converter="userConverter" value="#{reportingController.selectedUsers}">
+                        <f:selectItems value="#{reportingController.userList}" var="user" itemLabel="#{user.toString()}" itemValue="#{user}"/>
+                        <f:converter converterId="userConverter"/>
+                    </p:selectCheckboxMenu> 
+                    <p:selectOneButton label="Status" value="#{reportingController.leistungsReportSelectedStatus}">
+                        <f:selectItem itemLabel="offen" itemValue="offen"/>
+                        <f:selectItem itemLabel="fertig" itemValue="fertig"/>                          
+                        <p:ajax/>                     
+                    </p:selectOneButton>
 
-                <p:panel header="Partnerreport" style="width: 400px; height: 200px">
-                    <h:form>
-                        <h3>Alle offenen Artikel ausgeben</h3>                   
-                        <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getPartnerReportList()}"/>
-                    </h:form>
-                </p:panel>
+                    <br></br>
+                    <p:commandButton value="Test" icon="ui-icon-arrowthick-1-s" action="#{reportingController.test()}"/>
+                    <!--<p:commandButton value="ChartTest" icon="ui-icon-arrowthick-1-s" action="#{reportingController.loadUserCharts(reportingController.leistungDate1, reportingController.leistungDate2, reportingController.selectedUsers, reportingController.leistungsReportSelectedStatus)}"/>-->   
+                </h:form>
+            </p:panel>
 
-                <p:panel header="KAM Report" style="width: 400px; height: 200px">
-                    <h:form>
-                        <h3>Alle Artikel mit Kommentaren ausgeben</h3>
-                        <p:selectOneButton value="#{reportingController.offen}">
-                            <f:selectItem itemLabel="offen" itemValue="1"/>
-                            <f:selectItem itemLabel="fertig" itemValue="0"/>                          
-                            <p:ajax/>                     
-                        </p:selectOneButton>
-                        <br></br>
-                        <br></br>
-                        <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getKAMReportList(reportingController.offen)}"/>
-                    </h:form>
-                </p:panel>
+            <p:panel header="Partnerreport" style="width: 400px; height: 200px">
+                <h:form>
+                    <h3>Alle offenen Artikel ausgeben</h3>                   
+                    <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getPartnerReportList()}"/>
+                </h:form>
+            </p:panel>
 
-                <p:panel header="Alle bereits gepflegten Artikel eines Partners" style="width: 400px; height: 200px">
-                    <h:form>
-                        <style type="text/css">
-                            .selectCheckboxMenu { display: inline-block; vertical-align: top; }
-                        </style>
-                        <h:panelGrid columns="2" style="vertical-align: top;">
-                            <p:selectCheckboxMenu styleClass = "selectCheckboxMenu" id="menu" value="#{reportingController.selectedPartner}" label="Partner"
-                                                  filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
-                                <f:selectItems value="#{reportingController.partnerList}" var = "partner" itemLabel="#{partner}" itemValue="#{partner}"/>
-                            </p:selectCheckboxMenu>                        
-                            <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getEditArticlesReport(reportingController.selectedPartner)}"/>
-                        </h:panelGrid>
-                    </h:form>
-                </p:panel>
+            <p:panel header="KAM Report" style="width: 400px; height: 200px">
+                <h:form>
+                    <h3>Alle Artikel mit Kommentaren ausgeben</h3>
+                    <p:selectOneButton value="#{reportingController.offen}">
+                        <f:selectItem itemLabel="offen" itemValue="1"/>
+                        <f:selectItem itemLabel="fertig" itemValue="0"/>                          
+                        <p:ajax/>                     
+                    </p:selectOneButton>
+                    <br></br>
+                    <br></br>
+                    <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getKAMReportList(reportingController.offen)}"/>
+                </h:form>
+            </p:panel>
 
-                <p:panel header="Upload Report" style="width: 400px; height: 200px">
-                    <h:form>                    
-                        <h3>Bitte Start- und Enddatum angeben</h3>                    
-                        <p:panelGrid columns="2">
-                            <h:outputLabel for="date1" value="Erstes Datum:" />
-                            <h:outputLabel for="date2" value="Zweites Datum:" />
-                            <p:calendar id="date1" value="#{reportingController.uploadDate1}" locale="de" pattern="dd.MM.yyyy"/>
-                            <p:calendar id="date2" value="#{reportingController.uploadDate2}" locale="de" pattern="dd.MM.yyyy"/>                        
-                        </p:panelGrid>
-                        <br></br>
-                        <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" update=":messages" action="#{reportingController.getNewArticlesReport(reportingController.uploadDate1, reportingController.uploadDate2)}"/>
-                    </h:form>
-                </p:panel>
+            <p:panel header="Alle bereits gepflegten Artikel eines Partners" style="width: 400px; height: 200px">
+                <h:form>
+                    <style type="text/css">
+                        .selectCheckboxMenu { display: inline-block; vertical-align: top; }
+                    </style>
+                    <h:panelGrid columns="2" style="vertical-align: top;">
+                        <p:selectCheckboxMenu styleClass = "selectCheckboxMenu" id="menu" value="#{reportingController.selectedPartner}" label="Partner"
+                                              filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
+                            <f:selectItems value="#{reportingController.partnerList}" var = "partner" itemLabel="#{partner}" itemValue="#{partner}"/>
+                        </p:selectCheckboxMenu>                        
+                        <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getEditArticlesReport(reportingController.selectedPartner)}"/>
+                    </h:panelGrid>
+                </h:form>
+            </p:panel>
 
-                <p:panel header="Reject Report" style="width: 400px; height: 200px">
-                    <h:form>                    
-                        <h3>Bitte Start- und Enddatum angeben</h3>                    
-                        <p:panelGrid columns="2">
-                            <h:outputLabel for="date1" value="Erstes Datum:" />
-                            <h:outputLabel for="date2" value="Zweites Datum:" />
-                            <p:calendar id="date1" value="#{reportingController.rejectedDate1}" locale="de" pattern="dd.MM.yyyy"/>
-                            <p:calendar id="date2" value="#{reportingController.rejectedDate2}" locale="de" pattern="dd.MM.yyyy"/>                        
-                        </p:panelGrid>
-                        <br></br>
-                        <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" update=":messages" action="#{reportingController.getRejectReport(reportingController.rejectedDate1, reportingController.rejectedDate2)}"/>
-                    </h:form>
-                </p:panel>
+            <p:panel header="Upload Report" style="width: 400px; height: 200px">
+                <h:form>                    
+                    <h3>Bitte Start- und Enddatum angeben</h3>                    
+                    <p:panelGrid columns="2">
+                        <h:outputLabel for="date1" value="Erstes Datum:" />
+                        <h:outputLabel for="date2" value="Zweites Datum:" />
+                        <p:calendar id="date1" value="#{reportingController.uploadDate1}" locale="de" pattern="dd.MM.yyyy"/>
+                        <p:calendar id="date2" value="#{reportingController.uploadDate2}" locale="de" pattern="dd.MM.yyyy"/>                        
+                    </p:panelGrid>
+                    <br></br>
+                    <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" update=":messages" action="#{reportingController.getNewArticlesReport(reportingController.uploadDate1, reportingController.uploadDate2)}"/>
+                </h:form>
+            </p:panel>
 
-            </p:panelGrid>
+            <p:panel header="Reject Report" style="width: 400px; height: 200px">
+                <h:form>                    
+                    <h3>Bitte Start- und Enddatum angeben</h3>                    
+                    <p:panelGrid columns="2">
+                        <h:outputLabel for="date1" value="Erstes Datum:" />
+                        <h:outputLabel for="date2" value="Zweites Datum:" />
+                        <p:calendar id="date1" value="#{reportingController.rejectedDate1}" locale="de" pattern="dd.MM.yyyy"/>
+                        <p:calendar id="date2" value="#{reportingController.rejectedDate2}" locale="de" pattern="dd.MM.yyyy"/>                        
+                    </p:panelGrid>
+                    <br></br>
+                    <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" update=":messages" action="#{reportingController.getRejectReport(reportingController.rejectedDate1, reportingController.rejectedDate2)}"/>
+                </h:form>
+            </p:panel>
+
+        </p:panelGrid>
         <!--</c:if>-->
     </ui:define>
 </ui:composition>

@@ -29,27 +29,27 @@ import org.primefaces.model.chart.LineChartModel;
 @Named
 @RequestScoped
 public class ChartController implements Serializable {
-
-    private HashMap<Integer, HashMap<String, Integer>> getChartHashMap(List<Object[]> resultList) {
-        LinkedHashMap<Integer, HashMap<String, Integer>> map = new LinkedHashMap<>();
+    
+    public HashMap<Integer, HashMap<String, Long>> getChartHashMap(List<Object[]> resultList) {
+        LinkedHashMap<Integer, HashMap<String, Long>> map = new LinkedHashMap<>();
         int key;
         for (Object[] o : resultList) {
             key = Integer.parseInt(o[0].toString());
-            String name = (String) o[2];
-            Integer anzahl = (Integer) o[5];
-
+            String name = (String) o[1];
+            Long anzahl = (Long) o[3];
+            
             if (map.containsKey(key)) {
                 map.get(key).put(name, anzahl);
             } else {
-                map.put(key, new HashMap<String, Integer>());
+                map.put(key, new HashMap<String, Long>());
                 map.get(key).put(name, anzahl);
             }
         }
         return map;
     }
-
-    public LineChartModel createBarModel(List<Object[]> resultList, String title, String xAxisLabel, String yAxisLabel) {
-        HashMap<Integer, HashMap<String, Integer>> data = getChartHashMap(resultList);
+    
+    public LineChartModel createLinechartModel(List<Object[]> resultList, String title, String xAxisLabel, String yAxisLabel) {
+        HashMap<Integer, HashMap<String, Long>> data = getChartHashMap(resultList);
         LineChartModel model = new LineChartModel();
         model = populateData(model, data);
         model.setTitle(title);
@@ -58,22 +58,25 @@ public class ChartController implements Serializable {
         model.setShowDatatip(false);
         Axis xAxis = model.getAxis(AxisType.X);
         xAxis.setLabel(xAxisLabel);
+//        xAxis.setTickInterval("10");
+//        xAxis.setTickFormat("%b");
+//        System.out.println(xAxis.getTickInterval());
         Axis yAxis = model.getAxis(AxisType.Y);
         yAxis.setLabel(yAxisLabel);
-        yAxis.setMin(0.00);
-        yAxis.setMax(80.00);
+//        yAxis.setMin(0);
+//        yAxis.setMax(80.00);
         return model;
     }
-
-    private LineChartModel populateData(LineChartModel model, HashMap<Integer, HashMap<String, Integer>> data) {
-
-        Collection<HashMap<String, Integer>> nameswerte = data.values();
-
-        List<String> nameen = new ArrayList<>();
-        for (HashMap<String, Integer> nameswert : nameswerte) {
-            nameen.addAll(nameswert.keySet());
+    
+    private LineChartModel populateData(LineChartModel model, HashMap<Integer, HashMap<String, Long>> data) {
+        
+        Collection<HashMap<String, Long>> nameswerte = data.values();
+        
+        List<String> namen = new ArrayList<>();
+        for (HashMap<String, Long> nameswert : nameswerte) {
+            namen.addAll(nameswert.keySet());
         }
-        Set<String> namesSet = new HashSet<>(nameen);
+        Set<String> namesSet = new HashSet<>(namen);
 
         // Für jede Station im Set eine ChartSerie erstellen
         for (String name : namesSet) {
@@ -82,14 +85,14 @@ public class ChartController implements Serializable {
         }
         return model;
     }
-
-    private ChartSeries createChartSeries(String name, HashMap<Integer, HashMap<String, Integer>> data) {
+    
+    private ChartSeries createChartSeries(String name, HashMap<Integer, HashMap<String, Long>> data) {
         ChartSeries series = new ChartSeries();
         series.setLabel(name);
         Set<Integer> kalenderwochen = data.keySet();
-
+        
         for (int kw : kalenderwochen) {
-            Integer anzahl = data.get(kw).get(name);
+            Long anzahl = data.get(kw).get(name);
             if (anzahl != null) {
                 series.set(kw, anzahl);
             } else {
@@ -98,5 +101,5 @@ public class ChartController implements Serializable {
         }
         return series;
     }
-
+    
 }

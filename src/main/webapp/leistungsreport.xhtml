@@ -8,80 +8,94 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <ui:define name="content">   
+        <script type="text/javascript">
+            function ext() {
+                //this = chart widget instance
+                //this.cfg = options
+                this.cfg.seriesDefaults = {
+                    shadowDepth: 5
+                };
+            }
+
+        </script>
 
         <!--<mc:checkSession/>-->
         <p:growl id="messages" showDetail="true" />
 
         <!--<c:if test="#{userBean.valid and userBean.user.rolle.id != 4}">-->
-            <p:panelGrid columns="2">
+        <p:panelGrid columns="2">
 
-                <p:dataTable value="#{reportingController.kwNutzerStatistik}" var="row">
+            <p:dataTable value="#{reportingController.kwNutzerStatistik}" var="row">
+                <f:facet name="header">
+                    Übersicht nach Kalenderwoche
+                </f:facet>              
+                <p:column>
                     <f:facet name="header">
-                        Übersicht nach Kalenderwoche
-                    </f:facet>              
-                    <p:column>
-                        <f:facet name="header">
-                            Kalenderwoche
-                        </f:facet>                
-                        <h:outputText value="#{row[0]}"/>
-                    </p:column>
+                        Kalenderwoche
+                    </f:facet>                
+                    <h:outputText value="#{row[0]}"/>
+                </p:column>
 
-                    <p:column>
-                        <f:facet name="header">
-                            Name
-                        </f:facet>
-                        <h:outputText value="#{row[1]}"/>
-                    </p:column>
-
-                    <p:column>
-                        <f:facet name="header">
-                            Status
-                        </f:facet>
-                        <h:outputText value="#{row[2]}"/>
-                    </p:column>
-
-                    <p:column>
-                        <f:facet name="header">
-                            Anzahl
-                        </f:facet>
-                        <h:outputText value="#{row[3]}"/>
-                    </p:column>
-                </p:dataTable>
-
-                <p:dataTable value="#{reportingController.tagesNutzerStatistik}" var="row">
+                <p:column>
                     <f:facet name="header">
-                        Tagesübersicht
+                        Name
                     </f:facet>
-                    <p:column>
-                        <f:facet name="header">
-                            Datum
-                        </f:facet>                
-                        <h:outputText value="#{row[0]}"/>
-                    </p:column>
+                    <h:outputText value="#{row[1]}"/>
+                </p:column>
 
-                    <p:column>
-                        <f:facet name="header">
-                            Name
-                        </f:facet>
-                        <h:outputText value="#{row[1]}"/>
-                    </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        Status
+                    </f:facet>
+                    <h:outputText value="#{row[2]}"/>
+                </p:column>
 
-                    <p:column>
-                        <f:facet name="header">
-                            Status
-                        </f:facet>
-                        <h:outputText value="#{row[2]}"/>
-                    </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        Anzahl
+                    </f:facet>
+                    <h:outputText value="#{row[3]}"/>
+                </p:column>
+            </p:dataTable>
 
-                    <p:column>
-                        <f:facet name="header">
-                            Anzahl
-                        </f:facet>
-                        <h:outputText value="#{row[3]}"/>
-                    </p:column>
-                </p:dataTable>
+            <p:dataTable value="#{reportingController.tagesNutzerStatistik}" var="row">
+                <f:facet name="header">
+                    Tagesübersicht
+                </f:facet>
+                <p:column>
+                    <f:facet name="header">
+                        Datum
+                    </f:facet>                
+                    <h:outputText value="#{row[0]}"/>
+                </p:column>
 
-            </p:panelGrid>
+                <p:column>
+                    <f:facet name="header">
+                        Name
+                    </f:facet>
+                    <h:outputText value="#{row[1]}"/>
+                </p:column>
+
+                <p:column>
+                    <f:facet name="header">
+                        Status
+                    </f:facet>
+                    <h:outputText value="#{row[2]}"/>
+                </p:column>
+
+                <p:column>
+                    <f:facet name="header">
+                        Anzahl
+                    </f:facet>
+                    <h:outputText value="#{row[3]}"/>
+                </p:column>
+            </p:dataTable>
+
+        </p:panelGrid>
         <!--</c:if>-->
+
+        <!--<ui:repeat value="#{reportingController.kwUserChartList}" var="userChart">-->
+        <p:chart type="line"  model="#{reportingController.kwOverviewChart}"/>
+        <!--</ui:repeat>-->
     </ui:define>
 </ui:composition>

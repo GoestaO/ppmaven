@@ -218,4 +218,67 @@ public class ReportingHandler {
         return result;
     }
 
+    public List<Object[]> getKWGesamtuebersichtChart(String datum1, String datum2, String userList, String status) {
+        String query = "select DATE_FORMAT(b.Timestamp, '%d.%m.%Y') as 'Tag', \n"
+                + "CONCAT(UPPER(user.VORNAME), ' ', upper(user.NACHNAME)) as 'Name', b.`Status`, \n"
+                + "count(b.`Status`) as 'Anzahl' \n"
+                + "from buchungen b \n"
+                + "inner join user on b.User = user.ID\n"
+                + "inner join backlog on b.Identifier = backlog.Identifier\n"
+                + "where b.Timestamp between '" + datum1 + "' and '" + datum2 + "'\n"
+                + "and b.Status = " + status
+                + "and b.User in " + userList + "\n"
+                + "group by DATE(b.Timestamp), Name, b.`Status` desc";
+        Query q = em.createNativeQuery(query);
+        List<Object[]> result = q.getResultList();
+        return result;
+    }
+
+    public List<Object[]> getKWNutzerChart(String datum1, String datum2, String userList, String status) {
+        String query = "select WEEKOFYEAR(b.Timestamp)+1 as 'KW', \n"
+                + "CONCAT(UPPER(user.VORNAME), ' ', upper(user.NACHNAME)) as 'Name', b.`Status`, \n"
+                + "count(b.`Status`) as 'Anzahl' \n"
+                + "from buchungen b \n"
+                + "inner join user on b.User = user.ID\n"
+                + "inner join backlog on b.Identifier = backlog.Identifier\n"
+                + "where b.Timestamp between '" + datum1 + "' and '" + datum2 + "'\n"
+                + "and b.User in " + userList + "\n"
+                + "and b.Status = '" + status + "' \n"
+                + "group by DATE(b.Timestamp), Name, b.`Status` desc";
+        Query q = em.createNativeQuery(query);
+        List<Object[]> result = q.getResultList();
+        return result;
+    }
+
+    public List<Object[]> getTagesGesamtuebersichtChart(String datum1, String datum2, String userList, String status) {
+        String query = "select DATE_FORMAT(b.Timestamp, '%d.%m.%Y') as 'Tag', \n"
+                + "CONCAT(UPPER(user.VORNAME), ' ', upper(user.NACHNAME)) as 'Name', b.`Status`, \n"
+                + "count(b.`Status`) as 'Anzahl' \n"
+                + "from buchungen b \n"
+                + "inner join user on b.User = user.ID\n"
+                + "inner join backlog on b.Identifier = backlog.Identifier\n"
+                + "where b.Timestamp between '" + datum1 + "' and '" + datum2 + "'\n"
+                + "and b.Status = " + status
+                + "and b.User in " + userList + "\n"
+                + "group by DATE(b.Timestamp), Name, b.`Status` desc";
+        Query q = em.createNativeQuery(query);
+        List<Object[]> result = q.getResultList();
+        return result;
+    }
+
+    public List<Object[]> getTagesNutzerChart(String datum1, String datum2, String userList) {
+        String query = "select DATE_FORMAT(b.Timestamp, '%d.%m.%Y') as 'Tag', \n"
+                + "CONCAT(UPPER(user.VORNAME), ' ', upper(user.NACHNAME)) as 'Name', b.`Status`, \n"
+                + "count(b.`Status`) as 'Anzahl' \n"
+                + "from buchungen b \n"
+                + "inner join user on b.User = user.ID\n"
+                + "inner join backlog on b.Identifier = backlog.Identifier\n"
+                + "where b.Timestamp between '" + datum1 + "' and '" + datum2 + "'\n"
+                + "and b.User in " + userList + "\n"
+                + "group by DATE(b.Timestamp), Name, b.`Status` desc";
+        Query q = em.createNativeQuery(query);
+        List<Object[]> result = q.getResultList();
+        return result;
+    }
+
 }
