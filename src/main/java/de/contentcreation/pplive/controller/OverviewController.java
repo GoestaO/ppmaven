@@ -15,16 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import javafx.event.ActionEvent;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.html.HtmlDataTable;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.apache.commons.codec.binary.StringUtils;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;

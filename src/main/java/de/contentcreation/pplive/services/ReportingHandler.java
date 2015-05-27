@@ -234,7 +234,7 @@ public class ReportingHandler {
         return result;
     }
 
-    public List<Object[]> getKWNutzerChart(String datum1, String datum2, String userList, String status) {
+    public List<Object[]> getKWNutzerChart(String datum1, String datum2, String userList) {
         String query = "select WEEKOFYEAR(b.Timestamp)+1 as 'KW', \n"
                 + "CONCAT(UPPER(user.VORNAME), ' ', upper(user.NACHNAME)) as 'Name', b.`Status`, \n"
                 + "count(b.`Status`) as 'Anzahl' \n"
@@ -243,7 +243,6 @@ public class ReportingHandler {
                 + "inner join backlog on b.Identifier = backlog.Identifier\n"
                 + "where b.Timestamp between '" + datum1 + "' and '" + datum2 + "'\n"
                 + "and b.User in " + userList + "\n"
-                + "and b.Status = '" + status + "' \n"
                 + "group by DATE(b.Timestamp), Name, b.`Status` desc";
         Query q = em.createNativeQuery(query);
         List<Object[]> result = q.getResultList();

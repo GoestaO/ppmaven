@@ -30,12 +30,18 @@ import org.primefaces.model.chart.LineChartModel;
 @RequestScoped
 public class ChartController implements Serializable {
     
-    public HashMap<Integer, HashMap<String, Long>> getChartHashMap(List<Object[]> resultList) {
+    private HashMap<Integer, HashMap<String, Long>> getChartHashMap(List<Object[]> resultList, boolean singleUser) {
         LinkedHashMap<Integer, HashMap<String, Long>> map = new LinkedHashMap<>();
         int key;
+        String name = "";
         for (Object[] o : resultList) {
             key = Integer.parseInt(o[0].toString());
-            String name = (String) o[1];
+            if(!singleUser){
+             name = (String) o[1];
+            }
+            else {
+                name = (String) o[2];
+            }
             Long anzahl = (Long) o[3];
             
             if (map.containsKey(key)) {
@@ -48,8 +54,8 @@ public class ChartController implements Serializable {
         return map;
     }
     
-    public LineChartModel createLinechartModel(List<Object[]> resultList, String title, String xAxisLabel, String yAxisLabel) {
-        HashMap<Integer, HashMap<String, Long>> data = getChartHashMap(resultList);
+    public LineChartModel createLinechartModel(List<Object[]> resultList, boolean singleUser, String title, String xAxisLabel, String yAxisLabel) {
+        HashMap<Integer, HashMap<String, Long>> data = getChartHashMap(resultList, singleUser);
         LineChartModel model = new LineChartModel();
         model = populateData(model, data);
         model.setTitle(title);
@@ -58,13 +64,10 @@ public class ChartController implements Serializable {
         model.setShowDatatip(false);
         Axis xAxis = model.getAxis(AxisType.X);
         xAxis.setLabel(xAxisLabel);
-//        xAxis.setTickInterval("10");
-//        xAxis.setTickFormat("%b");
-//        System.out.println(xAxis.getTickInterval());
+        xAxis.setTickCount(data.keySet().size()+2);
         Axis yAxis = model.getAxis(AxisType.Y);
+        yAxis.setMin(0);
         yAxis.setLabel(yAxisLabel);
-//        yAxis.setMin(0);
-//        yAxis.setMax(80.00);
         return model;
     }
     
@@ -101,5 +104,7 @@ public class ChartController implements Serializable {
         }
         return series;
     }
+    
+    
     
 }
