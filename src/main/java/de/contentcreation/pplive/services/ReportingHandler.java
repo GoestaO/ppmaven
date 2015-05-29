@@ -191,7 +191,7 @@ public class ReportingHandler {
         return result;
     }
 
-    public List<Object[]> getKWNutzeruebersicht(String datum1, String datum2, String userList) {
+    public List<Object[]> getWeeklyUserOverview(String datum1, String datum2, String userList) {
         String query = "select WEEKOFYEAR(b.Timestamp)+1 as 'KW', CONCAT(UPPER(user.VORNAME), ' ', upper(user.NACHNAME)) as 'Name', b.`Status`, count(b.`Status`) as 'Anzahl' from buchungen b \n"
                 + "inner join user on b.User = user.ID\n"
                 + "inner join backlog on b.Identifier = backlog.Identifier\n"
@@ -203,7 +203,7 @@ public class ReportingHandler {
         return result;
     }
 
-    public List<Object[]> getTagesNutzeruebersicht(String datum1, String datum2, String userList) {
+    public List<Object[]> getDailyUserOverview(String datum1, String datum2, String userList) {
         String query = "select DATE_FORMAT(b.Timestamp, '%d.%m.%Y') as 'Tag', \n"
                 + "CONCAT(UPPER(user.VORNAME), ' ', upper(user.NACHNAME)) as 'Name', b.`Status`, \n"
                 + "count(b.`Status`) as 'Anzahl' \n"
@@ -218,15 +218,15 @@ public class ReportingHandler {
         return result;
     }
 
-    public List<Object[]> getKWGesamtuebersichtChart(String datum1, String datum2, String userList, String status) {
-        String query = "select DATE_FORMAT(b.Timestamp, '%d.%m.%Y') as 'Tag', \n"
+    public List<Object[]> getWeeklyOverviewChart(String datum1, String datum2, String userList, String status) {
+        String query = "select WEEKOFYEAR(b.Timestamp) as 'KW', \n"
                 + "CONCAT(UPPER(user.VORNAME), ' ', upper(user.NACHNAME)) as 'Name', b.`Status`, \n"
                 + "count(b.`Status`) as 'Anzahl' \n"
                 + "from buchungen b \n"
                 + "inner join user on b.User = user.ID\n"
                 + "inner join backlog on b.Identifier = backlog.Identifier\n"
                 + "where b.Timestamp between '" + datum1 + "' and '" + datum2 + "'\n"
-                + "and b.Status = " + status
+                + "and b.Status = '" + status  + "'\n"
                 + "and b.User in " + userList + "\n"
                 + "group by DATE(b.Timestamp), Name, b.`Status` desc";
         Query q = em.createNativeQuery(query);
@@ -234,7 +234,7 @@ public class ReportingHandler {
         return result;
     }
 
-    public List<Object[]> getKWNutzerChart(String datum1, String datum2, String userList) {
+    public List<Object[]> getWeeklyUserChart(String datum1, String datum2, String userList) {
         String query = "select WEEKOFYEAR(b.Timestamp)+1 as 'KW', \n"
                 + "CONCAT(UPPER(user.VORNAME), ' ', upper(user.NACHNAME)) as 'Name', b.`Status`, \n"
                 + "count(b.`Status`) as 'Anzahl' \n"
@@ -244,29 +244,31 @@ public class ReportingHandler {
                 + "where b.Timestamp between '" + datum1 + "' and '" + datum2 + "'\n"
                 + "and b.User in " + userList + "\n"
                 + "group by DATE(b.Timestamp), Name, b.`Status` desc";
+        
         Query q = em.createNativeQuery(query);
         List<Object[]> result = q.getResultList();
         return result;
     }
 
-    public List<Object[]> getTagesGesamtuebersichtChart(String datum1, String datum2, String userList, String status) {
-        String query = "select DATE_FORMAT(b.Timestamp, '%d.%m.%Y') as 'Tag', \n"
+    public List<Object[]> getDailyOverviewChart(String datum1, String datum2, String userList, String status) {
+        String query = "select DATE_FORMAT(b.Timestamp, '%Y-%m-%d') as 'Tag', \n"
                 + "CONCAT(UPPER(user.VORNAME), ' ', upper(user.NACHNAME)) as 'Name', b.`Status`, \n"
                 + "count(b.`Status`) as 'Anzahl' \n"
                 + "from buchungen b \n"
                 + "inner join user on b.User = user.ID\n"
                 + "inner join backlog on b.Identifier = backlog.Identifier\n"
                 + "where b.Timestamp between '" + datum1 + "' and '" + datum2 + "'\n"
-                + "and b.Status = " + status
+                + "and b.Status = '" + status + "'\n"
                 + "and b.User in " + userList + "\n"
                 + "group by DATE(b.Timestamp), Name, b.`Status` desc";
         Query q = em.createNativeQuery(query);
+//        System.out.println("query = " + query);
         List<Object[]> result = q.getResultList();
         return result;
     }
 
-    public List<Object[]> getTagesNutzerChart(String datum1, String datum2, String userList) {
-        String query = "select DATE_FORMAT(b.Timestamp, '%d.%m.%Y') as 'Tag', \n"
+    public List<Object[]> getDailyUserChart(String datum1, String datum2, String userList) {
+        String query = "select DATE_FORMAT(b.Timestamp, '%Y-%m-%d') as 'Tag', \n"
                 + "CONCAT(UPPER(user.VORNAME), ' ', upper(user.NACHNAME)) as 'Name', b.`Status`, \n"
                 + "count(b.`Status`) as 'Anzahl' \n"
                 + "from buchungen b \n"

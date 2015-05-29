@@ -4,16 +4,14 @@
  * and open the template in the editor.
  */
 
-function extend() {
-      this.cfg.axes = {
-          xaxis: {
-              renderer: $.jqplot.DateAxisRenderer,
-              rendererOptions: { tickRenderer: $.jqplot.CanvasAxisTickRenderer },
-              tickOptions: {
-                  showGridline: true,
-                  formatString: '%H:%M',
-                  angle: -90                        
-             }         
-         }
-     }
+function ext() {
+    //this = chart widget instance
+    //this.cfg = options
+    this.cfg.seriesDefaults = {
+        shadowDepth: 5
+    },
+    this.cfg.axesDefaults = {
+        showTicks: true,
+        showTickMarks: true
+    };
 }

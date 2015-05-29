@@ -7,6 +7,7 @@ package de.contentcreation.pplive.util;
  */
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 import javax.faces.application.FacesMessage;
@@ -39,5 +40,12 @@ public final class DateHelper {
     public static String dateToDatumString(Date datum) {
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
         return (datum != null) ? format.format(datum) : "";
+    }
+
+    public static int getCalenderWeek(Date datum) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(datum);
+        int week = cal.get(Calendar.WEEK_OF_YEAR);
+        return week;
     }
 }

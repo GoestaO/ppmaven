@@ -88,11 +88,13 @@ public class ReportingController implements Serializable {
 
     private List<Object[]> dailyUserStatistic;
 
-    private List<LineChartModel> kwUserChartList;
+    private List<LineChartModel> cwUserChartList;
 
     private List<LineChartModel> dailyUserChartList;
 
     private LineChartModel cwOverviewChart;
+
+    private LineChartModel cwUserChart;
 
     private LineChartModel dailyOverviewChart;
 
@@ -228,12 +230,12 @@ public class ReportingController implements Serializable {
         this.cwOverviewChart = cwOverviewChart;
     }
 
-    public List<LineChartModel> getKwUserChartList() {
-        return kwUserChartList;
+    public List<LineChartModel> getCwUserChartList() {
+        return cwUserChartList;
     }
 
-    public void setKwUserChartList(List<LineChartModel> kwUserChartList) {
-        this.kwUserChartList = kwUserChartList;
+    public void setCwUserChartList(List<LineChartModel> cwUserChartList) {
+        this.cwUserChartList = cwUserChartList;
     }
 
     public LineChartModel getDailyOverviewChart() {
@@ -242,6 +244,14 @@ public class ReportingController implements Serializable {
 
     public void setDailyOverviewChart(LineChartModel dailyOverviewChart) {
         this.dailyOverviewChart = dailyOverviewChart;
+    }
+
+    public LineChartModel getCwUserChart() {
+        return cwUserChart;
+    }
+
+    public void setCwUserChart(LineChartModel cwUserChart) {
+        this.cwUserChart = cwUserChart;
     }
 
 //    Methoden
@@ -483,55 +493,89 @@ public class ReportingController implements Serializable {
     }
 
     public void test() {
-        weeklyUserStatistic = this.loadKWUebersicht(leistungDate1, leistungDate2, selectedUsers);
+        weeklyUserStatistic = this.loadWeeklyOverview(leistungDate1, leistungDate2, selectedUsers);
         dailyUserStatistic = this.loadDailyOverview(leistungDate1, leistungDate2, selectedUsers);
-        cwOverviewChart = loadCWOverviewChart(leistungDate1, leistungDate2, selectedUsers, leistungsReportSelectedStatus);
-        dailyOverviewChart = loadUserChart(leistungDate1, leistungDate2,selectedUsers.get(0));
-
-//        System.out.println("tagesNutzerStatistik = " + tagesNutzerStatistik.size());
+        cwOverviewChart = loadWeeklyOverviewChart(leistungDate1, leistungDate2, selectedUsers, leistungsReportSelectedStatus);
+        cwUserChartList = loadWeeklyUserChartList(leistungDate1, leistungDate2, selectedUsers);
+        dailyOverviewChart = loadDailyOverviewChart(leistungDate1, leistungDate2, selectedUsers, leistungsReportSelectedStatus);
+        dailyUserChartList = loadDailyUserChartList(leistungDate1, leistungDate2, selectedUsers);
         click("leistungsreport.jsf");
     }
 
-    public List<Object[]> loadKWUebersicht(Date datum1, Date datum2, List<User> userList) {
+    public List<Object[]> loadWeeklyOverview(Date datum1, Date datum2, List<User> userList) {
         String datum1String = DateHelper.getFirstDate(datum1);
         String datum2String = DateHelper.getSecondDate(datum2);
         String userListString = QueryHelper.getInClauseUserList(userList);
-        return rh.getKWNutzeruebersicht(datum1String, datum2String, userListString);
+        return rh.getWeeklyUserOverview(datum1String, datum2String, userListString);
     }
 
     public List<Object[]> loadDailyOverview(Date datum1, Date datum2, List<User> userList) {
         String datum1String = DateHelper.getFirstDate(datum1);
         String datum2String = DateHelper.getSecondDate(datum2);
         String userListString = QueryHelper.getInClauseUserList(userList);
-        return rh.getTagesNutzeruebersicht(datum1String, datum2String, userListString);
+        return rh.getDailyUserOverview(datum1String, datum2String, userListString);
     }
 
-    public LineChartModel loadCWOverviewChart(Date datum1, Date datum2, List<User> userList, String status) {
+    public LineChartModel loadWeeklyOverviewChart(Date datum1, Date datum2, List<User> userList, String status) {
+        int week = DateHelper.getCalenderWeek(datum1);
+        String datum1String = DateHelper.getFirstDate(datum1);
+        String datum2String = DateHelper.getSecondDate(datum2);
+        String userListString = QueryHelper.getInClauseUserList(userList);
+        List<Object[]> data = rh.getWeeklyOverviewChart(datum1String, datum2String, userListString, status);
+        LineChartModel chart = chartController.createLinechartModel(data, false, week, "Übersicht für ausgewählte Nutzer - Buchungen '" + status + "'", "Kalenderwoche", "Anzahl");
+        return chart;
+    }
 
+//    private LineChartModel loadUserChart(Date datum1, Date datum2, User user) {
+//        String datum1String = DateHelper.getFirstDate(datum1);
+//        String datum2String = DateHelper.getSecondDate(datum2);
+//        String userListString = "(" + String.valueOf(user.getId()) + ")";
+//        List<Object[]> data = rh.getKWNutzerChart(datum1String, datum2String, userListString);
+//        String nameLabel = user.getVorname().toUpperCase().concat(" ").concat(user.getNachname().toUpperCase());
+//        LineChartModel chart = chartController.createLinechartModel(data, true, "Statistik für " + nameLabel, "Kalenderwoche", "Anzahl");
+//        return chart;
+//    }
+    private List<LineChartModel> loadWeeklyUserChartList(Date datum1, Date datum2, List<User> userList) {
+        int week = DateHelper.getCalenderWeek(datum1);
+        List<LineChartModel> chartList = new ArrayList<>();
+        for (User user : userList) {
+            String datum1String = DateHelper.getFirstDate(datum1);
+            String datum2String = DateHelper.getSecondDate(datum2);
+            String userListString = "(" + String.valueOf(user.getId()) + ")";
+            List<Object[]> data = rh.getWeeklyUserChart(datum1String, datum2String, userListString);
+            LineChartModel chart = chartController.createLinechartModel(data, true, week, "Statistik für " + user, "Kalenderwoche", "Anzahl");
+            if (chart != null) {
+                chartList.add(chart);
+            }
+        }
+        return chartList;
+    }
+
+    private LineChartModel loadDailyOverviewChart(Date datum1, Date datum2, List<User> userList, String status) {
+        int week = DateHelper.getCalenderWeek(datum1);
         List<LineChartModel> chartList = new ArrayList<>();
         String datum1String = DateHelper.getFirstDate(datum1);
         String datum2String = DateHelper.getSecondDate(datum2);
-//        System.out.println("status = " + status);
-//        for (User u : userList) {
         String userListString = QueryHelper.getInClauseUserList(userList);
-//            String userListString = "(" + String.valueOf(u.getId()) + ")";
-        List<Object[]> data = rh.getKWGesamtuebersichtChart(datum1String, datum2String, userListString, status);
-//        System.out.println(chartController.getChartHashMap(data));
-        LineChartModel chart = chartController.createLinechartModel(data, false, "Übersicht über alle Nutzer - Buchungen '" + status + "'", "Kalenderwoche", "Anzahl");
-//            chartList.add(chart);
-//        }
-
+        List<Object[]> data = rh.getDailyOverviewChart(datum1String, datum2String, userListString, status);
+        LineChartModel chart = chartController.createDateLinechartModel(data, false, 0, "Übersicht für ausgewählte Nutzer - Buchungen '" + status + "'", "Datum", "Anzahl");
         return chart;
     }
 
-    private LineChartModel loadUserChart(Date datum1, Date datum2, User user) {
-        String datum1String = DateHelper.getFirstDate(datum1);
-        String datum2String = DateHelper.getSecondDate(datum2);
-        String userListString = "(" + String.valueOf(user.getId()) + ")";
-        List<Object[]> data = rh.getKWNutzerChart(datum1String, datum2String, userListString);
-        String nameLabel = user.getVorname().toUpperCase().concat(" ").concat(user.getNachname().toUpperCase());
-        LineChartModel chart = chartController.createLinechartModel(data, true, "Statistik für " + nameLabel, "Kalenderwoche", "Anzahl");
-        return chart;
+    private List<LineChartModel> loadDailyUserChartList(Date datum1, Date datum2, List<User> userList) {
+        int week = DateHelper.getCalenderWeek(datum1);
+        List<LineChartModel> chartList = new ArrayList<>();
+        for (User user : userList) {
+            String datum1String = DateHelper.getFirstDate(datum1);
+            String datum2String = DateHelper.getSecondDate(datum2);
+            String userListString = "(" + String.valueOf(user.getId()) + ")";
+            List<Object[]> data = rh.getDailyUserChart(datum1String, datum2String, userListString);
+            LineChartModel chart = chartController.createDateLinechartModel(data, true, 0, "Statistik für " + user, "Datum", "Anzahl");
+            if (chart != null) {
+                chartList.add(chart);
+            }
+        }
+        return chartList;
     }
 
 }
