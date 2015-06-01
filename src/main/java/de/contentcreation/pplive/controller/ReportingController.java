@@ -36,7 +36,14 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.chart.LineChartModel;
 
 /**
@@ -181,7 +188,7 @@ public class ReportingController implements Serializable {
 
     public List<User> getUserList() {
         if (userList == null) {
-            userList = this.loadUserList();
+            userList = this.loadUsersByDate();
         }
         return userList;
     }
@@ -257,6 +264,20 @@ public class ReportingController implements Serializable {
 //    Methoden
     private List<User> loadUserList() {
         return rh.getUsers();
+    }
+
+    private List<User> loadUsersByDate() {
+
+        if (this.leistungDate1 != null && this.leistungDate2 != null) {
+            return rh.getUsersByDate(this.leistungDate1, this.leistungDate2);
+        } else if (this.leistungDate1 != null) {
+            return rh.getUsersByDate(this.leistungDate1);
+        }
+        return null;
+    }
+
+    public void onSelectedDate(SelectEvent event) {
+        userList = loadUsersByDate();
     }
 
     /**
@@ -492,14 +513,34 @@ public class ReportingController implements Serializable {
         requestContext.execute("window.open('" + page + "', '_blank');");
     }
 
-    public void test() {
-        weeklyUserStatistic = this.loadWeeklyOverview(leistungDate1, leistungDate2, selectedUsers);
-        dailyUserStatistic = this.loadDailyOverview(leistungDate1, leistungDate2, selectedUsers);
-        cwOverviewChart = loadWeeklyOverviewChart(leistungDate1, leistungDate2, selectedUsers, leistungsReportSelectedStatus);
-        cwUserChartList = loadWeeklyUserChartList(leistungDate1, leistungDate2, selectedUsers);
-        dailyOverviewChart = loadDailyOverviewChart(leistungDate1, leistungDate2, selectedUsers, leistungsReportSelectedStatus);
-        dailyUserChartList = loadDailyUserChartList(leistungDate1, leistungDate2, selectedUsers);
-        click("leistungsreport.jsf");
+    public void generateLeistungsReport2() {
+        if (this.leistungDate2 == null) {
+            this.leistungDate2 = new Date();
+        }
+        if (this.leistungDate1 == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlendes Datum", "Bitte ein Startdatum wählen"));
+        }
+
+        if (this.selectedUsers == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Kein Nutzer ausgewählt", "Bitte mindestens einen Nutzer zur Analyse auswählen."));
+        }
+        if (this.leistungsReportSelectedStatus == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlender Status", "Bitte einen Status wählen."));
+        }
+
+        if (this.selectedUsers != null && this.leistungDate1 != null && this.leistungsReportSelectedStatus != null) {
+            if (this.leistungDate2.before(this.leistungDate1)) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlerhafte Eingabe", "Das erste Datum muss kleiner als das zweite Datum sein. Bitte versuche es noch einmal."));
+            }
+            leistungDate2 = new Date();
+            weeklyUserStatistic = this.loadWeeklyOverview(leistungDate1, leistungDate2, selectedUsers);
+            dailyUserStatistic = this.loadDailyOverview(leistungDate1, leistungDate2, selectedUsers);
+            cwOverviewChart = loadWeeklyOverviewChart(leistungDate1, leistungDate2, selectedUsers, leistungsReportSelectedStatus);
+            cwUserChartList = loadWeeklyUserChartList(leistungDate1, leistungDate2, selectedUsers);
+            dailyOverviewChart = loadDailyOverviewChart(leistungDate1, leistungDate2, selectedUsers, leistungsReportSelectedStatus);
+            dailyUserChartList = loadDailyUserChartList(leistungDate1, leistungDate2, selectedUsers);
+            click("leistungsreport.jsf");
+        }
     }
 
     public List<Object[]> loadWeeklyOverview(Date datum1, Date datum2, List<User> userList) {
@@ -576,6 +617,22 @@ public class ReportingController implements Serializable {
             }
         }
         return chartList;
+    }
+
+    public void postProcessXLSX(Object document) {
+        XSSFWorkbook wb = (XSSFWorkbook) document;
+        XSSFSheet sheet = wb.getSheetAt(0);
+        XSSFRow header = sheet.getRow(0);
+
+        XSSFCellStyle cellStyle = wb.createCellStyle();
+        cellStyle.setFillForegroundColor(HSSFColor.GREEN.index);
+        cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+
+        for (int i = 0; i < 11; i++) {
+//            XSSFCell cell = header.getCell(i);
+            sheet.autoSizeColumn(i);
+//            cell.setCellStyle(cellStyle);
+        }
     }
 
 }

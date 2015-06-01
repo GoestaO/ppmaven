@@ -123,7 +123,28 @@ public class LoginBean implements Serializable {
      * entweder die Backlogübersicht, oder es gibt eine Fehlermeldung und keine
      * Navigation.
      */
-    public String login(String username, String password, List<Integer> partnerList) {
+    public void login(String username, String password, List<Integer> partnerList) {
+//        String direction = "";
+        if (partnerList == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Kein Partner ausgewählt", "Bitte mindestens einen Partner auswählen."));
+//            direction = null;
+        }
+        User user = service.login(username, password);
+        if (user != null && partnerList != null) {
+            bean.setUser(user);
+            bean.setValid(true);
+            bean.setVorname(username);
+            bean.setNachname(username);
+            bean.setPartnerList(partnerList);
+//            direction = "backlogOverview.jsf?faces-redirect=true";
+        } else if (user == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "Benutzername '" + username + "' oder Passwort ist nicht korrekt!"));
+//            direction = null;
+        }
+//        return direction;
+    }
+
+    public String redirectedLogin(String username, String password, List<Integer> partnerList) {
         String direction = "";
         if (partnerList == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Kein Partner ausgewählt", "Bitte mindestens einen Partner auswählen."));
@@ -144,7 +165,7 @@ public class LoginBean implements Serializable {
         return direction;
     }
 
-    public String resetUser() {
+    public void resetUser() {
         if (bean != null) {
 
             // Bean zerstören
@@ -165,7 +186,7 @@ public class LoginBean implements Serializable {
 
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Logout war erfolgreich.");
         FacesContext.getCurrentInstance().addMessage(null, message);
-        return "login.jsf?faces-redirect = true";
+//        return "login.jsf?faces-redirect = true";
     }
 
 }

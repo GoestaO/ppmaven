@@ -379,7 +379,7 @@ public class OverviewController implements Serializable {
      * @param article Das BacklogArticle-Objekt
      * @return Die Liste *
      */
-    private List<BacklogArticle> toList(BacklogArticle article) {
+    public List<BacklogArticle> toList(BacklogArticle article) {
         List<BacklogArticle> list = new ArrayList<>();
         list.add(article);
         return list;

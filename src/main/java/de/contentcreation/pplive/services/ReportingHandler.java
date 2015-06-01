@@ -191,6 +191,21 @@ public class ReportingHandler {
         return result;
     }
 
+    public List<User> getUsersByDate(Date firstDate, Date secondDate) {
+        TypedQuery q = em.createQuery("select distinct(ub.user) from UpdateBuchung ub where ub.timestamp between :firstDate and :secondDate", User.class);
+        q.setParameter("firstDate", firstDate);
+        q.setParameter("secondDate", secondDate);
+        List<User> result = q.getResultList();
+        return result;
+    }
+
+    public List<User> getUsersByDate(Date firstDate) {
+        TypedQuery q = em.createQuery("select distinct(ub.user) from UpdateBuchung ub where ub.timestamp > :firstDate", User.class);
+        q.setParameter("firstDate", firstDate);
+        List<User> result = q.getResultList();
+        return result;
+    }
+
     public List<Object[]> getWeeklyUserOverview(String datum1, String datum2, String userList) {
         String query = "select WEEKOFYEAR(b.Timestamp)+1 as 'KW', CONCAT(UPPER(user.VORNAME), ' ', upper(user.NACHNAME)) as 'Name', b.`Status`, count(b.`Status`) as 'Anzahl' from buchungen b \n"
                 + "inner join user on b.User = user.ID\n"
@@ -226,7 +241,7 @@ public class ReportingHandler {
                 + "inner join user on b.User = user.ID\n"
                 + "inner join backlog on b.Identifier = backlog.Identifier\n"
                 + "where b.Timestamp between '" + datum1 + "' and '" + datum2 + "'\n"
-                + "and b.Status = '" + status  + "'\n"
+                + "and b.Status = '" + status + "'\n"
                 + "and b.User in " + userList + "\n"
                 + "group by DATE(b.Timestamp), Name, b.`Status` desc";
         Query q = em.createNativeQuery(query);
@@ -244,7 +259,7 @@ public class ReportingHandler {
                 + "where b.Timestamp between '" + datum1 + "' and '" + datum2 + "'\n"
                 + "and b.User in " + userList + "\n"
                 + "group by DATE(b.Timestamp), Name, b.`Status` desc";
-        
+
         Query q = em.createNativeQuery(query);
         List<Object[]> result = q.getResultList();
         return result;
