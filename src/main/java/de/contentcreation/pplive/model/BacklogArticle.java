@@ -212,21 +212,14 @@ public class BacklogArticle implements Serializable {
         if (!Objects.equals(this.bemerkung2, other.bemerkung2)) {
             return false;
         }
-//        if (!Objects.equals(this.bemerkung3, other.bemerkung3)) {
-//            return false;
-//        }
+        if (!Objects.equals(this.bemerkung3, other.bemerkung3)) {
+            return false;
+        }
+        if (!Objects.equals(this.bemerkungKAM, other.bemerkungKAM)) {
+            return false;
+        }
         
-//        if (!(this.bemerkung1 == other.bemerkung1)) {
-//            return false;
-//        }
-//
-//        if (!(this.bemerkung2 == other.bemerkung2)) {
-//            return false;
-//        }
-//
-//        if (!(this.bemerkung3 == other.bemerkung3)) {
-//            return false;
-//        }
+
         return true;
     }
 
@@ -240,6 +233,21 @@ public class BacklogArticle implements Serializable {
         if (!(this.bemerkung2 == null && other.bemerkung2 == null)) {
             return false;
         }
+        if (!(this.bemerkung3 == null && other.bemerkung3 == null)) {
+            return false;
+        }
+        if (!(this.bemerkung3.isEmpty() && other.bemerkung3 == null)) {
+            return false;
+        }
+        
+        if (!(this.bemerkungKAM == null && other.bemerkungKAM == null)) {
+            return false;
+        }
+        
+        if (!(this.bemerkungKAM.isEmpty() && other.bemerkungKAM == null)) {
+            return false;
+        }
+        
         return true;
     }
 

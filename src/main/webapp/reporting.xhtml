@@ -40,23 +40,23 @@
                         <p:panelGrid columns="2">
                             <h:outputLabel for="date1" value="Erstes Datum:" />
                             <h:outputLabel for="date2" value="Zweites Datum:" />
-                            <p:calendar id="date1" value="#{reportingController.leistungDate1}" locale="de" pattern="dd.MM.yyyy">
+                            <p:calendar id="date1" value="#{reportingController.leistungDate1}" maxdate="new Date();" locale="de" pattern="dd.MM.yyyy">
                                 <p:ajax event="dateSelect" listener="#{reportingController.onSelectedDate(event)}" update="userList" />
                             </p:calendar>
-                            <p:calendar id="date2" value="#{reportingController.leistungDate2}" locale="de" pattern="dd.MM.yyyy">
+                            <p:calendar id="date2" value="#{reportingController.leistungDate2}" maxdate="new Date();" locale="de" pattern="dd.MM.yyyy">
                                 <p:ajax event="dateSelect" listener="#{reportingController.onSelectedDate(event)}" update="userList" />
                             </p:calendar>                        
-                        </p:panelGrid>
-                        <p:selectCheckboxMenu id="userList" label = "User" converter="userConverter" value="#{reportingController.selectedUsers}">
-                            <f:selectItems  value="#{reportingController.userList}" var="user" itemLabel="#{user}" itemValue="#{user}"/>
-                            <f:converter converterId="userConverter"/>
-                        </p:selectCheckboxMenu> 
-                        <p:selectOneButton label="Status" value="#{reportingController.leistungsReportSelectedStatus}">
-                            <f:selectItem itemLabel="offen" itemValue="offen"/>
-                            <f:selectItem itemLabel="fertig" itemValue="fertig"/>                          
-                            <p:ajax/>                     
-                        </p:selectOneButton>
 
+                            <p:selectCheckboxMenu id="userList" label = "User" converter="userConverter" value="#{reportingController.selectedUsers}">
+                                <f:selectItems  value="#{reportingController.userList}" var="user" itemLabel="#{user}" itemValue="#{user}"/>
+                                <f:converter converterId="userConverter"/>
+                            </p:selectCheckboxMenu> 
+                            <p:selectOneButton label="Status" value="#{reportingController.leistungsReportSelectedStatus}">
+                                <f:selectItem itemLabel="offen" itemValue="offen" />
+                                <f:selectItem itemLabel="fertig" itemValue="fertig" />                          
+                                <p:ajax/>                     
+                            </p:selectOneButton>
+                        </p:panelGrid>
                         <br></br>
                         <p:commandButton value="Report" update=":messages" icon="ui-icon-arrowthick-1-s" action="#{reportingController.generateLeistungsReport2()}"/>
 
@@ -105,8 +105,8 @@
                         <p:panelGrid columns="2">
                             <h:outputLabel for="date1" value="Erstes Datum:" />
                             <h:outputLabel for="date2" value="Zweites Datum:" />
-                            <p:calendar id="date1" value="#{reportingController.uploadDate1}" locale="de" pattern="dd.MM.yyyy"/>
-                            <p:calendar id="date2" value="#{reportingController.uploadDate2}" locale="de" pattern="dd.MM.yyyy"/>                        
+                            <p:calendar id="date1" value="#{reportingController.uploadDate1}" maxdate="new Date();" locale="de" pattern="dd.MM.yyyy"/>
+                            <p:calendar id="date2" value="#{reportingController.uploadDate2}" maxdate="new Date();" locale="de" pattern="dd.MM.yyyy"/>                        
                         </p:panelGrid>
                         <br></br>
                         <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" update=":messages" action="#{reportingController.getNewArticlesReport(reportingController.uploadDate1, reportingController.uploadDate2)}"/>
@@ -119,8 +119,8 @@
                         <p:panelGrid columns="2">
                             <h:outputLabel for="date1" value="Erstes Datum:" />
                             <h:outputLabel for="date2" value="Zweites Datum:" />
-                            <p:calendar id="date1" value="#{reportingController.rejectedDate1}" locale="de" pattern="dd.MM.yyyy"/>
-                            <p:calendar id="date2" value="#{reportingController.rejectedDate2}" locale="de" pattern="dd.MM.yyyy"/>                        
+                            <p:calendar id="date1" value="#{reportingController.rejectedDate1}" maxdate="new Date();" locale="de" pattern="dd.MM.yyyy"/>
+                            <p:calendar id="date2" value="#{reportingController.rejectedDate2}" maxdate="new Date();" locale="de" pattern="dd.MM.yyyy"/>                        
                         </p:panelGrid>
                         <br></br>
                         <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" update=":messages" action="#{reportingController.getRejectReport(reportingController.rejectedDate1, reportingController.rejectedDate2)}"/>

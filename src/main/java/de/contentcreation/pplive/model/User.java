@@ -125,7 +125,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return vorname.toUpperCase() + " " + nachname.toUpperCase();
+        return vorname.toUpperCase().substring(0, 1) + ". " + nachname.toUpperCase();
     }
       
     

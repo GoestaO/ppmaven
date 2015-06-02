@@ -252,34 +252,34 @@ public class OverviewController implements Serializable {
      * @param selectedArticles Die ausgewählten Artikel, die im
      * Bearbeitungsdialog bearbeitet wurden.
      */
-    public void update(List<BacklogArticle> selectedArticles) {
-
-        for (BacklogArticle editedArticle : selectedArticles) {
-            String identifier = editedArticle.getIdentifier();
-            BacklogArticle usprungsArtikel = dh.getBacklogArticle(identifier);
-            String bemerkung1 = editedArticle.getBemerkung1();
-            boolean neuerStatus = editedArticle.isOffen();
-            String bemerkung2 = editedArticle.getBemerkung2();
-            String bemerkung3 = editedArticle.getBemerkung3();
-            String bemerkungKAM = editedArticle.getBemerkungKAM();
-            User currentUser = userBean.getUser();
-            String season = editedArticle.getSaison();
-//            System.out.println("usprungsArtikel.getBemerkung1() = " + usprungsArtikel.getBemerkung1());
-            if (neuerStatus && !usprungsArtikel.getBemerkung1().equals(bemerkung1)) {
-                dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
-            } else if (neuerStatus == false) {
-                dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
-            } else {
-                System.out.println(editedArticle.getIdentifier() + " wurde nicht aktualisiert.");
-            }
-        }
-
-        // Bestätigungsnachricht, dass Bearbeitung erfolgreich war.
-        FacesMessage msg = new FacesMessage("Artikel bearbeitet", "Artikel erfolgreich aktualisiert");
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-
-    }
-
+//    @Deprecated
+//    public void update(List<BacklogArticle> selectedArticles) {
+//
+//        for (BacklogArticle editedArticle : selectedArticles) {
+//            String identifier = editedArticle.getIdentifier();
+//            BacklogArticle usprungsArtikel = dh.getBacklogArticle(identifier);
+//            String bemerkung1 = editedArticle.getBemerkung1();
+//            boolean neuerStatus = editedArticle.isOffen();
+//            String bemerkung2 = editedArticle.getBemerkung2();
+//            String bemerkung3 = editedArticle.getBemerkung3();
+//            String bemerkungKAM = editedArticle.getBemerkungKAM();
+//            User currentUser = userBean.getUser();
+//            String season = editedArticle.getSaison();
+////            System.out.println("usprungsArtikel.getBemerkung1() = " + usprungsArtikel.getBemerkung1());
+//            if (neuerStatus && !usprungsArtikel.getBemerkung1().equals(bemerkung1)) {
+//                dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
+//            } else if (neuerStatus == false) {
+//                dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
+//            } else {
+//                System.out.println(editedArticle.getIdentifier() + " wurde nicht aktualisiert.");
+//            }
+//        }
+//
+//        // Bestätigungsnachricht, dass Bearbeitung erfolgreich war.
+//        FacesMessage msg = new FacesMessage("Artikel bearbeitet", "Artikel erfolgreich aktualisiert");
+//        FacesContext.getCurrentInstance().addMessage(null, msg);
+//
+//    }
     public void updateHandler(ActionEvent event) {
 
         List<BacklogArticle> refusedList = new ArrayList<>();
@@ -288,23 +288,23 @@ public class OverviewController implements Serializable {
         for (BacklogArticle editedArticle : selectedArticles) {
             String identifier = editedArticle.getIdentifier();
             String bemerkung1 = editedArticle.getBemerkung1();
+            bemerkung1 = (bemerkung1 == null) ? null : bemerkung1.trim();
+
             String bemerkung2 = editedArticle.getBemerkung2();
+            bemerkung2 = (bemerkung2 == null) ? null : bemerkung2.trim();
+
             String bemerkung3 = editedArticle.getBemerkung3();
-            if (bemerkung3.equals("")) {
-                bemerkung3 = null;
-            }
+            bemerkung3 = (bemerkung3 == null) ? null : bemerkung3.trim();
+
             String bemerkungKAM = editedArticle.getBemerkungKAM();
-            if (bemerkungKAM.equals("")) {
-                bemerkungKAM = null;
-            }
+            bemerkungKAM = (bemerkungKAM == null) ? null : bemerkungKAM.trim();
+
             boolean neuerStatus = editedArticle.isOffen();
             User currentUser = userBean.getUser();
             String season = editedArticle.getSaison();
 
             BacklogArticle usprungsArtikel = dh.getBacklogArticle(identifier);
 
-//            System.out.println("equals = " + usprungsArtikel.equals(editedArticle));
-//            System.out.println("equalsWithNulls = " + usprungsArtikel.equalsWithNulls(editedArticle));
             // Wenn Status auf "fertig" gesetzt, dann auf finishedList setzen und Updatebuchung durchführen
             if (neuerStatus == false) {
                 finishedList.add(editedArticle);
@@ -348,6 +348,15 @@ public class OverviewController implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Nicht eingeloggt!", "Du musst dich erst einloggen, bevor du loslegen kannst."));
     }
 
+    /**
+     * Generiert eine Feedbacknachricht für den Nutzer, welche Artikel
+     * geupdated, welche ignoriert und welche gefinished wurden.
+     *
+     * @param finishedList
+     * @param updatedList
+     * @param refusedList
+     * @return
+     */
     private String generateMessage(List<BacklogArticle> finishedList, List<BacklogArticle> updatedList, List<BacklogArticle> refusedList) {
         StringBuilder message = new StringBuilder("<html><body>");
 

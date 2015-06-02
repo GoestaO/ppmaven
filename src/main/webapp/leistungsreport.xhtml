@@ -13,28 +13,12 @@
 
 
     <ui:define name="content">   
-        <!--        <script type="text/javascript">
-                    function ext() {
-                        //this = chart widget instance
-                        //this.cfg = options
-                        this.cfg.seriesDefaults = {
-                            shadowDepth: 5
-                        };
-                    }
-        
-                </script>-->
         <h:outputScript library="js" name="chart.js" />
         <mc:checkSession/>
         <p:growl id="messages" showDetail="true" />
 
         <c:if test="#{userBean.valid and userBean.user.rolle.id != 4}">
 
-            <h:form>
-                <p:commandLink ajax="false">
-                    <!--<p:graphicImage library="img" name="excel.png" />-->
-                    <pe:exporter type = "xlsx" target="weeklyUserStatistic,dailyUserStatistic" postProcessor="#{reportingController.postProcessXLSX}"/>
-                </p:commandLink>
-            </h:form>
             <p:panelGrid columns="2">
                 <p:dataTable id = "weeklyUserStatistic" value="#{reportingController.weeklyUserStatistic}" var="row" scrollable="true" scrollHeight="600">
                     <f:facet name="header">
@@ -103,6 +87,15 @@
                 </p:dataTable>
 
             </p:panelGrid>
+            <br/>
+            <br/>
+            <p:outputLabel value="Export"/>
+            <h:form>
+                <p:commandLink ajax="false">
+                    <p:graphicImage library="img" name="excel.png" />
+                    <pe:exporter type = "xlsx" target=":weeklyUserStatistic, :dailyUserStatistic" postProcessor="#{reportingController.postProcessXLSX}" fileName="Leistungsreport"/>
+                </p:commandLink>
+            </h:form>
             <p:separator style="height: 10px;"/>
 
 
