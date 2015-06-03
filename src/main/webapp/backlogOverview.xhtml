@@ -11,6 +11,17 @@
     <ui:define name="content">
 
         <mc:checkSession/>
+        <h:outputScript library="js" name="backlogOverview.js"/>
+
+<!--        <script type="text/javascript">
+
+            jQuery(document).ready(function () {
+                $(".statusButton input[value=false]").closest('.ui-state-active').css("background-color", "#ff0000");
+                $(".statusButton input[value=true]").closest('.ui-state-active').css("background-color", "#008000");
+            });
+
+
+        </script>-->
 
         <h:form id="form1">
             <!--            <p:contextMenu for="backlog">
@@ -101,8 +112,12 @@
             </p:dataTable>
         </h:form>
         <h:form id="form2">
-            <p:dialog header="Artikel bearbeiten" id="articleDetail" widgetVar="editDialog" modal="true">
-                <p:dataTable id="dataTable" var="selectedArticle"  value="#{overviewController.selectedArticles}" editable="true" editMode="cell" style="font-size: 12px">                     
+            <p:dialog header="Artikel bearbeiten" id="articleDetail" widgetVar="editDialog" modal="true" onShow="colorizeRadioButtons()">
+
+                <p:commandButton  onclick="finishAll();" styleClass="dialogbutton" value="Alle fertig" />
+                <p:commandButton  onclick="openAll();" styleClass="dialogbutton" value="Alle offen" />         
+                <p:dataTable id="dataTable" var="selectedArticle"  value="#{overviewController.selectedArticles}" editable="true" editMode="cell" style="font-size: 12px">
+
                     <p:columnGroup type="header">
                         <p:row>
                             <p:column width="40" headerText="Config"/>
@@ -175,8 +190,8 @@
                         </p:autoComplete>-->
                     </p:column>
                     <p:column>
-                        <p:selectOneButton value="#{selectedArticle.offen}">
-                            <f:selectItem itemLabel="offen" itemValue="true" id="offen" />
+                        <p:selectOneButton styleClass="statusButton" onchange="colorizeRadioButtons();" value="#{selectedArticle.offen}">
+                            <f:selectItem  itemLabel="offen" itemValue="true" id="offen" />
                             <f:selectItem itemLabel="fertig" itemValue="false" id="fertig"/>                          
                             <!--<p:ajax/>-->                     
                         </p:selectOneButton>

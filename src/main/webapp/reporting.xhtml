@@ -20,49 +20,50 @@
         <c:if test="#{userBean.valid and userBean.user.rolle.id != 4}">
 <!--        <p:panelGrid columns="3" rendered ="#{userBean.valid and userBean.user.rolle.id != 4}">-->
             <p:panelGrid columns="3">
-                <!--            <p:panel header="Leistungsreport" style="width: 400px; height: 200px">
-                                <h:form>
-                                    <h3>Bitte Start- und Enddatum angeben</h3>                    
-                                    <p:panelGrid columns="2">
-                                        <h:outputLabel for="date1" value="Erstes Datum:" />
-                                        <h:outputLabel for="date2" value="Zweites Datum:" />
-                                        <p:calendar id="date1" value="#{reportingController.leistungDate1}" locale="de" pattern="dd.MM.yyyy"/>
-                                        <p:calendar id="date2" value="#{reportingController.leistungDate2}" locale="de" pattern="dd.MM.yyyy"/>                        
-                                    </p:panelGrid>
-                                    <br></br>
-                                    <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getLeistungsReport(reportingController.leistungDate1, reportingController.leistungDate2)}"/>
-                                </h:form>
-                            </p:panel>-->
-
                 <p:panel header="Leistungsreport" style="width: 400px; height: 200px">
                     <h:form>
                         <h3>Bitte Start- und Enddatum angeben</h3>                    
                         <p:panelGrid columns="2">
                             <h:outputLabel for="date1" value="Erstes Datum:" />
                             <h:outputLabel for="date2" value="Zweites Datum:" />
-                            <p:calendar id="date1" value="#{reportingController.leistungDate1}" maxdate="new Date();" locale="de" pattern="dd.MM.yyyy">
-                                <p:ajax event="dateSelect" listener="#{reportingController.onSelectedDate(event)}" update="userList" />
-                            </p:calendar>
-                            <p:calendar id="date2" value="#{reportingController.leistungDate2}" maxdate="new Date();" locale="de" pattern="dd.MM.yyyy">
-                                <p:ajax event="dateSelect" listener="#{reportingController.onSelectedDate(event)}" update="userList" />
-                            </p:calendar>                        
-
-                            <p:selectCheckboxMenu id="userList" label = "User" converter="userConverter" value="#{reportingController.selectedUsers}">
-                                <f:selectItems  value="#{reportingController.userList}" var="user" itemLabel="#{user}" itemValue="#{user}"/>
-                                <f:converter converterId="userConverter"/>
-                            </p:selectCheckboxMenu> 
-                            <p:selectOneButton label="Status" value="#{reportingController.leistungsReportSelectedStatus}">
-                                <f:selectItem itemLabel="offen" itemValue="offen" />
-                                <f:selectItem itemLabel="fertig" itemValue="fertig" />                          
-                                <p:ajax/>                     
-                            </p:selectOneButton>
+                            <p:calendar id="date1" value="#{reportingController.leistungDate1}" locale="de" pattern="dd.MM.yyyy"/>
+                            <p:calendar id="date2" value="#{reportingController.leistungDate2}" locale="de" pattern="dd.MM.yyyy"/>                        
                         </p:panelGrid>
                         <br></br>
-                        <p:commandButton value="Report" update=":messages" icon="ui-icon-arrowthick-1-s" action="#{reportingController.generateLeistungsReport2()}"/>
-
+                        <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getLeistungsReport(reportingController.leistungDate1, reportingController.leistungDate2)}"/>
                     </h:form>
                 </p:panel>
+                
+                <c:if test="#{userBean.user.rolle.id == 1}">
+                    <p:panel header="Nutzerstatistik" style="width: 400px; height: 200px" >
+                        <h:form>
+                            <h3>Bitte Start- und Enddatum angeben</h3>                    
+                            <p:panelGrid columns="2">
+                                <h:outputLabel for="date1" value="Erstes Datum:" />
+                                <h:outputLabel for="date2" value="Zweites Datum:" />
+                                <p:calendar id="date1" value="#{reportingController.leistungDate1}" maxdate="new Date();" locale="de" pattern="dd.MM.yyyy">
+                                    <p:ajax event="dateSelect" listener="#{reportingController.onSelectedDate(event)}" update="userList" />
+                                </p:calendar>
+                                <p:calendar id="date2" value="#{reportingController.leistungDate2}" maxdate="new Date();" locale="de" pattern="dd.MM.yyyy">
+                                    <p:ajax event="dateSelect" listener="#{reportingController.onSelectedDate(event)}" update="userList" />
+                                </p:calendar>                        
 
+                                <p:selectCheckboxMenu id="userList" label = "User" converter="userConverter" value="#{reportingController.selectedUsers}">
+                                    <f:selectItems  value="#{reportingController.userList}" var="user" itemLabel="#{user}" itemValue="#{user}"/>
+                                    <f:converter converterId="userConverter"/>
+                                </p:selectCheckboxMenu> 
+                                <p:selectOneButton label="Status" value="#{reportingController.leistungsReportSelectedStatus}">
+                                    <f:selectItem itemLabel="offen" itemValue="offen" />
+                                    <f:selectItem itemLabel="fertig" itemValue="fertig" />                          
+                                    <p:ajax/>                     
+                                </p:selectOneButton>
+                            </p:panelGrid>
+                            <br></br>
+                            <p:commandButton value="Report" update=":messages" icon="ui-icon-arrowthick-1-s" action="#{reportingController.generateLeistungsReport2()}"/>
+
+                        </h:form>
+                    </p:panel>
+                </c:if>
                 <p:panel header="Partnerreport" style="width: 400px; height: 200px">
                     <h:form>
                         <h3>Alle offenen Artikel ausgeben</h3>                   

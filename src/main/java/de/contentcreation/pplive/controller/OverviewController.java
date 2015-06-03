@@ -243,43 +243,20 @@ public class OverviewController implements Serializable {
 
         }
     }
+    
+//    public void finishAll(){
+//        for (BacklogArticle b : selectedArticles){
+//            b.setOffen(false);
+//        }        
+//    }
 
     /**
      * Diese Methode ist für die Aktualisierung der im Bearbeitungsdialog
      * bearbeiteten Artikel zuständig. Dazu werden alle Nutzereingaben bezogen
      * und an den Datenbank-Handler weitergereicht, der sie dann abspeichert.
      *
-     * @param selectedArticles Die ausgewählten Artikel, die im
-     * Bearbeitungsdialog bearbeitet wurden.
+     * @param event
      */
-//    @Deprecated
-//    public void update(List<BacklogArticle> selectedArticles) {
-//
-//        for (BacklogArticle editedArticle : selectedArticles) {
-//            String identifier = editedArticle.getIdentifier();
-//            BacklogArticle usprungsArtikel = dh.getBacklogArticle(identifier);
-//            String bemerkung1 = editedArticle.getBemerkung1();
-//            boolean neuerStatus = editedArticle.isOffen();
-//            String bemerkung2 = editedArticle.getBemerkung2();
-//            String bemerkung3 = editedArticle.getBemerkung3();
-//            String bemerkungKAM = editedArticle.getBemerkungKAM();
-//            User currentUser = userBean.getUser();
-//            String season = editedArticle.getSaison();
-////            System.out.println("usprungsArtikel.getBemerkung1() = " + usprungsArtikel.getBemerkung1());
-//            if (neuerStatus && !usprungsArtikel.getBemerkung1().equals(bemerkung1)) {
-//                dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
-//            } else if (neuerStatus == false) {
-//                dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
-//            } else {
-//                System.out.println(editedArticle.getIdentifier() + " wurde nicht aktualisiert.");
-//            }
-//        }
-//
-//        // Bestätigungsnachricht, dass Bearbeitung erfolgreich war.
-//        FacesMessage msg = new FacesMessage("Artikel bearbeitet", "Artikel erfolgreich aktualisiert");
-//        FacesContext.getCurrentInstance().addMessage(null, msg);
-//
-//    }
     public void updateHandler(ActionEvent event) {
 
         List<BacklogArticle> refusedList = new ArrayList<>();
