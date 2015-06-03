@@ -203,7 +203,11 @@ public class BacklogArticle implements Serializable {
             return false;
         }
         final BacklogArticle other = (BacklogArticle) obj;
+
         if (!Objects.equals(this.identifier, other.identifier)) {
+            return false;
+        }
+        if (!Objects.equals(this.saison, other.saison)) {
             return false;
         }
         if (!Objects.equals(this.bemerkung1, other.bemerkung1)) {
@@ -218,7 +222,6 @@ public class BacklogArticle implements Serializable {
         if (!Objects.equals(this.bemerkungKAM, other.bemerkungKAM)) {
             return false;
         }
-        
 
         return true;
     }
@@ -239,15 +242,15 @@ public class BacklogArticle implements Serializable {
         if (!(this.bemerkung3.isEmpty() && other.bemerkung3 == null)) {
             return false;
         }
-        
+
         if (!(this.bemerkungKAM == null && other.bemerkungKAM == null)) {
             return false;
         }
-        
+
         if (!(this.bemerkungKAM.isEmpty() && other.bemerkungKAM == null)) {
             return false;
         }
-        
+
         return true;
     }
 
