@@ -39,20 +39,23 @@
                     <div style="clear:both"></div>
 
                     <h:form>
+                        <!--Idle-Monitor-->
                         <p:idleMonitor timeout="1740000">                          
-                            <p:ajax event="idle" listener="#{userBean.sessionIdleListener}" />
-                            <!--<p:ajax event="active" listener="#{userBean.keepSessionAlive}"/>-->
-                        </p:idleMonitor> 
-                        <p:confirmDialog  closable="true" id="sessionExpiredDlg" 
+                            <p:ajax event="idle" listener="#{userBean.sessionIdleListener}" />                           
+                        </p:idleMonitor>
+
+                        <!--Dialog, der aufklappt, wenn die Session abläuft-->
+                        <p:confirmDialog  closable="false" id="sessionExpiredDlg" 
                                           message="Deine Sitzung ist abgelaufen. Bitte melde dich erneut an."  
                                           header="#{msgs['confirmDialog.initiatingDestroyProcess.label']}"
                                           severity="alert" widgetVar="sessionExpiredConfirmation" style="z-index: 25000">
-                            <p:commandButton id="confirmRouteDel" value="Ok" oncomplete="PF('sessionExpiredConfirmation').hide();" action="#{loginBean.resetUser()}"/>
-                            <p:button href="login.jsf" value="Zum Login" />
-
+                            <p:commandButton id="confirmRouteDel" value="Ok" oncomplete="PF('sessionExpiredConfirmation').hide();" action="#{loginBean.resetUser()}" update=":all"/>
+                            <!--<p:button href="login.jsf" value="Zum Login" />-->
                         </p:confirmDialog>
                     </h:form>
 
+
+                    <!--Menüleiste-->
                     <h:form>
                         <p:menubar id="navigation" style="height: 2em; box-sizing: content-box;"> 
 
@@ -64,7 +67,8 @@
                                 </c:if>
                                 <f:facet name="options">                                    
                                     <p:outputLabel value="#{userBean.vorname} #{userBean.nachname}"/>
-                                    <p:commandButton id="logout" icon="ui-icon-extlink"  actionListener="#{loginBean.resetUser()}" styleClass="ui-priority-primary" value="Abmelden" update=":all" onsuccess="window.open('#{request.contextPath}/index.jsf', '_self');">
+<!--                                    <p:commandButton id="logout" icon="ui-icon-extlink"  actionListener="#{loginBean.resetUser()}" styleClass="ui-priority-primary" value="Abmelden" update=":all" onsuccess="window.open('#{request.contextPath}/index.jsf', '_self');">-->
+                                    <p:commandButton id="logout" icon="ui-icon-extlink"  actionListener="#{loginBean.resetUser()}" styleClass="ui-priority-primary" value="Abmelden" update=":all">
                                     </p:commandButton>                      
                                 </f:facet>
                             </c:if>

@@ -14,7 +14,8 @@
 
     <ui:define name="content">   
         <h:outputScript library="js" name="chart.js" />
-        <mc:checkSession/>
+        <mc:ladeanimation/>
+        <mc:loginComponent/>
         <p:growl id="messages" showDetail="true" />
 
         <c:if test="#{userBean.valid and userBean.user.rolle.id != 4}">

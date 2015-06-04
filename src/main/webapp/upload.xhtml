@@ -9,11 +9,14 @@
 
     <ui:define name="content" > 
 
-        <h:form rendered ="#{!userBean.valid}">
+        <mc:loginComponent/>
+        <mc:ladeanimation/>
+
+<!--        <h:form rendered ="#{!userBean.valid}">
             <p:button href="login.jsf" value="Zum Login" />
             <p:button href="register.jsf" value="Zur Registrierung" />
             #{overviewController.fatal()}
-        </h:form>
+        </h:form>-->
 
         <h:form id="form" style="width: 600px;">
             <!--<p:growl id="messages" showDetail="true"/>-->

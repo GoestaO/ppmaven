@@ -15,7 +15,11 @@ function openAll() {
 }
 
 function colorizeRadioButtons() {
-
+    
+     // Initiale Zustände: offen = grün, fertig = rot
+    $(".statusButton input[value=true]").closest('.ui-state-active').css("background-color", "#ff0000");
+    $(".statusButton input[value=false]").closest('.ui-state-active').css("background-color", "#008000");
+    
     // Klick auf offen: offen auf grün setzen, fertig zurücksetzen
     $(".statusButton input[value=true]").closest('.ui-state-active').css("background-color", "#ff0000");
     $(".statusButton input[value=true]").closest('.ui-button').css("background-color", "");
