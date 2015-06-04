@@ -16,20 +16,21 @@ function openAll() {
 
 function colorizeRadioButtons() {
 
-
-//    $('.ui-state-active').removeClass('ui-state-focus');
-    $('.ui-state-focus').blur();
-    $('.ui-state-focus').val('HUHU');
     // Klick auf offen: offen auf grün setzen, fertig zurücksetzen
-    $(".statusButton input[value=true]").closest('.ui-state-active').css("background-color", "#008000");
+    $(".statusButton input[value=true]").closest('.ui-state-active').css("background-color", "#ff0000");
     $(".statusButton input[value=true]").closest('.ui-button').css("background-color", "");
 
 // Klick auf fertig: offen zurücksetzen, fertig auf rot setzen
-    $(".statusButton input[value=false]").closest('.ui-state-active').css("background-color", "#ff0000");
+    $(".statusButton input[value=false]").closest('.ui-state-active').css("background-color", "#008000");
     $(".statusButton input[value=false]").closest('.ui-button').css("background-color", "");
 
     // Initiale Zustände: offen = grün, fertig = rot
-    $(".statusButton input[value=true]").closest('.ui-state-active').css("background-color", "#008000");
-    $(".statusButton input[value=false]").closest('.ui-state-active').css("background-color", "#ff0000");
+    $(".statusButton input[value=true]").closest('.ui-state-active').css("background-color", "#ff0000");
+    $(".statusButton input[value=false]").closest('.ui-state-active').css("background-color", "#008000");
 
+
+}
+
+PrimeFaces.widget.Dialog.prototype.applyFocus = function () {
+    this.jq.find(':not(:submit):not(:button):input:visible:enabled:first').blur();
 }

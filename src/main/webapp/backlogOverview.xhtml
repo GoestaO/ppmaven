@@ -59,8 +59,6 @@
                         <p:column width="30"/>
                     </p:row>
                 </p:columnGroup>
-
-
                 <p:column>
                     <h:outputText value="#{article.config}"/>
                 </p:column>
@@ -113,10 +111,12 @@
         </h:form>
         <h:form id="form2">
             <p:dialog header="Artikel bearbeiten" id="articleDetail" widgetVar="editDialog" modal="true" onShow="colorizeRadioButtons()">
-
+               
                 <p:commandButton  onclick="finishAll();" styleClass="dialogbutton" value="Alle fertig" />
-                <p:commandButton  onclick="openAll();" styleClass="dialogbutton" value="Alle offen" />         
-                <p:dataTable id="dataTable" var="selectedArticle"  value="#{overviewController.selectedArticles}" editable="true" editMode="cell" style="font-size: 12px">
+                <p:commandButton  id="openAll" onclick="openAll();" styleClass="dialogbutton" value="Alle offen" />
+                <br/>
+                <br/>                
+                <p:dataTable  id="dataTable" var="selectedArticle"  value="#{overviewController.selectedArticles}" editable="true" editMode="cell" style="font-size: 12px">
 
                     <p:columnGroup type="header">
                         <p:row>
@@ -146,7 +146,7 @@
                         <h:outputText value="#{selectedArticle.partnerId}" />
                     </p:column>
                     <p:column width="40">
-                        <p:selectOneMenu value="#{selectedArticle.saison}">
+                        <p:selectOneMenu value="#{selectedArticle.saison}" >
                             <f:selectItem itemLabel="" itemValue=""/>
                             <f:selectItems value="#{overviewController.seasons}" var="season" itemValue="#{season}" itemLabel="#{season}"/>
                             <!--<p:ajax/>-->
