@@ -9,14 +9,12 @@
 
 
     <ui:define name="content">
-
         <mc:loginComponent/>
-        <!--<mc:ladeanimation/>-->
-        
+
         <!--Zusätzliche JQuery-Funktionen laden-->
         <h:outputScript library="js" name="backlogOverview.js"/>
 
-        <h:form id="form1">
+        <h:form prependId="false" id="form1">
             <p:hotkey bind="alt+n" handler="PF('varEditButton').jq.click()" />
             <p:growl id="msgs" escape="false" showDetail="true" />
             <p:contextMenu for="backlog">
@@ -85,13 +83,14 @@
                     <h:outputText value="#{article.bemerkungKAM}"/>
                 </p:column>
                 <p:column width="40">
-                    <p:commandButton icon="ui-icon-wrench" oncomplete ="PF('editDialog').show()" update=":form2:articleDetail" >
+                    <p:commandButton icon="ui-icon-wrench" styleClass="huhuButton" oncomplete ="PF('editDialog').show()" update=":form2:articleDetail" >
                         <f:setPropertyActionListener target="#{overviewController.selectedArticles}" value="#{overviewController.toList(article)}"/>
                     </p:commandButton>
                 </p:column>
                 <f:facet name="header">                    
-                    <p:commandButton id="clearButton" widgetVar="varClearButtonButton" update=":form1:backlog" icon="ui-icon-trash" value="Filter löschen" action="#{overviewController.clearFilters()}" />
+                    <p:commandButton id="clearButton" styleClass="clearButtonClass" widgetVar="varClearButtonButton" update=":form1:backlog" icon="ui-icon-trash" value="Filter löschen" action="#{overviewController.clearFilters()}" />
                     <p:commandButton id="editButton" widgetVar="varEditButton" update=":form2:articleDetail" icon="ui-icon-search" value="Bearbeiten" oncomplete="PF('editDialog').show()" />
+                    <p:commandButton id="testButton" value="TEST"/>
                 </f:facet>
             </p:dataTable>
         </h:form>
