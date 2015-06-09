@@ -207,7 +207,7 @@ public class ReportingHandler {
     }
 
     public List<Object[]> getWeeklyUserOverview(String datum1, String datum2, String userList) {
-        String query = "select WEEKOFYEAR(b.Timestamp)+1 as 'KW', CONCAT(UPPER(LEFT(user.VORNAME, 1)), '. ', upper(user.NACHNAME)) as 'Name', b.`Status`, count(b.`Status`) as 'Anzahl' from buchungen b \n"
+        String query = "select WEEKOFYEAR(b.Timestamp) as 'KW', CONCAT(UPPER(LEFT(user.VORNAME, 1)), '. ', upper(user.NACHNAME)) as 'Name', b.`Status`, count(b.`Status`) as 'Anzahl' from buchungen b \n"
                 + "inner join user on b.User = user.ID\n"
                 + "inner join backlog on b.Identifier = backlog.Identifier\n"
                 + "where b.Timestamp between '" + datum1 + "' and '" + datum2 + "'\n"
@@ -250,7 +250,7 @@ public class ReportingHandler {
     }
 
     public List<Object[]> getWeeklyUserChart(String datum1, String datum2, String userList) {
-        String query = "select WEEKOFYEAR(b.Timestamp)+1 as 'KW', \n"
+        String query = "select WEEKOFYEAR(b.Timestamp) as 'KW', \n"
                 + "CONCAT(UPPER(LEFT(user.VORNAME, 1)), '. ', upper(user.NACHNAME)) as 'Name', b.`Status`, \n"
                 + "count(b.`Status`) as 'Anzahl' \n"
                 + "from buchungen b \n"

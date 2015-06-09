@@ -9,14 +9,14 @@
 
 
     <ui:define name="content">
-        <mc:loginComponent/>
-
+                <mc:loginComponent/>
+        
         <!--Zusätzliche JQuery-Funktionen laden-->
         <h:outputScript library="js" name="backlogOverview.js"/>
 
         <h:form prependId="false" id="form1">
             <p:hotkey bind="alt+n" handler="PF('varEditButton').jq.click()" />
-            <p:growl id="msgs" escape="false" showDetail="true" />
+            <p:growl id="msgs" escape="false" showDetail="true" life="1000"/>
             <p:contextMenu for="backlog">
                 <p:menuitem value="Bearbeiten" update=":form2:articleDetail" icon="ui-icon-wrench" oncomplete="PF('editDialog').show()"/>               
             </p:contextMenu>

@@ -29,7 +29,7 @@
                     <f:selectItems value="#{loginBean.partnerList}" var="partner" itemLabel="#{partner}" itemValue="#{partner}"/>
                 </p:selectManyCheckbox>
 
-                <p:commandButton value="Login" action="#{loginBean.redirectedLogin(loginBean.username, loginBean.password, loginBean.selectedPartners)}" update =":growlForm:growl,loginForm"/>
+                <p:commandButton value="Login" action="#{loginBean.login(loginBean.username, loginBean.password, loginBean.selectedPartners)}" update =":growlForm:growl,loginForm"/>
             </h:form>
         </c:if>
         <style>

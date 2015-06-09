@@ -136,6 +136,7 @@ public class LoginBean implements Serializable {
             bean.setVorname(username);
             bean.setNachname(username);
             bean.setPartnerList(partnerList);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Willkommen."));
 //            direction = "backlogOverview.jsf?faces-redirect=true";
         } else if (user == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "Benutzername '" + username + "' oder Passwort ist nicht korrekt!"));
