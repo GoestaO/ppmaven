@@ -1,14 +1,13 @@
 package de.contentcreation.pplive.services;
 
 import de.contentcreation.pplive.model.BacklogArticle;
+import de.contentcreation.pplive.model.Partner;
 import de.contentcreation.pplive.model.UpdateBuchung;
 import de.contentcreation.pplive.model.User;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -120,7 +119,6 @@ public class DatabaseHandler {
 
         BacklogArticle backlogArticle = (BacklogArticle) em.find(
                 BacklogArticle.class, identifier);
-        
 
         return backlogArticle;
     }
@@ -150,7 +148,9 @@ public class DatabaseHandler {
     }
 
     /**
-     * Aktualisiert den Status eines Artikels und erzeugt eine Buchung mit den gemachten Angaben.
+     * Aktualisiert den Status eines Artikels und erzeugt eine Buchung mit den
+     * gemachten Angaben.
+     *
      * @param identifier Der Identifier
      * @param bemerkung1 Bemerkung 1
      * @param bemerkung2 Bemerkung 2
@@ -199,7 +199,8 @@ public class DatabaseHandler {
 
     /**
      * Gibt alle Saisons einmalig aus, die in der DB vorhanden sind.
-     * @return 
+     *
+     * @return
      */
     public List<String> getSeasons() {
 
@@ -208,13 +209,13 @@ public class DatabaseHandler {
                         "select distinct(b.saison) from BacklogArticle b where b.saison !='' order by b.saison",
                         String.class);
         List<String> seasons = getSeasons.getResultList();
-        
 
         return seasons;
     }
 
     /**
      * Verschlüsselt einen String in einen MD5-Hash
+     *
      * @param input Der Input
      * @return Der MD5-Hash
      */
@@ -236,7 +237,8 @@ public class DatabaseHandler {
     }
 
     /**
-     * Gibt alle Partner aus, von denen noch Artikel offen sind.
+     * Gibt alle Partner-IDs aus, von denen noch Artikel offen sind.
+     *
      * @return Liste mit den Partnern
      */
     public List<Integer> getPartner() {
@@ -251,7 +253,9 @@ public class DatabaseHandler {
     }
 
     /**
-     * Gibt alle Partner aus, auch von Artikeln, die bereits geschlossen wurden.
+     * Gibt alle Partner-IDs aus, auch von Artikeln, die bereits geschlossen
+     * wurden.
+     *
      * @return Liste mit den Partnern
      */
     public List<Integer> getPartner2() {
@@ -266,7 +270,19 @@ public class DatabaseHandler {
     }
 
     /**
+     * Gibt alle Partner-Objekte aus
+     *
+     * @return
+     */
+    public List<Partner> getPartnerLoginScreen() {
+        TypedQuery<Partner> q = em.createNamedQuery("Partner.findAllInBacklog", Partner.class);
+        List<Partner> result = q.getResultList();
+        return result;
+    }
+
+    /**
      * Gibt alle Bemerkungen1 aus
+     *
      * @return Die Bemerkungen
      */
     public List<String> getBemerkungen1() {
@@ -277,9 +293,10 @@ public class DatabaseHandler {
 
         return bemerkungen;
     }
-    
+
     /**
      * Gibt alle Bemerkungen2 aus
+     *
      * @return Die Bemerkungen
      */
     public List<String> getBemerkungen2() {
@@ -293,6 +310,7 @@ public class DatabaseHandler {
 
     /**
      * Gibt die ID (Key) einer bestimmten Bemerkung aus
+     *
      * @param value Die gesuchte Bemerkung
      * @return Die gefundene entsprechende ID.
      */

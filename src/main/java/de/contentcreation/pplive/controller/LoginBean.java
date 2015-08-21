@@ -5,6 +5,7 @@
  */
 package de.contentcreation.pplive.controller;
 
+import de.contentcreation.pplive.model.Partner;
 import de.contentcreation.pplive.model.User;
 import de.contentcreation.pplive.services.UserService;
 import java.math.BigInteger;
@@ -16,11 +17,13 @@ import javax.inject.Named;
 import de.contentcreation.pplive.model.UserBean;
 import de.contentcreation.pplive.services.DatabaseHandler;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.persistence.CacheStoreMode;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -39,6 +42,12 @@ public class LoginBean implements Serializable {
     private List<Integer> partnerList;
 
     private List<Integer> selectedPartners;
+
+    private List<Partner> partnerListNew;
+
+    private List<Partner> partnerListTransposed;
+
+    private List<Partner> selectedPartnersNew;
 
     @Inject
     private UserBean bean;
@@ -78,12 +87,42 @@ public class LoginBean implements Serializable {
         this.partnerList = partnerList;
     }
 
+    public List<Partner> getPartnerListTransposed() {
+        if (partnerListTransposed == null) {
+            partnerListTransposed = loadTransposedList();
+        }
+        return partnerListTransposed;
+    }
+
+    public void setPartnerListTransposed(List<Partner> partnerListTransposed) {
+        this.partnerListTransposed = partnerListTransposed;
+    }
+
     public List<Integer> getSelectedPartners() {
         return selectedPartners;
     }
 
     public void setSelectedPartners(List<Integer> selectedPartners) {
         this.selectedPartners = selectedPartners;
+    }
+
+    public List<Partner> getPartnerListNew() {
+        if (partnerListNew == null) {
+            partnerListNew = loadPartnerList();
+        }
+        return partnerListNew;
+    }
+
+    public void setPartnerListNew(List<Partner> partnerListNew) {
+        this.partnerListNew = partnerListNew;
+    }
+
+    public List<Partner> getSelectedPartnersNew() {
+        return selectedPartnersNew;
+    }
+
+    public void setSelectedPartnersNew(List<Partner> selectedPartnersNew) {
+        this.selectedPartnersNew = selectedPartnersNew;
     }
 
     /**
@@ -109,9 +148,13 @@ public class LoginBean implements Serializable {
         return md5;
     }
 
+    private List<Partner> loadPartnerList() {
+        return dbHandler.getPartnerLoginScreen();
+    }
+
     /**
      * Diese Methode führt den Abgleich der eingegebenen Daten auf der
-     * Login-Seite mit in der DB hinterlegen Daten durch, indem auf den
+     * Login-Seite mit in der DB hiexitnterlegen Daten durch, indem auf den
      * UserService zugegriffen wird und geschaut wird, ob ein Eintrag mit der
      * Kombination aus Nutzername + Passwort existiert.
      *
@@ -119,15 +162,10 @@ public class LoginBean implements Serializable {
      * @param password Das eingegebene Passwort.
      * @param partnerList Die gewählten Partner, die für eine Sitzung bearbeitet
      * werden sollen.
-     * @return Die Seite, zu der am Ende der Methode navigiert werden soll,
-     * entweder die Backlogübersicht, oder es gibt eine Fehlermeldung und keine
-     * Navigation.
      */
     public void login(String username, String password, List<Integer> partnerList) {
-//        String direction = "";
         if (partnerList == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Kein Partner ausgewählt", "Bitte mindestens einen Partner auswählen."));
-//            direction = null;
         }
         User user = service.login(username, password);
         if (user != null && partnerList != null) {
@@ -137,12 +175,10 @@ public class LoginBean implements Serializable {
             bean.setNachname(username);
             bean.setPartnerList(partnerList);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Willkommen."));
-//            direction = "backlogOverview.jsf?faces-redirect=true";
+
         } else if (user == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "Benutzername '" + username + "' oder Passwort ist nicht korrekt!"));
-//            direction = null;
         }
-//        return direction;
     }
 
     public String redirectedLogin(String username, String password, List<Integer> partnerList) {
@@ -190,4 +226,90 @@ public class LoginBean implements Serializable {
 //        return "login.jsf?faces-redirect = true";
     }
 
+    private List<Partner> loadTransposedList() {
+        if (partnerListNew == null) {
+            partnerListNew = loadPartnerList();
+        }
+
+        int columns = partnerListNew.size() / 9 + 1;
+//        System.out.println("partnerListNew = " + partnerListNew.size());
+        int rows = loadPartnerList().size() / columns + 1;
+
+        Partner[][] newArrayContent = listToMatrix(partnerListNew, columns);
+
+        List<Partner> list = sanitizeList(flattenArray(transposeMatrix(newArrayContent)));       
+        return list;
+
+    }
+
+    private static List<Partner> flattenArray(Partner[][] array) {
+        List<Partner> list = new LinkedList<>();
+        for (int i = 0; i < array.length; i++) {
+            for (int x = 0; x < array[i].length; x++) {
+                list.add(array[i][x]);
+            }
+        }
+        return list;
+    }
+
+    private static Partner[][] transposeMatrix(Partner[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+
+        Partner[][] trasposedMatrix = new Partner[n][m];
+
+        for (int x = 0; x < n; x++) {
+            for (int y = 0; y < m; y++) {
+                trasposedMatrix[x][y] = matrix[y][x];
+            }
+        }
+
+        return trasposedMatrix;
+    }
+
+    private static String matrixToString(Partner[][] a) {
+        int m = a.length;
+        int n = a[0].length;
+
+        String tmp = "";
+
+        for (int y = 0; y < m; y++) {
+            for (int x = 0; x < n; x++) {
+                tmp = tmp + a[y][x] + " ";
+            }
+
+            tmp = tmp + "\n";
+        }
+
+        return tmp;
+    }
+
+    private static Partner[][] listToMatrix(List<Partner> list, int columns) {
+
+        int rows = list.size() / columns + 1;
+        Partner[][] newArrayContent = new Partner[rows][columns];
+
+        for (int x = 0; x < rows; x++) {
+            for (int z = 0; z < columns; z++) {
+                int y = columns * x;
+                try {
+                    newArrayContent[x][z] = list.get(y + z);
+                } catch (java.lang.IndexOutOfBoundsException ex) {
+                    newArrayContent[x][z] = null;
+                }
+
+            }
+        }
+        return newArrayContent;
+    }
+
+    private static List<Partner> sanitizeList(List<Partner> list) {
+        List<Partner> otherList = new ArrayList<>();
+        for (Partner p : list) {
+            if (p != null) {
+                otherList.add(p);
+            }
+        }
+        return otherList;
+    }
 }

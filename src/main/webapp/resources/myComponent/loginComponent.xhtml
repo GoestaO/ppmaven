@@ -9,10 +9,9 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <cc:interface>
-
+        <!--<h:outputScript library="js" name="transpose_table.js"/>-->
     </cc:interface>
-    <cc:implementation>
-
+    <cc:implementation>       
         <h:form id="growlForm">
             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" life="3000"/>
         </h:form>
@@ -20,23 +19,31 @@
         <c:if test="#{!userBean.valid}">
             <p:panel header="Login" id="loginPanel" rendered="#{!userBean.valid}">
                 <h:form id="loginForm">
+
                     <h:panelGrid columns="2">                
                         <p:outputLabel for="username" value="Nutzername:" />
                         <p:inputText id = "username" label="Nutzername" value="#{loginBean.username}" required="true"></p:inputText>
                         <p:outputLabel for="password" value="Passwort:" />
                         <p:password id = "password" label="Passwort" value="#{loginBean.password}" required="true"></p:password>
-                    </h:panelGrid>
-                    <p:selectManyCheckbox style = "margin-right: 5px;" requiredMessage="" required="true" value="#{loginBean.selectedPartners}" layout="grid" columns ="20">
-                        <f:selectItems value="#{loginBean.partnerList}" var="partner" itemLabel="#{partner}" itemValue="#{partner}"/>
+                    </h:panelGrid>                
+                    <p:selectManyCheckbox styleClass="selectPartnerTable" id = "selectManyPartner" requiredMessage="" required="true" value="#{loginBean.selectedPartners}" layout ="grid" columns="9" >
+                        <f:selectItems value="#{loginBean.partnerListNew}" var="partner" itemLabel="#{(partner.id).toString().concat(' ').concat(partner.name)}" itemValue="#{partner.id}"/>
                     </p:selectManyCheckbox>
-
-                    <p:commandButton value="Login" actionListener="#{loginBean.login(loginBean.username, loginBean.password, loginBean.selectedPartners)}" update =":all"/>
-                </h:form>
+                    <!--<p:commandButton value="TEST" actionListener="#{loginBean.partnerListTransposed}" />-->
+                    <p:commandButton value="Login" action="#{loginBean.login(loginBean.username, loginBean.password, loginBean.selectedPartners)}" update ="@all"/>                    
+                </h:form>               
             </p:panel>
         </c:if>
-        <style>
-            table {border-collapse: collapse;}
-            td    {padding: 8px;}
-        </style>
+
+<!--        <style>
+            .ui-selectmanycheckbox{
+                border-style: solid;
+                border-width: 2px;
+                border-color: black;
+            }
+
+           
+
+        </style>-->
     </cc:implementation>
 </ui:composition>
