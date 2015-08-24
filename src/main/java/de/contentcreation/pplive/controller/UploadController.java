@@ -6,9 +6,11 @@
 package de.contentcreation.pplive.controller;
 
 import de.contentcreation.pplive.model.BacklogArticle;
+import de.contentcreation.pplive.model.Partner;
 import de.contentcreation.pplive.services.DatabaseHandler;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -18,6 +20,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.logging.Level;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -56,7 +59,7 @@ public class UploadController implements Serializable {
      */
     public void handleFileUpload(FileUploadEvent event) {
         List<BacklogArticle> backlogList = new ArrayList();
-        
+
         // Die hochzuladende Datei auf den Server laden und in backlog.csv abspeichern
         try {
             File targetFile = new File("backlog.csv");
@@ -71,7 +74,7 @@ public class UploadController implements Serializable {
             inputStream.close();
             out.flush();
             out.close();
-            
+
             // Anschließend die gerade hochgeladene Datei einlesen und parsen
             FileReader reader = new FileReader(targetFile);
             BufferedReader br = new BufferedReader(reader);
@@ -90,7 +93,7 @@ public class UploadController implements Serializable {
                 String saison = data[8];
                 int appdomainID = Integer.parseInt(data[10]);
                 String identifier = config + partnerID + appdomainID;
-                
+
                 // BacklogArticle-Objekt erzeugen und die Attribute setzen
                 BacklogArticle ba = new BacklogArticle();
                 ba.setIdentifier(identifier);
@@ -106,7 +109,7 @@ public class UploadController implements Serializable {
                 line = br.readLine();
             }
             br.close();
-            
+
             // Die Liste an den DB-Handler übergeben, der jedes Objekt auf Vorhandensein überprüft und eventuell abspeichert
             counter = dh.checkAndAdd(backlogList);
         } catch (IOException e) {
@@ -119,4 +122,66 @@ public class UploadController implements Serializable {
         FacesContext.getCurrentInstance()
                 .addMessage(null, message);
     }
+
+    private File uploadFile(FileUploadEvent event, String fileName) {
+        File targetFile = new File(fileName);
+        try {
+
+            InputStream inputStream = event.getFile().getInputstream();
+            OutputStream out = new FileOutputStream(new File(targetFile.getName()));
+            int read = 0;
+            byte[] bytes = new byte[1024];
+
+            while ((read = inputStream.read(bytes)) != -1) {
+                out.write(bytes, 0, read);
+            }
+            inputStream.close();
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            Logger.getLogger(UploadController.class.getClass()).log(Logger.Level.FATAL, e);
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, "Upload fehlgeschlagen", e.getMessage());
+            FacesContext.getCurrentInstance()
+                    .addMessage(null, message);
+        }
+        return targetFile;
+    }
+
+    private List<Partner> readPartnerFromFile(File file) {
+        List<Partner> partnerList = new ArrayList<>();
+
+        try {
+            FileReader reader = new FileReader(file);
+            try (BufferedReader bufferedReader = new BufferedReader(reader)) {
+                bufferedReader.readLine();
+                String line = bufferedReader.readLine();
+                while (line != null) {
+                    String[] data = line.split(";");
+                    int id = Integer.parseInt(data[0]);
+                    String name = data[1];
+                    Partner partner = new Partner(id, name);
+                    partnerList.add(partner);
+                    line = bufferedReader.readLine();
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            java.util.logging.Logger.getLogger(UploadController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(UploadController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return partnerList;
+    }
+
+    public void uploadNewPartnerList(FileUploadEvent event) {
+
+        File uploadFile = uploadFile(event, "partnerList.csv");
+        List<Partner> partnerList = readPartnerFromFile(uploadFile);
+        dh.clearPartnerTable();
+        dh.insertPartners(partnerList);
+        FacesMessage message = new FacesMessage("Partnerliste erfolgreich aktualisiert");
+        FacesContext.getCurrentInstance()
+                .addMessage(null, message);
+
+    }
+
 }

@@ -93,7 +93,7 @@ public class Partner implements Serializable {
 
     @Override
     public String toString() {
-        return "de.contentcreation.pplive.model.Partner[ id=" + id + " ]";
+        return name;
     }
 
 }

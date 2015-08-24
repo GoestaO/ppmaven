@@ -327,4 +327,31 @@ public class DatabaseHandler {
         return id;
     }
 
+    public void insertPartners(List<Partner> list) {
+        for (Partner p : list) {
+            em.persist(p);
+            em.flush();
+        }
+    }
+
+    public void clearPartnerTable() {
+        em.createQuery("Delete from Partner p").executeUpdate();
+    }
+
+    public boolean unknownPartnersFound() {
+        TypedQuery<Long> query = em.createQuery("select count(b) from BacklogArticle b  where b.partnerId > 0 and b.offen = 1 and b.partnerId not in (select p.id from Partner p)", Long.class);
+        Long result = query.getSingleResult();
+//        System.out.println("result = " + result);
+        if (result > 0) {
+            return true;
+        }
+        return false;
+    }
+    
+    public List<Integer> getUnknownPartners(){
+        TypedQuery<Integer> query = em.createQuery("select distinct(b.partnerId) from BacklogArticle b  where b.partnerId > 0 and b.offen = 1 and b.partnerId not in (select p.id from Partner p)", Integer.class);
+        List<Integer> result = query.getResultList();
+        return result;
+    }
+
 }

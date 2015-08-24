@@ -49,6 +49,10 @@ public class LoginBean implements Serializable {
 
     private List<Partner> selectedPartnersNew;
 
+    private Boolean unknownPartnersFound;
+
+    private List<Integer> unknownPartners;
+
     @Inject
     private UserBean bean;
 
@@ -87,13 +91,12 @@ public class LoginBean implements Serializable {
         this.partnerList = partnerList;
     }
 
-    public List<Partner> getPartnerListTransposed() {
-        if (partnerListTransposed == null) {
-            partnerListTransposed = loadTransposedList();
-        }
-        return partnerListTransposed;
-    }
-
+//    public List<Partner> getPartnerListTransposed() {
+//        if (partnerListTransposed == null) {
+//            partnerListTransposed = loadTransposedList();
+//        }
+//        return partnerListTransposed;
+//    }
     public void setPartnerListTransposed(List<Partner> partnerListTransposed) {
         this.partnerListTransposed = partnerListTransposed;
     }
@@ -123,6 +126,28 @@ public class LoginBean implements Serializable {
 
     public void setSelectedPartnersNew(List<Partner> selectedPartnersNew) {
         this.selectedPartnersNew = selectedPartnersNew;
+    }
+
+    public List<Integer> getUnknownPartners() {
+        if (unknownPartners == null) {
+            unknownPartners = loadUnknownPartners();
+        }
+        return unknownPartners;
+    }
+
+    public void setUnknownPartners(List<Integer> unknownPartners) {
+        this.unknownPartners = unknownPartners;
+    }
+
+    public Boolean getUnknownPartnersFound() {
+        if (unknownPartnersFound == null) {
+            unknownPartnersFound = loadUnknownPartnersFound();
+        }
+        return unknownPartnersFound;
+    }
+
+    public void setUnknownPartnersFound(Boolean unknownPartnersFound) {
+        this.unknownPartnersFound = unknownPartnersFound;
     }
 
     /**
@@ -202,6 +227,9 @@ public class LoginBean implements Serializable {
         return direction;
     }
 
+    /**
+     * Zerstört die Session, wenn sich ein Nutzer ausloggt.
+     */
     public void resetUser() {
         if (bean != null) {
 
@@ -226,90 +254,65 @@ public class LoginBean implements Serializable {
 //        return "login.jsf?faces-redirect = true";
     }
 
-    private List<Partner> loadTransposedList() {
+    public List<Partner> getTransposedList() {
         if (partnerListNew == null) {
             partnerListNew = loadPartnerList();
         }
-
+//        System.out.println("this = " + this);
         int columns = partnerListNew.size() / 9 + 1;
-//        System.out.println("partnerListNew = " + partnerListNew.size());
-        int rows = loadPartnerList().size() / columns + 1;
+        LinkedList<List<Partner>> listOfLists = splitToMulitpleLists(partnerListNew, columns);
 
-        Partner[][] newArrayContent = listToMatrix(partnerListNew, columns);
-
-        List<Partner> list = sanitizeList(flattenArray(transposeMatrix(newArrayContent)));       
-        return list;
-
+//        System.out.println("partnerListNew = " + partnerListNew);
+//        for (List<Partner> l : listOfLists) {
+//            System.out.println(l);
+//        }
+        List<Partner> newList = createNewList(listOfLists, 9);
+//        System.out.println("newList = " + newList.size());
+        return newList;
     }
 
-    private static List<Partner> flattenArray(Partner[][] array) {
-        List<Partner> list = new LinkedList<>();
-        for (int i = 0; i < array.length; i++) {
-            for (int x = 0; x < array[i].length; x++) {
-                list.add(array[i][x]);
-            }
-        }
-        return list;
-    }
-
-    private static Partner[][] transposeMatrix(Partner[][] matrix) {
-        int m = matrix.length;
-        int n = matrix[0].length;
-
-        Partner[][] trasposedMatrix = new Partner[n][m];
-
-        for (int x = 0; x < n; x++) {
-            for (int y = 0; y < m; y++) {
-                trasposedMatrix[x][y] = matrix[y][x];
-            }
-        }
-
-        return trasposedMatrix;
-    }
-
-    private static String matrixToString(Partner[][] a) {
-        int m = a.length;
-        int n = a[0].length;
-
-        String tmp = "";
-
-        for (int y = 0; y < m; y++) {
-            for (int x = 0; x < n; x++) {
-                tmp = tmp + a[y][x] + " ";
-            }
-
-            tmp = tmp + "\n";
-        }
-
-        return tmp;
-    }
-
-    private static Partner[][] listToMatrix(List<Partner> list, int columns) {
-
-        int rows = list.size() / columns + 1;
-        Partner[][] newArrayContent = new Partner[rows][columns];
-
-        for (int x = 0; x < rows; x++) {
-            for (int z = 0; z < columns; z++) {
-                int y = columns * x;
+    private static LinkedList<Partner> createNewList(List<List<Partner>> listOfLists, int columns) {
+        LinkedList<Partner> newList = new LinkedList<>();
+        for (int i = 0; i < listOfLists.get(0).size(); i++) {
+            for (List<Partner> l : listOfLists) {
                 try {
-                    newArrayContent[x][z] = list.get(y + z);
+                    System.out.println("l = " + l);
+                    newList.add(l.get(i));
                 } catch (java.lang.IndexOutOfBoundsException ex) {
-                    newArrayContent[x][z] = null;
+                    continue;
                 }
-
             }
         }
-        return newArrayContent;
+        return newList;
     }
 
-    private static List<Partner> sanitizeList(List<Partner> list) {
-        List<Partner> otherList = new ArrayList<>();
-        for (Partner p : list) {
-            if (p != null) {
-                otherList.add(p);
+    private static LinkedList<List<Partner>> splitToMulitpleLists(List<Partner> list, int columnCount) {
+        int listCount = list.size() / columnCount + 1;
+        LinkedList<List<Partner>> listOfLists = new LinkedList<>();
+        for (int i = 0; i < listCount; i++) {
+            List<Partner> helperList = new LinkedList<>();
+            listOfLists.add(helperList);
+        }
+
+        for (int i = 0; i < listOfLists.size(); i++) {
+            for (int j = 0; j < columnCount; j++) {
+                try {
+                    listOfLists.get(i).add(list.get(columnCount * i + j));
+                } catch (IndexOutOfBoundsException ex) {
+                    break;
+                }
             }
         }
-        return otherList;
+//        System.out.println("listOfLists = " + listOfLists);
+        return listOfLists;
     }
+
+    private boolean loadUnknownPartnersFound() {
+        return dbHandler.unknownPartnersFound();
+    }
+
+    private List<Integer> loadUnknownPartners() {
+        return dbHandler.getUnknownPartners();
+    }
+
 }

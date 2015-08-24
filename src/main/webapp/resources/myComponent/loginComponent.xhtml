@@ -26,24 +26,26 @@
                         <p:outputLabel for="password" value="Passwort:" />
                         <p:password id = "password" label="Passwort" value="#{loginBean.password}" required="true"></p:password>
                     </h:panelGrid>                
+                    <h:outputText value="#{loginBean.unknownPartners} im Backlog, aber nicht in der Partnerliste gefunden, bitte aktualisieren!" style="color: #c9302c;" rendered="#{loginBean.unknownPartnersFound}"/>
                     <p:selectManyCheckbox styleClass="selectPartnerTable" id = "selectManyPartner" requiredMessage="" required="true" value="#{loginBean.selectedPartners}" layout ="grid" columns="9" >
                         <f:selectItems value="#{loginBean.partnerListNew}" var="partner" itemLabel="#{(partner.id).toString().concat(' ').concat(partner.name)}" itemValue="#{partner.id}"/>
                     </p:selectManyCheckbox>
-                    <!--<p:commandButton value="TEST" actionListener="#{loginBean.partnerListTransposed}" />-->
+                    <!--<p:commandButton value="TEST" actionListener="#{loginBean.partnerListNew}" />-->
                     <p:commandButton value="Login" action="#{loginBean.login(loginBean.username, loginBean.password, loginBean.selectedPartners)}" update ="@all"/>                    
-                </h:form>               
+                </h:form>  
+
             </p:panel>
         </c:if>
 
-<!--        <style>
-            .ui-selectmanycheckbox{
-                border-style: solid;
-                border-width: 2px;
-                border-color: black;
-            }
-
-           
-
-        </style>-->
+        <!--        <style>
+                    .ui-selectmanycheckbox{
+                        border-style: solid;
+                        border-width: 2px;
+                        border-color: black;
+                    }
+        
+                   
+        
+                </style>-->
     </cc:implementation>
 </ui:composition>
