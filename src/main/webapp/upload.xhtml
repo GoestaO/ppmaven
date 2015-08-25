@@ -16,27 +16,16 @@
             <p:growl id="messagesGrowl" showDetail="true"/>
         </h:form>
 
-        <p:panelGrid columns="2">
+        <p:panelGrid columns="2" rendered ="#{userBean.valid}">
             <p:panel header="Neue Backlogliste hochladen" style="width: 600px;">
-
-                <h:form id="form" style="width: 600px;">
-                    <!--<p:growl id="messages" showDetail="true"/>-->
-                    <p:messages showDetail="true" id="messages" closable="true"/>
-                </h:form>
-
                 <h:form rendered ="#{userBean.valid}" >
                     <p:fileUpload fileUploadListener="#{uploadController.handleFileUpload}" label = "Dateiauswahl" auto = "true" mode="advanced" dragDropSupport="false"
-                                  update=":form:messages" fileLimit="1" allowTypes="/(\.|\/)(csv)$/"  rendered ="#{userBean.valid}"/>
+                                  update=":growlForm:messagesGrowl" fileLimit="1" allowTypes="/(\.|\/)(csv)$/"  rendered ="#{userBean.valid}"/>
                 </h:form>
             </p:panel>
 
             <p:panel header="Neue Partnerliste hochladen" style="width: 600px;">
-                <h:form id="partnerUploadForm" >
-
-                    <p:messages showDetail="true" id="messages" closable="true"/>
-                </h:form>
-
-                <h:form rendered ="#{userBean.valid}" >
+                <h:form id="partnerUploadForm" rendered ="#{userBean.valid}">
                     <p:fileUpload fileUploadListener="#{uploadController.uploadNewPartnerList}" label = "Dateiauswahl" auto = "true" mode="advanced" dragDropSupport="false"
                                   update=":growlForm:messagesGrowl" fileLimit="1" allowTypes="/(\.|\/)(csv)$/"  rendered ="#{userBean.valid}"/>
                 </h:form>
