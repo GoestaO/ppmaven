@@ -144,3 +144,7 @@ a.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-st
     margin:0px 0px 3px 0px;
 }
 
+.uploadPanel td {
+    vertical-align: top;
+}
+

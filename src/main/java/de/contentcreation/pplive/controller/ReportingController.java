@@ -266,10 +266,9 @@ public class ReportingController implements Serializable {
         return rh.getUsers();
     }
 
-    private List<User> loadUsersByDate() {
-
+    private List<User> loadUsersByDate() {        
         if (this.leistungDate1 != null && this.leistungDate2 != null) {
-            return rh.getUsersByDate(this.leistungDate1, this.leistungDate2);
+            return rh.getUsersByDate(this.leistungDate1, shiftDate(this.leistungDate2));
         } else if (this.leistungDate1 != null) {
             return rh.getUsersByDate(this.leistungDate1);
         }

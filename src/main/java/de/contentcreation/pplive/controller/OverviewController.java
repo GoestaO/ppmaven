@@ -17,6 +17,7 @@ import java.util.Locale;
 import java.util.Map;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
+import javax.faces.application.ViewExpiredException;
 import javax.faces.component.html.HtmlDataTable;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -243,13 +244,12 @@ public class OverviewController implements Serializable {
 
         }
     }
-    
+
 //    public void finishAll(){
 //        for (BacklogArticle b : selectedArticles){
 //            b.setOffen(false);
 //        }        
 //    }
-
     /**
      * Diese Methode ist für die Aktualisierung der im Bearbeitungsdialog
      * bearbeiteten Artikel zuständig. Dazu werden alle Nutzereingaben bezogen
@@ -427,5 +427,6 @@ public class OverviewController implements Serializable {
         RequestContext.getCurrentInstance().execute("PF('dataTable').clearFilters();");
         filterValues = null;
     }
+   
 
 }

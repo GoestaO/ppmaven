@@ -16,7 +16,7 @@
             <p:growl id="messagesGrowl" showDetail="true"/>
         </h:form>
 
-        <p:panelGrid columns="2" rendered ="#{userBean.valid}">
+        <p:panelGrid columns="2" rendered ="#{userBean.valid}" styleClass="uploadPanel">
             <p:panel header="Neue Backlogliste hochladen" style="width: 600px;">
                 <h:form rendered ="#{userBean.valid}" >
                     <p:fileUpload fileUploadListener="#{uploadController.handleFileUpload}" label = "Dateiauswahl" auto = "true" mode="advanced" dragDropSupport="false"
@@ -29,7 +29,12 @@
                     <p:fileUpload fileUploadListener="#{uploadController.uploadNewPartnerList}" label = "Dateiauswahl" auto = "true" mode="advanced" dragDropSupport="false"
                                   update=":growlForm:messagesGrowl" fileLimit="1" allowTypes="/(\.|\/)(csv)$/"  rendered ="#{userBean.valid}"/>
                 </h:form>
+                <h3>Hinweis: Bitte CSV verwenden, erforderliches Format:</h3>
+               
+                <p:graphicImage library="img" name="partner_upload_format.png"/>
+
             </p:panel>
+
         </p:panelGrid>
 
     </ui:define>

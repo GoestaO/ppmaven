@@ -9,8 +9,8 @@
 
 
     <ui:define name="content">
-                <mc:loginComponent/>
-        
+        <mc:loginComponent/>
+
         <!--Zusätzliche JQuery-Funktionen laden-->
         <h:outputScript library="js" name="backlogOverview.js"/>
 
@@ -169,6 +169,33 @@
                     <p:commandButton value="Ja" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                     <p:commandButton value="Nein" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                 </p:confirmDialog>
+            </p:dialog>
+        </h:form>
+
+        <h:form>            
+            
+            <p:ajaxExceptionHandler type="javax.faces.application.ViewExpiredException"
+                                    update="exceptionDialog" onexception="PF('viewExpiredDialog').show();" />
+
+            <p:ajaxExceptionHandler type="java.lang.NullPointerException"
+                                    update="exceptionDialog" onexception="PF('exceptionDialog').show();" />
+
+            <p:dialog id="exceptionDialog" header="Exception: #{pfExceptionHandler.type}
+                      wurde geschmissen!" widgetVar="exceptionDialog" height="800px">
+                Bitte <a href="goesta.ostendorf@zalando-operations.com">schicke uns</a> einen Bug Report.
+                <br/><br/>
+
+                <br/><br/>
+                <p:button onclick="document.location.href = document.location.href;"
+                          value="Versuche es noch einmal"/>
+
+            </p:dialog>
+
+            <p:dialog id="viewExpiredDialog" header="ViewExpiredException ausgelöst" widgetVar="viewExpiredDialog" height="200px" modal="true">
+                Die Ansicht ist veraltet, bitte die Seite neu laden
+                <br/><br/>               
+                <p:button onclick="document.location.href = document.location.href;"
+                          value="Neu laden"/>
             </p:dialog>
         </h:form>
     </ui:define>
