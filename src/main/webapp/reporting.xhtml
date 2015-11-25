@@ -35,7 +35,7 @@
                         <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getLeistungsReport(reportingController.leistungDate1, reportingController.leistungDate2)}"/>
                     </h:form>
                 </p:panel>
-                
+
                 <c:if test="#{userBean.user.rolle.id == 1}">
                     <p:panel header="Nutzerstatistik" style="width: 400px; height: 200px" >
                         <h:form>
@@ -52,6 +52,7 @@
 
                                 <p:selectCheckboxMenu id="userList" label = "User" converter="userConverter" value="#{reportingController.selectedUsers}">
                                     <f:selectItems  value="#{reportingController.userList}" var="user" itemLabel="#{user}" itemValue="#{user}"/>
+                                    <p:ajax event="toggleSelect"/>
                                     <f:converter converterId="userConverter"/>
                                 </p:selectCheckboxMenu> 
                                 <p:selectOneButton label="Status" value="#{reportingController.leistungsReportSelectedStatus}">
