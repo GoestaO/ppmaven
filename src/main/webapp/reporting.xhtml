@@ -50,10 +50,10 @@
                                     <p:ajax event="dateSelect" listener="#{reportingController.onSelectedDate(event)}" update="userList" />
                                 </p:calendar>                        
 
-                                <p:selectCheckboxMenu id="userList" label = "User" converter="userConverter" value="#{reportingController.selectedUsers}">
+                                <p:selectCheckboxMenu id="userList" label = "User" converter="#{userConverter}" value="#{reportingController.selectedUsers}">
                                     <f:selectItems  value="#{reportingController.userList}" var="user" itemLabel="#{user}" itemValue="#{user}"/>
                                     <p:ajax event="toggleSelect"/>
-                                    <f:converter converterId="userConverter"/>
+                                    <!--<f:converter converterId="userConverter"/>-->
                                 </p:selectCheckboxMenu> 
                                 <p:selectOneButton label="Status" value="#{reportingController.leistungsReportSelectedStatus}">
                                     <f:selectItem itemLabel="offen" itemValue="offen" />

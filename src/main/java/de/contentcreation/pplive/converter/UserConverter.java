@@ -9,18 +9,20 @@ import de.contentcreation.pplive.model.User;
 import de.contentcreation.pplive.services.UserService;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
-import javax.faces.convert.FacesConverter;
+import javax.inject.Named;
 
 /**
  *
  * @author gostendorf
  */
-@FacesConverter("userConverter")
+@Named
+@RequestScoped
 public class UserConverter implements Converter {
 
     @EJB
