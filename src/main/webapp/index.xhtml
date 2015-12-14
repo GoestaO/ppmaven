@@ -12,10 +12,11 @@
 
         <c:if test="${!userBean.valid}">
             <center>
-                <p:button href="#{request.contextPath}/login.jsf" value="Zum Login" /> 
+                <p:commandButton value="Zum Login" icon="ui-icon-calculator" onsuccess="window.open('#{request.contextPath}/login.jsf', '_self');" />
                 <br/>
                 <br/>
-                <p:button href="#{request.contextPath}/register.jsf" value="Zur Registrierung" />  
+                 <p:commandButton value="Zur Registrierung" icon="ui-icon-document" onsuccess="window.open('#{request.contextPath}/register.jsf', '_self');" />
+                <!--<p:button href="#{request.contextPath}/register.jsf" value="Zur Registrierung" />-->  
 
             </center>
         </c:if>

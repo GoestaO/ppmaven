@@ -1,0 +1,97 @@
+<ui:composition template="templates/base_content.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:mc="http://xmlns.jcp.org/jsf/composite/myComponent"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+
+    <ui:define name="content" > 
+
+        <mc:loginComponent/>
+        <mc:ladeanimation/>
+        <c:if test="#{userBean.user.rolle.id le 3}">
+            <h:form id="growlForm">
+                <p:growl id="messagesGrowl" showDetail="true"/>
+            </h:form>
+            <center>
+                <h:form id="searchForm">
+
+                    <p:panelGrid columns="2" rendered ="#{userBean.valid}" styleClass="uploadPanel">
+                        <f:facet name="header">
+                            Nutzersuche
+                        </f:facet>
+                        <p:outputLabel value="Nutzername:"/>
+                        <p:inputText value="#{usermanagementBean.userName}"/>
+                        <p:commandButton value="Suchen" actionListener="#{usermanagementBean.searchUser(usermanagementBean.userName)}" update=":searchResultForm"/>
+                    </p:panelGrid>
+                </h:form>
+                <br/>
+                <h:form id="searchResultForm">
+                    <p:contextMenu for="resultTable">
+                        <p:menuitem value="Passwort ändern" oncomplete="PF('passwordChangeWidget').show();" update=":passwordChangeForm"/>
+                        <p:menuitem value="Rolle ändern" oncomplete="PF('roleChangeWidget').show;" update=":roleChangeForm"/>
+                </p:contextMenu>
+                <p:dataTable id="resultTable" rendered="#{usermanagementBean.searchResult!=null}" widgetVar="resultTableWidget" value="#{usermanagementBean.searchResult}" var="user" rowKey="#{user.id}" 
+                             selection="#{usermanagementBean.selectedUser}" selectionMode="single" style="width:30%;">
+                    <f:facet name="header">
+                        Gefundene Nutzer
+                    </f:facet>
+                    <p:column headerText="Nutzername">
+                        <h:outputText value="#{user.nick}"/>
+                    </p:column>
+                    <p:column headerText="Vorname">
+                        <h:outputText value="#{user.vorname}"/>
+                    </p:column>
+                    <p:column headerText="Nachname">
+                        <h:outputText value="#{user.nachname}"/>
+                    </p:column>
+                    <p:column headerText="Rolle">
+                        <h:outputText value="#{user.rolle.rollenname}"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+
+            <h:form id="passwordChangeForm">
+                <p:dialog header="Passwort ändern" widgetVar="passwordChangeWidget">
+                    <p:outputPanel id="passwordChangePanel" style="text-align:center;">
+                        <h:panelGrid id="passwordGrid" columns="2" cellpadding="5" rendered="#{not empty usermanagementBean.selectedUser}">
+                            <p:outputLabel for ="userPassword" value ="Nutzername"/>
+                            <h:outputText id="userPassword" value="#{usermanagementBean.selectedUser.nick}"/>
+                            <p:outputLabel for ="newPassword1" value ="Neues Passwort:"/>
+                            <p:password id="newPassword1" value="#{usermanagementBean.newPassword1}" required="true"/>
+                            <p:outputLabel for ="newPassword2" value ="Passwort wiederholen"/>
+                            <p:password id="newPassword2" value="#{usermanagementBean.newPassword2}" required="true"/>
+                        </h:panelGrid>
+                        <p:commandButton value ="OK" actionListener="#{usermanagementBean.changePassword()}" update=":growlForm:messagesGrowl :searchResultForm:resultTable">
+                            <p:confirm header="Bestätigung erforderlich" message="Passwort wirklich ändern??" icon="ui-icon-alert"/>
+                        </p:commandButton>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Ja" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="Nein" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+
+            <h:form id="roleChangeForm">
+                <p:dialog id="roleChangeDialog" widgetVar="roleChangeWidget" header="Rolle ändern">
+                    <p:panelGrid columns="2">
+                        <p:outputLabel value="Nutzername: "/>
+                        <h:outputText value="#{usermanagementBean.selectedUser.nick}"/>
+                        <p:outputLabel value="Aktuelle Rolle: "/>
+                        <h:outputText value="#{usermanagementBean.selectedUser.rolle.rollenname}"/>
+                        <p:outputLabel value="Neue Rolle: "/>
+<!--                        <p:selectOneMenu value="#{usermanagementBean.newRole}" converter="#{rollenConverter}">
+                            <f:selectItems value="#{usermanagementBean.availableRoles}" var="role" itemLabel="#{role.rollenname}" itemValue="#{role}"/>
+                        </p:selectOneMenu>-->
+                        <p:commandButton value="Speichern" actionListener="#{usermanagementBean.updateRole()}"/>
+                    </p:panelGrid>                    
+                </p:dialog>
+            </h:form>
+        </center>
+    </c:if>
+</ui:define>
+</ui:composition>

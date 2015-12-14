@@ -2,6 +2,7 @@ package de.contentcreation.pplive.services;
 
 import de.contentcreation.pplive.model.BacklogArticle;
 import de.contentcreation.pplive.model.Partner;
+import de.contentcreation.pplive.model.Rolle;
 import de.contentcreation.pplive.model.UpdateBuchung;
 import de.contentcreation.pplive.model.User;
 import java.math.BigInteger;
@@ -347,11 +348,20 @@ public class DatabaseHandler {
         }
         return false;
     }
-    
-    public List<Integer> getUnknownPartners(){
+
+    public List<Integer> getUnknownPartners() {
         TypedQuery<Integer> query = em.createQuery("select distinct(b.partnerId) from BacklogArticle b  where b.partnerId > 0 and b.offen = 1 and b.partnerId not in (select p.id from Partner p)", Integer.class);
         List<Integer> result = query.getResultList();
         return result;
+    }
+
+    public List<Rolle> getAllRoles() {
+        TypedQuery<Rolle> q = em.createQuery("select r from Rolle r", Rolle.class);
+        return q.getResultList();
+    }
+
+    public Rolle findRoleById(Integer id) {
+        return em.find(Rolle.class, id);
     }
 
 }

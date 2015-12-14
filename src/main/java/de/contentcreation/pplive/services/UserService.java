@@ -74,7 +74,7 @@ public class UserService {
                 "select u from User u where u.nick = :nick", User.class);
         checkForNick.setParameter("nick", nick);
         List<User> userList = checkForNick.getResultList();
-        if (userList.size() == 0) {
+        if (userList.isEmpty()) {
             User u = new User();
             Rolle rolle = new Rolle();
             rolle.setId(4);
@@ -114,6 +114,7 @@ public class UserService {
 
     public User findByName(String name) {
         TypedQuery q = em.createQuery("select u from User u where u.nick = :name", User.class);
+        q.setParameter("name", name);
         User u = (User) q.getSingleResult();
         if (u != null) {
             return u;
@@ -124,5 +125,20 @@ public class UserService {
     public List<User> findAll() {
         TypedQuery q = em.createQuery("select u from User u", User.class);
         return q.getResultList();
+    }
+
+    public List<User> findUsers(String searchTerm) {
+        searchTerm = "%".concat(searchTerm).concat("%");
+        TypedQuery q = em.createQuery("select u from User u where u.nick like :searchTerm", User.class);
+        q.setParameter("searchTerm", searchTerm);
+        List<User> u = q.getResultList();
+        if (u != null) {
+            return u;
+        }
+        return null;
+    }
+    
+    public void update(User user){
+        em.merge(user);
     }
 }
