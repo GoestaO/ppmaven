@@ -8,6 +8,8 @@ package de.contentcreation.pplive.converter;
 import de.contentcreation.pplive.model.Rolle;
 import de.contentcreation.pplive.services.DatabaseHandler;
 import javax.ejb.EJB;
+import javax.enterprise.context.RequestScoped;
+//import javax.enterprise.context.RequestScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -18,6 +20,7 @@ import javax.inject.Named;
  * @author goesta
  */
 @Named
+@RequestScoped
 public class RollenConverter implements Converter {
 
     @EJB

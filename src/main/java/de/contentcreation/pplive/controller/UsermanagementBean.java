@@ -114,7 +114,6 @@ public class UsermanagementBean implements Serializable {
 
     public void searchUser(String searchTerm) {
         searchResult = userService.findUsers(searchTerm);
-        System.out.println("searchResult = " + searchResult.size());
     }
 
     /**
