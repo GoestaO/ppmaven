@@ -1,6 +1,8 @@
 package de.contentcreation.pplive.util;
 
 import de.contentcreation.pplive.model.User;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -49,6 +51,30 @@ public class QueryHelper {
         }
         inClause = (userList.size() > 0) ? inClause.substring(0, inClause.length() - 1) + ")" : empty;
         return inClause;
+    }
+
+    public static List<Integer> StringParameterToIntegerList(String s) {
+        ArrayList<Integer> list = new ArrayList<>();
+        s = s.replace("[", "");
+        s = s.replace("]", "");
+        String[] array = s.split("_");
+        for (String e : array) {
+            try {
+                list.add(Integer.parseInt(s));
+            } catch (NumberFormatException ex) {
+
+            }
+        }
+        return list;
+    }
+    
+    public static String IntegerListToStringParameter(List<Integer> list) {
+        String partnerListParameter = Arrays.toString(list.toArray());
+        partnerListParameter = partnerListParameter.replace(",", "_");
+        partnerListParameter = partnerListParameter.replace(" ", "");
+        partnerListParameter = partnerListParameter.replace("[", "");
+        partnerListParameter = partnerListParameter.replace("]", "");
+        return partnerListParameter;
     }
 
 }

@@ -10,9 +10,62 @@
 
     <ui:define name="content">
         <mc:loginComponent/>
-
+        <h:form>
+            <h:inputHidden id="urlEnd" value="#{userBean.urlEnd}"/>
+        </h:form>
         <!--Zusätzliche JQuery-Funktionen laden-->
         <h:outputScript library="js" name="backlogOverview.js"/>
+        <h:outputScript library="js" name="websocket.js"/>
+
+
+
+        <h:outputScript  >
+
+            $( document ).ready(function() {
+
+            <!--var uriEnd = $('#urlEnd').val();-->
+
+
+            var wsUri="ws://10.170.43.26:8080/Partnerprogramm/primepush/backlogChannel";
+            console.log(wsUri);
+
+            testWebSocket(wsUri);
+
+            $(window).on('beforeunload', function(){
+            websocket.close();
+            });
+
+
+            });
+
+
+
+
+
+            function testWebSocket(wsUri) {
+
+            websocket = new WebSocket(wsUri);
+
+            $(window).on('beforeunload', function(){
+            websocket.close();
+            });
+
+            websocket.onopen = function(evt) { onOpen(evt) };
+            websocket.onclose = function(evt) { onClose(evt) };
+            websocket.onmessage = function(evt) { onMessage(evt) };
+            websocket.onerror = function(evt) { onError(evt) }; 
+            };
+
+
+
+
+
+
+        </h:outputScript>
+
+        <p:socket channel="/backlogChannel">
+            <p:ajax event="message" update="form1:backlog"/>
+        </p:socket>
 
         <h:form prependId="false" id="form1">
             <p:hotkey bind="alt+n" handler="PF('varEditButton').jq.click()" />
@@ -20,6 +73,8 @@
             <p:contextMenu for="backlog">
                 <p:menuitem value="Bearbeiten" update=":form2:articleDetail" icon="ui-icon-wrench" oncomplete="PF('editDialog').show()"/>               
             </p:contextMenu>
+
+
             <p:dataTable binding="#{overviewController.dataTable}" sortMode="single" widgetVar = "dataTable" id="backlog" selectionMode="multiple" selection="#{overviewController.selectedArticles}" rowKey="#{article.identifier}" var="article" value="#{overviewController.backlogList}" 
                          rows="100"
                          paginator="true" 
@@ -173,7 +228,7 @@
         </h:form>
 
         <h:form>            
-            
+
             <p:ajaxExceptionHandler type="javax.faces.application.ViewExpiredException"
                                     update="exceptionDialog" onexception="PF('viewExpiredDialog').show();" />
 

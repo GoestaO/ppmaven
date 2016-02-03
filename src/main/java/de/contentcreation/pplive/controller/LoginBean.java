@@ -5,6 +5,7 @@
  */
 package de.contentcreation.pplive.controller;
 
+import de.contentcreation.pplive.model.BacklogArticle;
 import de.contentcreation.pplive.model.Partner;
 import de.contentcreation.pplive.model.User;
 import de.contentcreation.pplive.services.UserService;
@@ -16,11 +17,16 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import de.contentcreation.pplive.model.UserBean;
 import de.contentcreation.pplive.services.DatabaseHandler;
+import de.contentcreation.pplive.util.QueryHelper;
+import de.contentcreation.pplive.websockets.BacklogClientEndpoint;
+import de.contentcreation.pplive.websockets.BacklogClientEndpoint.BacklogArticleMessageHandler;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -49,9 +55,13 @@ public class LoginBean implements Serializable {
 
     private List<Partner> selectedPartnersNew;
 
+    private BacklogClientEndpoint backlogClient;
+
     private Boolean unknownPartnersFound;
 
     private List<Integer> unknownPartners;
+
+    private String websocketChannel;
 
     @Inject
     private UserBean bean;
@@ -65,6 +75,8 @@ public class LoginBean implements Serializable {
     private String username;
 
     private String password;
+
+    private BacklogClientEndpoint client;
 
     // Getter & Setter
     public String getUsername() {
@@ -188,7 +200,8 @@ public class LoginBean implements Serializable {
      * @param partnerList Die gewählten Partner, die für eine Sitzung bearbeitet
      * werden sollen.
      */
-    public void login(String username, String password, List<Integer> partnerList) {
+    public String login(String username, String password, List<Integer> partnerList) {
+        String direction = "";
         if (partnerList == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Kein Partner ausgewählt", "Bitte mindestens einen Partner auswählen."));
         }
@@ -199,11 +212,20 @@ public class LoginBean implements Serializable {
             bean.setVorname(username);
             bean.setNachname(username);
             bean.setPartnerList(partnerList);
+            websocketChannel = "ws://10.170.43.26:8080/Partnerprogramm/primepush/backlogChannel";
+//            String pathParameter = QueryHelper.IntegerListToStringParameter(partnerList);
+//            websocketChannel = websocketChannel.concat(pathParameter);
+            try {
+                bean.connectWebSocket(websocketChannel, partnerList);
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Willkommen."));
-
+            direction = "backlogOverview.jsf?faces-redirect=true";
         } else if (user == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "Benutzername '" + username + "' oder Passwort ist nicht korrekt!"));
         }
+        return direction;
     }
 
     public String redirectedLogin(String username, String password, List<Integer> partnerList) {
@@ -214,11 +236,17 @@ public class LoginBean implements Serializable {
         }
         User user = service.login(username, password);
         if (user != null && partnerList != null) {
+            websocketChannel = "ws://localhost:8080/Partnerprogramm/primepush/backlogChannel";
             bean.setUser(user);
             bean.setValid(true);
             bean.setVorname(username);
             bean.setNachname(username);
             bean.setPartnerList(partnerList);
+            try {
+                bean.connectWebSocket(websocketChannel, partnerList);
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
             direction = "backlogOverview.jsf?faces-redirect=true";
         } else if (user == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "Benutzername '" + username + "' oder Passwort ist nicht korrekt!"));

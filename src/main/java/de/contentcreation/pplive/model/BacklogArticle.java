@@ -254,4 +254,16 @@ public class BacklogArticle implements Serializable {
         return true;
     }
 
+    public final boolean identifierEquals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final BacklogArticle other = (BacklogArticle) obj;
+
+        return Objects.equals(this.identifier, other.identifier);
+    }
+
 }

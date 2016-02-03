@@ -12,10 +12,36 @@
     </ui:define>
 
     <ui:define name="content" >
+
+        <!--<h:outputScript library="js" name="websocket.js"/>-->
+
+
+
+<!--        <h:outputScript  >          
+
+            var wsUri = "ws://localhost:8080/Partnerprogramm/backlogChannel";
+            var websocket = new WebSocket(wsUri);
+
+            websocket.onerror = function (evt) {
+            onError(evt);
+            };
+
+            websocket.onopen = function(evt) { onOpen(evt) };
+            websocket.onclose = function(evt) { onClose(evt) };
+            websocket.onmessage = function(evt) { onMessage(evt) };
+            websocket.onerror = function(evt) { onError(evt) }; 
+          
+
+
+
+
+
+
+        </h:outputScript>-->
         <!--<h:outputScript library="js" name="transpose_table.js"/>-->
-<!--        <h:form id="growlForm">
-            <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" life="3000"/>
-        </h:form>-->
+        <!--        <h:form id="growlForm">
+                    <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" life="3000"/>
+                </h:form>-->
 
 <!--        <c:if test="${!userBean.valid}">
             <h:form id="loginForm">
@@ -33,10 +59,10 @@
         </c:if>-->
         <mc:loginComponent/>
         <!--<h:outputScript library="js" name="transpose_table.js"/>-->
-<!--        <script>
-            $(document.ready(function () {
-                alert("Hallo");
-            });
-        </script>-->
+        <!--        <script>
+                    $(document.ready(function () {
+                        alert("Hallo");
+                    });
+                </script>-->
     </ui:define>
 </ui:composition>

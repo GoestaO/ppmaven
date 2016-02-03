@@ -10,14 +10,15 @@ import de.contentcreation.pplive.model.Bemerkung;
 import de.contentcreation.pplive.model.User;
 import de.contentcreation.pplive.model.UserBean;
 import de.contentcreation.pplive.services.DatabaseHandler;
+import de.contentcreation.pplive.websockets.BacklogClientEndpoint;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
-import javax.faces.application.ViewExpiredException;
 import javax.faces.component.html.HtmlDataTable;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -73,10 +74,23 @@ public class OverviewController implements Serializable {
 
     private LineChartModel allUsersChart;
 
-//    @PostConstruct
-//    public void init() {
-//        dataTable = new DataTable();
-//    }
+    @PostConstruct
+    public void init() {
+        BacklogClientEndpoint.BacklogArticleMessageHandler messageHandler = new BacklogClientEndpoint.BacklogArticleMessageHandler() {
+            @Override
+            public void handleMessage(BacklogArticle article) {
+                System.out.println("Handling message: " + article.getBemerkung1());
+                for (BacklogArticle a : backlogList) {
+                    if (a.identifierEquals(article)) {
+                        a = article;
+                    }
+                }               
+            }
+
+        };
+        userBean.getClient().addBacklogArticleMessageHandler(messageHandler);
+    }
+
     // Getter und Setter
     public DataTable getDataTable() {
         return dataTable;
@@ -285,6 +299,7 @@ public class OverviewController implements Serializable {
             // Wenn Status auf "fertig" gesetzt, dann auf finishedList setzen und Updatebuchung durchführen
             if (neuerStatus == false) {
                 finishedList.add(editedArticle);
+                userBean.getClient().sendMessage(editedArticle);
                 dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
 
                 // Schauen, ob es bei dem Artikel Veränderungen gab, wenn es keine gab, keine Buchung durchführen
@@ -292,6 +307,7 @@ public class OverviewController implements Serializable {
                 refusedList.add(editedArticle);
             } else {
                 updatedList.add(editedArticle);
+                userBean.getClient().sendMessage(editedArticle);
                 dh.updateArticleStatus(identifier, bemerkung1, bemerkung2, bemerkung3, bemerkungKAM, neuerStatus, currentUser, season);
             }
 
@@ -427,6 +443,5 @@ public class OverviewController implements Serializable {
         RequestContext.getCurrentInstance().execute("PF('dataTable').clearFilters();");
         filterValues = null;
     }
-   
 
 }
