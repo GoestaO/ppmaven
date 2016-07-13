@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.contentcreation</groupId>
-    <artifactId>PartnerprogrammJSF</artifactId>
+    <artifactId>Partnerprogramm</artifactId>
     <version>Live_20151125</version>
     <packaging>war</packaging>
 
-    <name>PartnerprogrammJSF</name>
+    <name>Partnerprogramm</name>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>

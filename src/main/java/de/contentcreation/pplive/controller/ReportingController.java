@@ -5,17 +5,6 @@
  */
 package de.contentcreation.pplive.controller;
 
-import de.contentcreation.pplive.model.BacklogArticle;
-import de.contentcreation.pplive.model.User;
-import de.contentcreation.pplive.reporting.ExcelGenerator;
-import de.contentcreation.pplive.reportingClasses.RejectReportBemerkung1;
-import de.contentcreation.pplive.reportingClasses.RejectReportBemerkung2;
-import de.contentcreation.pplive.reportingClasses.RejectReportOverview;
-import de.contentcreation.pplive.reportingClasses.UserReport;
-import de.contentcreation.pplive.services.DatabaseHandler;
-import de.contentcreation.pplive.services.ReportingHandler;
-import de.contentcreation.pplive.util.DateHelper;
-import de.contentcreation.pplive.util.QueryHelper;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
@@ -36,6 +26,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -45,6 +36,18 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.chart.LineChartModel;
+
+import de.contentcreation.pplive.model.BacklogArticle;
+import de.contentcreation.pplive.model.User;
+import de.contentcreation.pplive.reporting.ExcelGenerator;
+import de.contentcreation.pplive.reportingClasses.RejectReportBemerkung1;
+import de.contentcreation.pplive.reportingClasses.RejectReportBemerkung2;
+import de.contentcreation.pplive.reportingClasses.RejectReportOverview;
+import de.contentcreation.pplive.reportingClasses.UserReport;
+import de.contentcreation.pplive.services.DatabaseHandler;
+import de.contentcreation.pplive.services.ReportingHandler;
+import de.contentcreation.pplive.util.DateHelper;
+import de.contentcreation.pplive.util.QueryHelper;
 
 /**
  * Dies ist der Controller für die Reporting-Seite.
@@ -66,6 +69,9 @@ public class ReportingController implements Serializable {
 
     @Inject
     private ChartController chartController;
+    
+    @Inject
+    private OverviewController overviewController;
 
     private Date leistungDate1;
 
@@ -425,6 +431,20 @@ public class ReportingController implements Serializable {
             }
         }
     }
+    
+    public void exportCurrentSelection(){
+    	String fileName="currentSelection.xlsx";
+    	File reportFile = new File(fileName);
+    	ex.exportCurrentSelection(reportFile, overviewController.getBacklogList());
+    	 try {
+             download(reportFile);
+
+         } catch (IOException ex) {
+             Logger.getLogger(ReportingController.class
+                     .getName()).log(Level.SEVERE, null, ex);
+         }
+    }
+  
 
     /**
      * Diese Methode verschiebt ein Datum um einen Tag nach hinten, ist wichtig,

@@ -87,15 +87,17 @@
                         <f:setPropertyActionListener target="#{overviewController.selectedArticles}" value="#{overviewController.toList(article)}"/>
                     </p:commandButton>
                 </p:column>
-                <f:facet name="header">                    
+                <f:facet name="header">
+<!--                                     <p:commandButton id="clearButton" styleClass="clearButtonClass" widgetVar="varClearButtonButton" update=":form1:backlog" icon="ui-icon-trash" value="Filter löschen" action="#{overviewController.clearFilters()}" /> -->
+                                    
                     <p:commandButton id="clearButton" styleClass="clearButtonClass" widgetVar="varClearButtonButton" update=":form1:backlog" icon="ui-icon-trash" value="Filter löschen" action="#{overviewController.clearFilters()}" />
-                    <p:commandButton id="editButton" widgetVar="varEditButton" update=":form2:articleDetail" icon="ui-icon-search" value="Bearbeiten" oncomplete="PF('editDialog').show()" />                   
+                    <p:commandButton id="editButton" widgetVar="varEditButton" update=":form2:articleDetail" icon="ui-icon-search" value="Bearbeiten" oncomplete="PF('editDialog').show()" />
+                    <p:commandButton id="exportButton" ajax="False" icon=" ui-icon-circle-arrow-s" value="Export" action="#{reportingController.exportCurrentSelection()}"/>                   
                 </f:facet>
             </p:dataTable>
         </h:form>
         <h:form id="form2">
             <p:dialog header="Artikel bearbeiten" id="articleDetail" widgetVar="editDialog" modal="true" onShow="colorizeRadioButtons()">
-
                 <p:commandButton  onclick="finishAll();" styleClass="dialogbutton" value="Alle fertig" />
                 <p:commandButton  id="openAll" onclick="openAll();" styleClass="dialogbutton" value="Alle offen" />
                 <br/>
