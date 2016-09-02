@@ -1,21 +1,23 @@
 package de.contentcreation.pplive.services;
 
-import de.contentcreation.pplive.model.BacklogArticle;
-import de.contentcreation.pplive.model.Partner;
-import de.contentcreation.pplive.model.Rolle;
-import de.contentcreation.pplive.model.UpdateBuchung;
-import de.contentcreation.pplive.model.User;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+
+import de.contentcreation.pplive.model.BacklogArticle;
+import de.contentcreation.pplive.model.Partner;
+import de.contentcreation.pplive.model.Rolle;
+import de.contentcreation.pplive.model.UpdateBuchung;
+import de.contentcreation.pplive.model.User;
 
 /**
  * Die Implemntierung des Datenbank-Handlers. Der Datenbank-Handler ist

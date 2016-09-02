@@ -656,6 +656,9 @@ public class ExcelGenerator {
 
 		Cell openHeader = headerRow.createCell(10);
 		openHeader.setCellValue("Offen");
+		
+		Cell lastTimestamp = headerRow.createCell(11);
+		openHeader.setCellValue("Letzte Buchung am");
 
 		int rownum = 1;
 		for (Object[] pr : partnerReport) {
@@ -709,6 +712,10 @@ public class ExcelGenerator {
 
 			Cell openCell = row.createCell(10);
 			openCell.setCellValue(pr[12].toString());
+			
+			Cell lastTimestampCell = row.createCell(11);
+			lastTimestampCell.setCellValue(pr[12].toString());
+			lastTimestampCell.setCellStyle(dateCellStyle);
 		}
 		for (int i = 0; i < 13; i++) {
 			sheet.autoSizeColumn(i);

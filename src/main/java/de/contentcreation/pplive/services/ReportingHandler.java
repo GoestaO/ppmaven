@@ -92,7 +92,7 @@ public class ReportingHandler {
 
         Query query = em
                 .createNativeQuery("select b.Identifier, b.PartnerID, b.Config, b.AppdomainID, b.Warengruppenpfad, b.Saison, user.VORNAME, user.NACHNAME, b.Bemerkung1, b.Bemerkung2, b.Bemerkung3, b.BemerkungKAM, \n"
-                        + "b.OFFEN, buchungen.Status\n"
+                        + "b.OFFEN, DATE_FORMAT(buchungen.Timestamp, '%d.%m.%Y'),buchungen.Status\n"
                         + "from backlog b\n"
                         + "inner join (select buchungen.Identifier, max(buchungen.ID) as ID from buchungen group by buchungen.Identifier) c\n"
                         + "on b.Identifier = c.Identifier\n"
@@ -100,7 +100,7 @@ public class ReportingHandler {
                         + "inner join user on user.ID = buchungen.User\n"
                         + "where \n"
                         + "(b.Bemerkung1 not like '' or b.Bemerkung2 not like '' or b.Bemerkung3 not like '') and b.OFFEN = " + offen);
-//        System.out.println("query = " + query);
+        System.out.println("query = " + query);
         List<Object[]> resultList = query.getResultList();
 
         return resultList;
