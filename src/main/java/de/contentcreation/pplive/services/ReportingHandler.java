@@ -29,7 +29,7 @@ public class ReportingHandler {
 
         TypedQuery<BacklogArticle> query = em
                 .createQuery(
-                        "Select b from BacklogArticle b where (b.bemerkung1 IS NULL or b.bemerkung1 =' ') AND b.offen = 1 order by b.datum, b.partnerId",
+                        "Select b from BacklogArticle b where (b.bemerkung1 IS NULL or b.bemerkung1 =' ' or b.bemerkung1 ='') AND (b.bemerkung2 IS NULL or b.bemerkung2 = ' ' or b.bemerkung2 = '') AND b.offen = 1 order by b.datum, b.partnerId",
                         BacklogArticle.class);
         List<BacklogArticle> newBacklogArticles = query.getResultList();
 
@@ -75,7 +75,7 @@ public class ReportingHandler {
         return resultList;
     }
 
-    // public List<PartnerReport> getProblemArticles() {
+    // public List<PartnerReport> getKAMReportArticles() {
     // EntityManagerFactory ef = Persistence
     // .createEntityManagerFactory("PartnerprogrammAlternative");
     // EntityManager em = ef.createEntityManager();
@@ -88,7 +88,7 @@ public class ReportingHandler {
     // ef.close();
     // return resultList;
     // }
-    public List<Object[]> getProblemArticles(int offen) {
+    public List<Object[]> getKAMReportArticles(int offen) {
 
         Query query = em
                 .createNativeQuery("select b.Identifier, b.PartnerID, b.Config, b.AppdomainID, b.Warengruppenpfad, b.Saison, user.VORNAME, user.NACHNAME, b.Bemerkung1, b.Bemerkung2, b.Bemerkung3, b.BemerkungKAM, \n"

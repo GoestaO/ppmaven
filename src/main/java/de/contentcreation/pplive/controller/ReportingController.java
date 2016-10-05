@@ -373,7 +373,7 @@ public class ReportingController implements Serializable {
      * @param offen 1 = Artikel offen, 0 = Artikel fertig
      */
     public void getKAMReportList(int offen) {
-        List<Object[]> partnerReport = rh.getProblemArticles(offen);
+        List<Object[]> partnerReport = rh.getKAMReportArticles(offen);
         String fileName = "KeyAccountReport.xlsx";
         File reportFile = new File(fileName);
         ex.createKeyAccountReport(reportFile, partnerReport);
