@@ -100,7 +100,7 @@ public class ReportingHandler {
                         + "inner join user on user.ID = buchungen.User\n"
                         + "where \n"
                         + "(b.Bemerkung1 not like '' or b.Bemerkung2 not like '' or b.Bemerkung3 not like '') and b.OFFEN = " + offen);
-        System.out.println("query = " + query);
+//        System.out.println("query = " + query);
         List<Object[]> resultList = query.getResultList();
 
         return resultList;
