@@ -90,19 +90,34 @@ public class ReportingHandler {
     // }
     public List<Object[]> getKAMReportArticles(int offen) {
 
-        Query query = em
-                .createNativeQuery("select b.Identifier, b.PartnerID, b.Config, b.AppdomainID, b.Warengruppenpfad, b.Saison, user.VORNAME, user.NACHNAME, b.Bemerkung1, b.Bemerkung2, b.Bemerkung3, b.BemerkungKAM, \n"
-                        + "b.OFFEN, DATE_FORMAT(buchungen.Timestamp, '%d.%m.%Y'),buchungen.Status\n"
-                        + "from backlog b\n"
-                        + "inner join (select buchungen.Identifier, max(buchungen.ID) as ID from buchungen group by buchungen.Identifier) c\n"
-                        + "on b.Identifier = c.Identifier\n"
-                        + "inner join buchungen on c.ID = buchungen.ID\n"
-                        + "inner join user on user.ID = buchungen.User\n"
-                        + "where \n"
-                        + "(b.Bemerkung1 not like '' or b.Bemerkung2 not like '' or b.Bemerkung3 not like '') and b.OFFEN = " + offen);
-//        System.out.println("query = " + query);
-        List<Object[]> resultList = query.getResultList();
+        String queryString = "select\n"
+                + "  b.Identifier,\n"
+                + "  b.PartnerID,\n"
+                + "  b.Config,\n"
+                + "  b.AppdomainID,\n"
+                + "  b.Warengruppenpfad,\n"
+                + "  b.Saison,\n"
+                + "  user.VORNAME,\n"
+                + "  user.NACHNAME,\n"
+                + "  b.Bemerkung1,\n"
+                + "  b.Bemerkung2,\n"
+                + "  b.Bemerkung3,\n"
+                + "  b.BemerkungKAM,\n"
+                + "  b.OFFEN,\n"
+                + "  c.letzte_buchung,\n"
+                + "  buchungen.Status\n"
+                + "from backlog b\n"
+                + "inner join\n"
+                + "  (select buchungen.Identifier, max(buchungen.ID) as ID, DATE_FORMAT(buchungen.Timestamp, '%d.%m.%Y') as letzte_buchung, buchungen.User from buchungen group by buchungen.Identifier) c\n"
+                + "on b.Identifier = c.Identifier\n"
+                + "inner join buchungen on c.ID = buchungen.ID\n"
+                + "inner join user on user.ID = c.User\n"
+                + "where\n"
+                + "(b.Bemerkung1 not like '' or b.Bemerkung2 not like '' or b.Bemerkung3 not like '') and b.OFFEN = " + offen;
 
+        Query query = em
+                .createNativeQuery(queryString);
+        List<Object[]> resultList = query.getResultList();
         return resultList;
     }
 
