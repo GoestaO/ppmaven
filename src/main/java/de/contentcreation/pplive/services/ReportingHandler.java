@@ -113,7 +113,9 @@ public class ReportingHandler {
                 + "inner join buchungen on c.ID = buchungen.ID\n"
                 + "inner join user on user.ID = c.User\n"
                 + "where\n"
-                + "(b.Bemerkung1 not like '' or b.Bemerkung2 not like '' or b.Bemerkung3 not like '') and b.OFFEN = " + offen;
+                + "(b.Bemerkung1 is NOT NULL  or b.Bemerkung1 not like '' or b.Bemerkung1 not like ' ' \n "
+                + "or b.Bemerkung2 is NOT NULL or b.Bemerkung2 not like '' or b.Bemerkung2 not like ' ' \n "
+                + "or b.Bemerkung3 is NOT NULL or b.Bemerkung3 not like '' or b.Bemerkung3 not like ' ') and b.OFFEN = " + offen;
 
         Query query = em
                 .createNativeQuery(queryString);
