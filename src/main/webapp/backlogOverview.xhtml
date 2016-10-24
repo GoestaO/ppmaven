@@ -92,7 +92,7 @@
                                     
                     <p:commandButton id="clearButton" styleClass="clearButtonClass" widgetVar="varClearButtonButton" update=":form1:backlog" icon="ui-icon-trash" value="Filter löschen" action="#{overviewController.clearFilters()}" />
                     <p:commandButton id="editButton" widgetVar="varEditButton" update=":form2:articleDetail" icon="ui-icon-search" value="Bearbeiten" oncomplete="PF('editDialog').show()" />
-                    <p:commandButton id="exportButton" ajax="False" icon=" ui-icon-circle-arrow-s" value="Export" action="#{reportingController.exportCurrentSelection()}"/>                   
+                    <p:commandButton id="exportButton" ajax = "false" icon=" ui-icon-circle-arrow-s" value="Export" action="#{reportingController.exportCurrentSelection(overviewController.backlogList)}"/>                   
                 </f:facet>
             </p:dataTable>
         </h:form>

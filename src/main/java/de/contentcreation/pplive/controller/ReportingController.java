@@ -432,10 +432,10 @@ public class ReportingController implements Serializable {
         }
     }
     
-    public void exportCurrentSelection(){
+    public void exportCurrentSelection(List<BacklogArticle> backlogList){
     	String fileName="currentSelection.xlsx";
     	File reportFile = new File(fileName);
-    	ex.exportCurrentSelection(reportFile, overviewController.getBacklogList());
+    	ex.exportCurrentSelection(reportFile, backlogList);
     	 try {
              download(reportFile);
 
@@ -472,7 +472,7 @@ public class ReportingController implements Serializable {
     public void download(File file) throws IOException {
         FacesContext fc = FacesContext.getCurrentInstance();
         ExternalContext ec = fc.getExternalContext();
-        ec.responseReset(); // Some JSF component library or some Filter might have set some headers in the buffer beforehand. We want to get rid of them, else it may collide.
+//        ec.responseReset(); // Some JSF component library or some Filter might have set some headers in the buffer beforehand. We want to get rid of them, else it may collide.
         ec.setResponseContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); // Check http://www.iana.org/assignments/media-types for all types. Use if necessary ExternalContext#getMimeType() for auto-detection based on filename.
 
         ec.setResponseContentLength((int) file.length()); // Set it with the file size. This header is optional. It will work if it's omitted, but the download progress will be unknown.
