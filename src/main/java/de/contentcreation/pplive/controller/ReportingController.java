@@ -40,6 +40,7 @@ import org.primefaces.model.chart.LineChartModel;
 import de.contentcreation.pplive.model.BacklogArticle;
 import de.contentcreation.pplive.model.User;
 import de.contentcreation.pplive.reporting.ExcelGenerator;
+import de.contentcreation.pplive.reportingClasses.LeistungsreportNoUser;
 import de.contentcreation.pplive.reportingClasses.RejectReportBemerkung1;
 import de.contentcreation.pplive.reportingClasses.RejectReportBemerkung2;
 import de.contentcreation.pplive.reportingClasses.RejectReportOverview;
@@ -313,6 +314,34 @@ public class ReportingController implements Serializable {
         }
     }
 
+     /**
+     * Diese Methode gibt für einen gewählten Zeitraum alle Buchungen aus.
+     *
+     * @param datum1 Das erste Datum = Start-Datum
+     * @param datum2 Das zweite Datum = End-Datum
+     */
+    public void getLeistungsReportNoUsers(Date datum1, Date datum2) {
+        if (datum2 == null) {
+            datum2 = new Date();
+        }
+
+        if (datum2.before(datum1)) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlerhafte Eingabe", "Das erste Datum muss kleiner als das zweite Datum sein. Bitte versuche es noch einmal."));
+        } else {
+            datum2 = this.shiftDate(datum2);
+            List<LeistungsreportNoUser> Leistungsreport = rh.getLeistungsreportNoUser(datum1, datum2);
+
+            String fileName = "Leistungsreport.xlsx";
+            File reportFile = new File(fileName);
+            ex.createLeistungsreportNoUser(reportFile, Leistungsreport);
+            try {
+                download(reportFile);
+            } catch (IOException ex) {
+                Logger.getLogger(ReportingController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
     /**
      * Diese Methode gibt für einen gewählten Zeitraum alle Buchungen aus.
      *

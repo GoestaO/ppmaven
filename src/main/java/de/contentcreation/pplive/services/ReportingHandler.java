@@ -2,6 +2,7 @@ package de.contentcreation.pplive.services;
 
 import de.contentcreation.pplive.model.BacklogArticle;
 import de.contentcreation.pplive.model.User;
+import de.contentcreation.pplive.reportingClasses.LeistungsreportNoUser;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +18,6 @@ import de.contentcreation.pplive.util.QueryHelper;
 import java.util.ArrayList;
 import javax.ejb.Stateless;
 import javax.persistence.PersistenceContext;
-import org.primefaces.context.RequestContext;
 
 @Stateless
 public class ReportingHandler {
@@ -60,6 +60,20 @@ public class ReportingHandler {
         query.setParameter("datum1", datum1);
         query.setParameter("datum2", datum2);
         List<UserReport> buchungsListe = query.getResultList();
+
+        return buchungsListe;
+    }
+    
+     public List<LeistungsreportNoUser> getLeistungsreportNoUser(Date datum1, Date datum2) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+
+        TypedQuery<LeistungsreportNoUser> query = em
+                .createQuery(
+                        "Select new de.contentcreation.pplive.reportingClasses.LeistungsreportNoUser(art.appdomainId, art.config, art.partnerId, art.cgPath, ub.saison, ub.timestamp, ub.status, ub.bemerkung1, ub.bemerkung2, ub.bemerkung3, ub.bemerkungKAM) from UpdateBuchung ub left join ub.backlogArticle art where ub.timestamp > :datum1 and ub.timestamp < :datum2",
+                        LeistungsreportNoUser.class);
+        query.setParameter("datum1", datum1);
+        query.setParameter("datum2", datum2);
+        List<LeistungsreportNoUser> buchungsListe = query.getResultList();
 
         return buchungsListe;
     }
