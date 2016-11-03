@@ -19,10 +19,10 @@
         <mc:loginComponent/>
         <!--<mc:checkSession/>-->
         <p:growl id="messages" showDetail="true" />
-        <c:if test="#{userBean.valid and userBean.user.rolle.id != 4}">
+        <c:if test="#{userBean.valid and (userBean.user.rolle.id lt 4 or userBean.user.rolle.id == 5)}">
 <!--        <p:panelGrid columns="3" rendered ="#{userBean.valid and userBean.user.rolle.id != 4}">-->
             <p:panelGrid columns="3">
-                <c:if test="#{userBean.user.rolle.id lt 3 }">
+                <c:if test="#{userBean.user.rolle.id lt 4 }">
                     <p:panel header="Leistungsreport" style="width: 400px; height: 200px">
                         <h:form>
                             <h3>Bitte Start- und Enddatum angeben</h3>                    
@@ -37,7 +37,7 @@
                         </h:form>
                     </p:panel>
                 </c:if>
-                <c:if test="#{userBean.user.rolle.id lt 3 }">
+                <c:if test="#{userBean.user.rolle.id lt 3 or userBean.user.rolle.id == 5}">
                     <p:panel header="Leistungsreport ohne benutzerbezogene Daten" style="width: 400px; height: 200px">
                         <h:form>
                             <h3>Bitte Start- und Enddatum angeben</h3>                    
@@ -97,16 +97,15 @@
                     </p:panel>
                 </c:if>
 
-
-                <p:panel header="Partnerreport" style="width: 400px; height: 200px">
-                    <h:form>
-                        <h3>Alle offenen Artikel ausgeben</h3>                   
-                        <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getPartnerReportList()}"/>
-                    </h:form>
-                </p:panel>
+                <c:if test="#{userBean.user.rolle.id lt 4}">
+                    <p:panel header="Partnerreport" style="width: 400px; height: 200px">
+                        <h:form>
+                            <h3>Alle offenen Artikel ausgeben</h3>                   
+                            <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" action="#{reportingController.getPartnerReportList()}"/>
+                        </h:form>
+                    </p:panel>                    
+                </c:if>
                 <c:if test="#{userBean.user.rolle.id lt 3}">
-                    
-
                     <p:panel header="Alle bereits gepflegten Artikel eines Partners" style="width: 400px; height: 200px">
                         <h:form>
                             <style type="text/css">
@@ -122,33 +121,33 @@
                         </h:form>
                     </p:panel>
 
-                        <p:panel header="Upload Report" style="width: 400px; height: 200px">
-                            <h:form>                    
-                                <h3>Bitte Start- und Enddatum angeben</h3>                    
-                                <p:panelGrid columns="2">
-                                    <h:outputLabel for="date1" value="Erstes Datum:" />
-                                    <h:outputLabel for="date2" value="Zweites Datum:" />
-                                    <p:calendar id="date1" value="#{reportingController.uploadDate1}" maxdate="new Date();" locale="de" pattern="dd.MM.yyyy"/>
-                                    <p:calendar id="date2" value="#{reportingController.uploadDate2}" maxdate="new Date();" locale="de" pattern="dd.MM.yyyy"/>                        
-                                </p:panelGrid>
-                                <br></br>
-                                <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" update=":messages" action="#{reportingController.getNewArticlesReport(reportingController.uploadDate1, reportingController.uploadDate2)}"/>
-                            </h:form>
-                        </p:panel>
+                    <p:panel header="Upload Report" style="width: 400px; height: 200px">
+                        <h:form>                    
+                            <h3>Bitte Start- und Enddatum angeben</h3>                    
+                            <p:panelGrid columns="2">
+                                <h:outputLabel for="date1" value="Erstes Datum:" />
+                                <h:outputLabel for="date2" value="Zweites Datum:" />
+                                <p:calendar id="date1" value="#{reportingController.uploadDate1}" maxdate="new Date();" locale="de" pattern="dd.MM.yyyy"/>
+                                <p:calendar id="date2" value="#{reportingController.uploadDate2}" maxdate="new Date();" locale="de" pattern="dd.MM.yyyy"/>                        
+                            </p:panelGrid>
+                            <br></br>
+                            <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" update=":messages" action="#{reportingController.getNewArticlesReport(reportingController.uploadDate1, reportingController.uploadDate2)}"/>
+                        </h:form>
+                    </p:panel>
 
-                        <p:panel header="Reject Report" style="width: 400px; height: 200px">
-                            <h:form>                    
-                                <h3>Bitte Start- und Enddatum angeben</h3>                    
-                                <p:panelGrid columns="2">
-                                    <h:outputLabel for="date1" value="Erstes Datum:" />
-                                    <h:outputLabel for="date2" value="Zweites Datum:" />
-                                    <p:calendar id="date1" value="#{reportingController.rejectedDate1}" maxdate="new Date();" locale="de" pattern="dd.MM.yyyy"/>
-                                    <p:calendar id="date2" value="#{reportingController.rejectedDate2}" maxdate="new Date();" locale="de" pattern="dd.MM.yyyy"/>                        
-                                </p:panelGrid>
-                                <br></br>
-                                <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" update=":messages" action="#{reportingController.getRejectReport(reportingController.rejectedDate1, reportingController.rejectedDate2)}"/>
-                            </h:form>
-                        </p:panel>
+                    <p:panel header="Reject Report" style="width: 400px; height: 200px">
+                        <h:form>                    
+                            <h3>Bitte Start- und Enddatum angeben</h3>                    
+                            <p:panelGrid columns="2">
+                                <h:outputLabel for="date1" value="Erstes Datum:" />
+                                <h:outputLabel for="date2" value="Zweites Datum:" />
+                                <p:calendar id="date1" value="#{reportingController.rejectedDate1}" maxdate="new Date();" locale="de" pattern="dd.MM.yyyy"/>
+                                <p:calendar id="date2" value="#{reportingController.rejectedDate2}" maxdate="new Date();" locale="de" pattern="dd.MM.yyyy"/>                        
+                            </p:panelGrid>
+                            <br></br>
+                            <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" update=":messages" action="#{reportingController.getRejectReport(reportingController.rejectedDate1, reportingController.rejectedDate2)}"/>
+                        </h:form>
+                    </p:panel>
                 </c:if>
             </p:panelGrid>
         </c:if>

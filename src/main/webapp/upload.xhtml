@@ -38,8 +38,8 @@
 
             </p:panelGrid>
         </c:if>
-        <c:if test ="#{userBean.user.rolle.id == 4}">
-            Keine Berechtigung
+        <c:if test ="#{userBean.user.rolle.id ge 4}">
+           <b>Keine Berechtigung</b>
         </c:if>
     </ui:define>
 </ui:composition>

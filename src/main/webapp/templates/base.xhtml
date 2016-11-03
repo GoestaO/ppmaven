@@ -61,12 +61,18 @@
 
                             <c:if test="${ userBean.valid == true  }">
                                 <p:menuitem url="backlogOverview.jsf" value="Backlog" icon="ui-icon-home" />  
-                                <c:if test="${ userBean.user.rolle.id != 4}">
+                                <c:if test="${ userBean.user.rolle.id lt 4}">
                                     <p:menuitem value="Reporting" url="reporting.jsf" icon="ui-icon-calculator" />
-                                    <p:menuitem value="Upload" url="upload.jsf" icon="ui-icon-circle-arrow-n" />
+                                    <p:menuitem value="Upload" url="upload.jsf" icon="ui-icon-circle-arrow-n" />                                   
+                                </c:if>
+                                <c:if test="${ userBean.user.rolle.id == 5}">
+                                    <p:menuitem value="Reporting" url="reporting.jsf" icon="ui-icon-calculator" />
+                                </c:if>
+                                <c:if test="${ userBean.user.rolle.id == 1}">                                    
                                     <p:menuitem value="Nutzerverwaltung" url="usermanagement.jsf" icon="ui-icon-tag" />
                                 </c:if>
-                                <f:facet name="options">                                    
+                                <f:facet name="options">
+                                    
                                     <p:outputLabel value="#{userBean.vorname} #{userBean.nachname}"/>
 <!--                                    <p:commandButton id="logout" icon="ui-icon-extlink"  actionListener="#{loginBean.resetUser()}" styleClass="ui-priority-primary" value="Abmelden" update=":all" onsuccess="window.open('#{request.contextPath}/index.jsf', '_self');">-->
                                     <p:commandButton id="logout" icon="ui-icon-extlink"  actionListener="#{loginBean.resetUser()}" styleClass="ui-priority-primary" value="Abmelden" update=":all">

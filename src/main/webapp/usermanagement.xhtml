@@ -12,7 +12,7 @@
 
         <mc:loginComponent/>
         <mc:ladeanimation/>
-        <c:if test="#{userBean.user.rolle.id le 3}">
+        <c:if test="#{userBean.user.rolle.id == 1}">
             <h:form id="growlForm">
                 <p:growl id="messagesGrowl" showDetail="true"/>
             </h:form>
@@ -96,7 +96,7 @@
                 </h:form>
             </center>
         </c:if>
-        <c:if test="#{userBean.user.rolle.id gt 3}">
+        <c:if test="#{userBean.user.rolle.id != 1}">
             <b>Keine Berechtigung</b>
         </c:if>
     </ui:define>
