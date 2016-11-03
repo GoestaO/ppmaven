@@ -22,7 +22,7 @@
         <c:if test="#{userBean.valid and (userBean.user.rolle.id lt 4 or userBean.user.rolle.id == 5)}">
 <!--        <p:panelGrid columns="3" rendered ="#{userBean.valid and userBean.user.rolle.id != 4}">-->
             <p:panelGrid columns="3">
-                <c:if test="#{userBean.user.rolle.id lt 4 }">
+                <c:if test="#{userBean.user.rolle.id lt 3 }">
                     <p:panel header="Leistungsreport" style="width: 400px; height: 200px">
                         <h:form>
                             <h3>Bitte Start- und Enddatum angeben</h3>                    
@@ -82,6 +82,21 @@
 
                         </h:form>
                     </p:panel>
+                    
+                    <p:panel header="Reject Report" style="width: 400px; height: 200px">
+                        <h:form>                    
+                            <h3>Bitte Start- und Enddatum angeben</h3>                    
+                            <p:panelGrid columns="2">
+                                <h:outputLabel for="date1" value="Erstes Datum:" />
+                                <h:outputLabel for="date2" value="Zweites Datum:" />
+                                <p:calendar id="date1" value="#{reportingController.rejectedDate1}" maxdate="new Date();" locale="de" pattern="dd.MM.yyyy"/>
+                                <p:calendar id="date2" value="#{reportingController.rejectedDate2}" maxdate="new Date();" locale="de" pattern="dd.MM.yyyy"/>                        
+                            </p:panelGrid>
+                            <br></br>
+                            <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" update=":messages" action="#{reportingController.getRejectReport(reportingController.rejectedDate1, reportingController.rejectedDate2)}"/>
+                        </h:form>
+                    </p:panel>
+                    
                     <p:panel header="KAM Report" style="width: 400px; height: 200px">
                         <h:form>
                             <h3>Alle Artikel mit Kommentaren ausgeben</h3>
@@ -135,19 +150,7 @@
                         </h:form>
                     </p:panel>
 
-                    <p:panel header="Reject Report" style="width: 400px; height: 200px">
-                        <h:form>                    
-                            <h3>Bitte Start- und Enddatum angeben</h3>                    
-                            <p:panelGrid columns="2">
-                                <h:outputLabel for="date1" value="Erstes Datum:" />
-                                <h:outputLabel for="date2" value="Zweites Datum:" />
-                                <p:calendar id="date1" value="#{reportingController.rejectedDate1}" maxdate="new Date();" locale="de" pattern="dd.MM.yyyy"/>
-                                <p:calendar id="date2" value="#{reportingController.rejectedDate2}" maxdate="new Date();" locale="de" pattern="dd.MM.yyyy"/>                        
-                            </p:panelGrid>
-                            <br></br>
-                            <p:commandButton value="Download" icon="ui-icon-arrowthick-1-s" ajax="false" update=":messages" action="#{reportingController.getRejectReport(reportingController.rejectedDate1, reportingController.rejectedDate2)}"/>
-                        </h:form>
-                    </p:panel>
+                    
                 </c:if>
             </p:panelGrid>
         </c:if>
